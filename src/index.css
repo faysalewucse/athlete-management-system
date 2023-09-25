@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  font-family: "Exo", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
 }
 
 .transition-300 {

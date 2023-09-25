@@ -4,10 +4,9 @@ import { Container } from "../Container";
 import { SlClose, SlMenu } from "react-icons/sl";
 import { useState } from "react";
 import { Dropdown } from "antd";
-import { MdNotifications } from "react-icons/md";
+import { MdNotifications, MdSearch } from "react-icons/md";
 
 export const Navbar = () => {
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const currentUser = false;
   const [isOpen, setIsOpen] = useState(false);
@@ -33,38 +32,37 @@ export const Navbar = () => {
 
   return (
     <div className="p-5 dark:bg-slate-950">
-      <Container>
-        <div className="flex items-center justify-between">
-          <nav className={`flex items-center gap-5 justify-end w-full`}>
-            <Dropdown
-              className="cursor-pointer"
-              menu={{ items }}
-              trigger={["click"]}
-              placement="bottomRight"
-            >
-              <a onClick={(e) => e.preventDefault()}>
-                <MdNotifications className="text-3xl text-primary" />
-              </a>
-            </Dropdown>
-            <Dropdown menu={{ items }} trigger={["click"]}>
-              <a onClick={(e) => e.preventDefault()}>
-                <img
-                  className="w-12 cursor-pointer"
-                  src={currentUser ? currentUser?.photoURL : avatar}
-                  alt="avatar"
-                />
-              </a>
-            </Dropdown>
-          </nav>
-          <div onClick={() => setOpen(!open)} className="md:hidden text-2xl">
-            {open ? (
-              <SlClose className="absolute right-6 top-9 text-3xl z-20" />
-            ) : (
-              <SlMenu className="text-black text-xl" />
-            )}
-          </div>
+      <div className="flex items-center justify-between">
+        <nav className={`flex items-center gap-5 justify-end w-full`}>
+          <MdSearch className="text-primary text-3xl" />
+          <Dropdown
+            className="cursor-pointer"
+            menu={{ items }}
+            trigger={["click"]}
+            placement="bottomRight"
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <MdNotifications className="text-3xl text-primary" />
+            </a>
+          </Dropdown>
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <a onClick={(e) => e.preventDefault()}>
+              <img
+                className="w-8 cursor-pointer"
+                src={currentUser ? currentUser?.photoURL : avatar}
+                alt="avatar"
+              />
+            </a>
+          </Dropdown>
+        </nav>
+        <div onClick={() => setOpen(!open)} className="md:hidden text-2xl">
+          {open ? (
+            <SlClose className="absolute right-6 top-9 text-3xl z-20" />
+          ) : (
+            <SlMenu className="text-black text-xl" />
+          )}
         </div>
-      </Container>
+      </div>
     </div>
   );
 };

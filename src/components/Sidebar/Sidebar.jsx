@@ -36,7 +36,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="p-10 border-r border-primary border-opacity-50 sticky h-screen overscroll-y-auto">
+    <aside className="p-10 border-r border-primary/10  border-opacity-50 sticky h-screen overscroll-y-auto">
       <img className="w-40 mx-auto mb-20" src={brand} alt="brand" />
       <div className="flex flex-col gap-5">
         {items.map((item) => (
@@ -45,7 +45,7 @@ const Sidebar = () => {
               className="flex items-center gap-4 text-xl font-medium text-primary hover:text-white hover:bg-primary transition-500 py-3 px-5 rounded-2xl"
               href={`/${item.label}`}
             >
-              <i className="text-2xl">{item.icon}</i> {item.label}
+              <i className="text-2xl">{item.icon}</i> <p>{item.label}</p>
             </a>
           </div>
         ))}

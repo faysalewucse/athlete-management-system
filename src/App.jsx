@@ -1,12 +1,23 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/router";
-import { ThemeProvider } from "./context/ThemeContext";
+import { ConfigProvider } from "antd";
 
 function App() {
   return (
-    <ThemeProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          // Seed Token
+          colorPrimary: "#1877BD",
+          borderRadius: 5,
+
+          // Alias Token
+          colorBgContainer: "#1877BD",
+        },
+      }}
+    >
       <RouterProvider router={router} />
-    </ThemeProvider>
+    </ConfigProvider>
   );
 }
 

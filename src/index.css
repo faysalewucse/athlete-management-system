@@ -3,5 +3,13 @@
 @tailwind utilities;
 
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.transition-300 {
+  @apply transition-all duration-300;
+}
+
+.transition-500 {
+  @apply transition-all duration-300;
 }

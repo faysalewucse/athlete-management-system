@@ -4,7 +4,7 @@ import { Container } from "../../components/Container";
 export const Home = () => {
   return (
     <div>
-      <Container> This is Home Page</Container>
+      <Container> This is Home Page 2</Container>
     </div>
   );
 };

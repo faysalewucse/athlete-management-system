@@ -1,10 +1,7 @@
-import React from "react";
-import { Container } from "../../components/Container";
-
 export const Home = () => {
   return (
-    <div>
-      <Container> This is Home Page</Container>
+    <div className="p-10 bg-gradient-to-b from-primary/5 to-primary/40">
+      <h1 className="text-4xl font-bold min-h-screen">Players</h1>
     </div>
   );
 };

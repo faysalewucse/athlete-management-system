@@ -1,15 +1,16 @@
 import avatar from "/avatar.png";
-import { Link, useNavigate } from "react-router-dom";
-import { Container } from "../Container";
-import { SlClose, SlMenu } from "react-icons/sl";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Dropdown } from "antd";
-import { MdNotifications, MdSearch } from "react-icons/md";
+import { Dropdown, Modal } from "antd";
+
+import { BiSolidBell } from "react-icons/bi";
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
+import SearchField from "../SearchField";
 
 export const Navbar = () => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const currentUser = false;
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   const items = [
     {
@@ -30,39 +31,53 @@ export const Navbar = () => {
     },
   ];
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="p-5 dark:bg-slate-950">
-      <div className="flex items-center justify-between">
-        <nav className={`flex items-center gap-5 justify-end w-full`}>
-          <MdSearch className="text-primary text-3xl" />
-          <Dropdown
-            className="cursor-pointer"
-            menu={{ items }}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <MdNotifications className="text-3xl text-primary" />
-            </a>
-          </Dropdown>
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <a onClick={(e) => e.preventDefault()}>
-              <img
-                className="w-8 cursor-pointer"
-                src={currentUser ? currentUser?.photoURL : avatar}
-                alt="avatar"
-              />
-            </a>
-          </Dropdown>
-        </nav>
-        <div onClick={() => setOpen(!open)} className="md:hidden text-2xl">
-          {open ? (
-            <SlClose className="absolute right-6 top-9 text-3xl z-20" />
-          ) : (
-            <SlMenu className="text-black text-xl" />
-          )}
-        </div>
+    <div className=" flex justify-end p-5 mx-5">
+      {/* user info */}
+      <div className="flex items-center gap-5">
+        <HiMiniMagnifyingGlass
+          onClick={showModal}
+          size={20}
+          className="text-primary cursor-pointer"
+        />
+        <Dropdown
+          className="cursor-pointer"
+          menu={{ items }}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
+          <a onClick={(e) => e.preventDefault()}>
+            <BiSolidBell className="text-3xl text-primary" />
+          </a>
+        </Dropdown>
+        <Dropdown placement="bottomRight" menu={{ items }} trigger={["click"]}>
+          <a onClick={(e) => e.preventDefault()}>
+            <img
+              className="border-2 border-primary rounded-full w-10 cursor-pointer"
+              src={currentUser ? currentUser?.photoURL : avatar}
+              alt="avatar"
+            />
+          </a>
+        </Dropdown>
       </div>
+      <Modal
+        title="Search"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
+        maskClosable={false}
+      >
+        <SearchField size="large" />
+      </Modal>
     </div>
   );
 };

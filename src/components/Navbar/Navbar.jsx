@@ -41,7 +41,7 @@ export const Navbar = () => {
   };
 
   return (
-    <div className=" flex justify-end p-5 mx-5">
+    <div className="flex justify-end p-5">
       {/* user info */}
       <div className="flex items-center gap-5">
         <HiMiniMagnifyingGlass

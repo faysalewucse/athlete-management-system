@@ -37,7 +37,7 @@ const items = [
 
 const Sidebar = () => {
   return (
-    <aside className="border-r-2 border-primary/25 border-opacity-50 sticky h-screen overscroll-y-auto p-10">
+    <aside className="md:fixed top-0 left-0 bottom-0 border-r-2 border-primary/25 border-opacity-50 sticky h-screen overscroll-y-auto p-10">
       <h2 className="flex gap-1 mb-10 items-center text-primary text-4xl font-bold">
         <RxStopwatch className="text-5xl" />
         <span className="mt-1 tracking-widest">VERTIME</span>

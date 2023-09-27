@@ -8,11 +8,9 @@ function App() {
       theme={{
         token: {
           // Seed Token
-          colorPrimary: "#1877BD",
+          fontFamily: "Poppins",
+          colorPrimary: "#0b818e",
           borderRadius: 5,
-
-          // Alias Token
-          colorBgContainer: "#1877BD",
         },
       }}
     >

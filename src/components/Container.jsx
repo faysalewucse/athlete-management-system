@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Container = ({ children }) => {
-  return <div className="max-w-7xl mx-auto">{children}</div>;
+  return <div className="max-w-screen-xl mx-auto">{children}</div>;
 };

@@ -1,6 +1,8 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/router";
 import { ConfigProvider } from "antd";
+import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -14,7 +16,10 @@ function App() {
         },
       }}
     >
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+      <Toaster position="top-center" reverseOrder={false} />
     </ConfigProvider>
   );
 }

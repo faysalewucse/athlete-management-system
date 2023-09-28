@@ -41,18 +41,37 @@ const AddAthelete = () => {
   };
 
   return (
-    <div className="container w-10/12 md:w-8/12  mx-auto py-20">
+    <div className="container max-w-4xl p-10">
       {/* <h1 className="text-center text-4xl font-bold mb-4">Add Athlete</h1> */}
+      {/* profile photo */}
+
       <Form
         form={form}
         name="add-athlete"
         initialValues={{ remember: true }}
         onFinish={onFinish}
         layout="vertical"
-        className="bg-primary bg-opacity-20 shadow-xl border-l border-white p-10 rounded-2xl"
+        size="large"
+        className="p-10 rounded-2xl"
       >
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
+            Profile Management
+          </h2>
+          <Form.Item
+            name="profile"
+            valuePropName="fileList"
+            getValueFromEvent={file}
+          >
+            <Upload name="logo" listType="picture">
+              <Button className="bg-blue-300 text-white flex items-center gap-2">
+                <BsUpload /> Upload Profile Picture
+              </Button>
+            </Upload>
+          </Form.Item>
+        </div>
+        <div>
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Athlete Information
           </h2>
           <Form.Item
@@ -101,35 +120,37 @@ const AddAthelete = () => {
         </div>
         {/* contact */}
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Contact Information
           </h2>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              {
-                type: "email",
-                required: true,
-                message: "Please enter athlete's email!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[
-              {
-                pattern: /^\d{7,13}$/,
-                required: true,
-                message: "Please enter athlete's phone number!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                {
+                  type: "email",
+                  required: true,
+                  message: "Please enter athlete's email!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              label="Phone"
+              rules={[
+                {
+                  pattern: /^\d{7,13}$/,
+                  required: true,
+                  message: "Please enter athlete's phone number!",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </div>
           <Form.Item
             name="address"
             label="Address"
@@ -145,7 +166,7 @@ const AddAthelete = () => {
         </div>
         {/* sport details */}
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Sports Details
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -190,7 +211,7 @@ const AddAthelete = () => {
         </div>
         {/* physical */}
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Physical Attributes
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -222,7 +243,7 @@ const AddAthelete = () => {
         </div>
         {/* experience */}
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Experience Level
           </h2>
           <Form.Item
@@ -245,7 +266,7 @@ const AddAthelete = () => {
         {/* medication  */} {/* medication part incomplete */}
         {/* <div>
           <h2>
-            <span className="text-primary text-lg font-semibold mb-3 underline">
+            <span className="text-primary text-lg font-semibold mb-3 ">
               Medical Information
             </span>
           </h2>
@@ -318,7 +339,7 @@ const AddAthelete = () => {
         </div> */}
         {/* Social */}
         <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
+          <h2 className="text-primary text-lg font-semibold mb-3 ">
             Social and Contact
           </h2>
           <Form.Item
@@ -344,23 +365,6 @@ const AddAthelete = () => {
           </Form.Item>
           <Form.Item name="parentContact" label="Parent Phone/Email">
             <Input />
-          </Form.Item>
-        </div>
-        {/* profile photo */}
-        <div>
-          <h2 className="text-primary text-lg font-semibold mb-3 underline">
-            Profile Management
-          </h2>
-          <Form.Item
-            name="profile"
-            valuePropName="fileList"
-            getValueFromEvent={file}
-          >
-            <Upload name="logo" listType="picture">
-              <Button className="bg-blue-300 text-white flex items-center gap-2">
-                <BsUpload /> Upload Profile Picture
-              </Button>
-            </Upload>
           </Form.Item>
         </div>
         <Form.Item>

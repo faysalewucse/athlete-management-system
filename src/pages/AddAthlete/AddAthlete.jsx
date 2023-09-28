@@ -7,6 +7,7 @@ import {
   Select,
   InputNumber,
   Upload,
+  Checkbox,
 } from "antd";
 import { BsUpload } from "react-icons/bs";
 import axios from "axios";
@@ -19,17 +20,87 @@ const AddAthelete = () => {
 
   // Form validation rules
   const onFinish = async (values) => {
-    setSubmitting(true);
-    console.log("Received values=", values);
+    // setSubmitting(true);
+
+    const {
+      fullName,
+      dob,
+      gender,
+      email,
+      phone,
+      address,
+      parentName,
+      parentContact,
+      sport,
+      position,
+      jerseyNumber,
+      height,
+      weight,
+      experienceLevel,
+      allergies,
+      pastInjuries,
+      currentMedication,
+      medicalConditions,
+      dietaryPreferences,
+      specialTrainingRequirements,
+      socialProfile,
+      consentAndLiabilityAgreement,
+      profile,
+    } = values;
+
+    const athleteData = {
+      profile,
+      athleteInfo: {
+        fullName,
+        gender,
+        dob: dob.format("DD-MM-YYYY"),
+        contactInfo: {
+          phone,
+          email,
+          address,
+        },
+      },
+      sportsDetails: {
+        sport,
+        position,
+        jerseyNumber: String(jerseyNumber),
+        height: Number(height),
+        weight: Number(weight),
+      },
+      experienceLevel,
+      medicalInfo: {
+        allergies: allergies
+          ? allergies?.split(",").map((item) => item.trim())
+          : [],
+        pastInjuries: pastInjuries?.map((injury) => ({
+          type: injury.type,
+          date: injury.date.format("YYYY-MM-DD"),
+          description: injury.description,
+        })),
+        currentMedication,
+        medicalConditions,
+        dietaryPreferences,
+        specialTrainingRequirements,
+      },
+      socialProfile,
+      parentInfo: {
+        parentName,
+        parentContact,
+      },
+      consentAndLiabilityAgreement,
+    };
+
+    console.log("Received values=", athleteData);
 
     //  replace with your API endpoint
     await axios
       .post("//url", {
-        values,
+        athleteData,
       })
       .then((res) => {
         console.log(res);
         setSubmitting(false);
+        form.resetFields();
       })
       .catch((err) => {
         console.error(err);
@@ -42,9 +113,6 @@ const AddAthelete = () => {
 
   return (
     <div className="container max-w-4xl p-10">
-      {/* <h1 className="text-center text-4xl font-bold mb-4">Add Athlete</h1> */}
-      {/* profile photo */}
-
       <Form
         form={form}
         name="add-athlete"
@@ -54,6 +122,7 @@ const AddAthelete = () => {
         size="large"
         className="p-10 rounded-2xl"
       >
+        {/* profile photo */}
         <div>
           <h2 className="text-primary text-lg font-semibold mb-3 ">
             Profile Management
@@ -70,6 +139,7 @@ const AddAthelete = () => {
             </Upload>
           </Form.Item>
         </div>
+        {/* athlete info */}
         <div>
           <h2 className="text-primary text-lg font-semibold mb-3 ">
             Athlete Information
@@ -263,80 +333,113 @@ const AddAthelete = () => {
             </Select>
           </Form.Item>
         </div>
-        {/* medication  */} {/* medication part incomplete */}
-        {/* <div>
+        {/* medication  */}
+        <div>
           <h2>
             <span className="text-primary text-lg font-semibold mb-3 ">
               Medical Information
             </span>
           </h2>
           <Form.Item
+            tooltip="Enter allergies separated by commas (if any)"
             name="allergies"
             label="Allergies"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
           <Form.Item
-            name="pastInjuries"
-            label="Past Injuries"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
+            tooltip="if any"
+            name="currentMedication"
+            label="Current Medication"
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
           <Form.Item
-            name="currentMedications"
-            label="Current Medications"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-          <Form.Item
+            tooltip="if any"
             name="medicalConditions"
             label="Medical Conditions"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
           <Form.Item
+            tooltip="if any"
             name="dietaryPreferences"
-            label="Dietary Preferences or Restrictions"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
+            label="Dietary Preferences"
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
           <Form.Item
             name="specialTrainingRequirements"
             label="Special Training Requirements"
-            rules={[
-              {
-                required: false,
-              },
-            ]}
+            tooltip="if needed, otherwise type 'none' "
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
-        </div> */}
+
+          <h3 className="my-3">Past Injuries</h3>
+          <Form.List name="pastInjuries">
+            {(fields, { add, remove }) => (
+              <div>
+                {fields.map(({ key, name }) => (
+                  <div key={key}>
+                    <Form.Item
+                      name={[name, "type"]}
+                      label="Type"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter the injury type.",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      name={[name, "date"]}
+                      label="Date"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please select the date of the injury.",
+                        },
+                      ]}
+                    >
+                      <DatePicker format="YYYY-MM-DD" />
+                    </Form.Item>
+                    <Form.Item
+                      name={[name, "description"]}
+                      label="Description"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please enter a description of the injury.",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Button
+                      className="bg-red-500 bg-opacity-50 mb-1"
+                      type="dashed"
+                      onClick={() => remove(name)}
+                    >
+                      Remove Injury
+                    </Button>
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    className="bg-green-500 bg-opacity-50"
+                    type="dashed"
+                    onClick={() => add()}
+                  >
+                    Add Injury
+                  </Button>
+                </Form.Item>
+              </div>
+            )}
+          </Form.List>
+        </div>
         {/* Social */}
         <div>
           <h2 className="text-primary text-lg font-semibold mb-3 ">
@@ -367,6 +470,16 @@ const AddAthelete = () => {
             <Input />
           </Form.Item>
         </div>
+        {/* terms */}
+        <div>
+          <Form.Item
+            name="consentAndLiabilityAgreement"
+            valuePropName="checked"
+          >
+            <Checkbox>Agree to terms and conditions.</Checkbox>
+          </Form.Item>
+        </div>
+        {/* submit */}
         <Form.Item>
           <Button
             className="bg-primary text-white"

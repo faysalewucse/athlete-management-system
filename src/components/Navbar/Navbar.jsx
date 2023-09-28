@@ -41,43 +41,49 @@ export const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-end p-5">
-      {/* user info */}
-      <div className="flex items-center gap-5">
-        <HiMiniMagnifyingGlass
-          onClick={showModal}
-          size={20}
-          className="text-primary cursor-pointer"
-        />
-        <Dropdown
-          className="cursor-pointer"
-          menu={{ items }}
-          trigger={["click"]}
-          placement="bottomRight"
+    <div className="z-50 sticky top-0">
+      <div className="flex bg-primary2 justify-end p-5">
+        {/* user info */}
+        <div className="flex items-center gap-5">
+          <HiMiniMagnifyingGlass
+            onClick={showModal}
+            size={20}
+            className="text-primary cursor-pointer"
+          />
+          <Dropdown
+            className="cursor-pointer"
+            menu={{ items }}
+            trigger={["click"]}
+            placement="bottomRight"
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <BiSolidBell className="text-3xl text-primary" />
+            </a>
+          </Dropdown>
+          <Dropdown
+            placement="bottomRight"
+            menu={{ items }}
+            trigger={["click"]}
+          >
+            <a onClick={(e) => e.preventDefault()}>
+              <img
+                className="border-2 border-primary rounded-full w-10 cursor-pointer"
+                src={currentUser ? currentUser?.photoURL : avatar}
+                alt="avatar"
+              />
+            </a>
+          </Dropdown>
+        </div>
+        <Modal
+          title="Search"
+          open={isModalOpen}
+          onCancel={handleCancel}
+          footer={null}
+          maskClosable={false}
         >
-          <a onClick={(e) => e.preventDefault()}>
-            <BiSolidBell className="text-3xl text-primary" />
-          </a>
-        </Dropdown>
-        <Dropdown placement="bottomRight" menu={{ items }} trigger={["click"]}>
-          <a onClick={(e) => e.preventDefault()}>
-            <img
-              className="border-2 border-primary rounded-full w-10 cursor-pointer"
-              src={currentUser ? currentUser?.photoURL : avatar}
-              alt="avatar"
-            />
-          </a>
-        </Dropdown>
+          <SearchField size="large" />
+        </Modal>
       </div>
-      <Modal
-        title="Search"
-        open={isModalOpen}
-        onCancel={handleCancel}
-        footer={null}
-        maskClosable={false}
-      >
-        <SearchField size="large" />
-      </Modal>
     </div>
   );
 };

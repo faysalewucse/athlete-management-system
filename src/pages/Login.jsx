@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import Brand from "../components/Brand";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -35,14 +36,17 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-[85vh] dark:bg-slate-900">
+    <div className="flex items-center justify-center h-[90vh] bg-white">
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="w-full md:w-1/3 p-5">
-        <h2 className="text-3xl font-bold mb-8 text-center dark:text-white text-black">
-          Login
-        </h2>
-        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-200 border-0 text-slate-700 p-5">
+        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-primary/10 border-0 text-slate-700 p-5">
+          <div className="flex justify-center">
+            <Brand />
+          </div>
+          <h2 className="text-3xl font-bold mb-8 text-center text-dark">
+            Login
+          </h2>
           <div className="rounded-t mb-0 px-6 py-6">
             <h6
               onClick={googleSignIn}
@@ -132,24 +136,24 @@ export const Login = () => {
                   value="SIGN IN"
                   className={`${
                     loading && "disabled cursor-not-allowed opacity-50"
-                  } bg-primary text-white w-full p-2 font-semibold rounded`}
+                  } bg-gradient cursor-pointer hover:shadow-xl transition-300 text-white w-full p-2 font-semibold rounded`}
                 />
               </div>
             </form>
           </div>
-        </div>
-        <div className="flex flex-wrap mt-6 dark:text-white">
-          <div className="w-1/2">
-            <a href="#pablo" onClick={(e) => e.preventDefault()}>
-              <small>Forgot password?</small>
-            </a>
-          </div>
-          <div className="w-1/2 text-right">
-            <a href="#pablo" onClick={(e) => e.preventDefault()}>
-              <small onClick={() => navigate("/register")}>
-                Create new account
-              </small>
-            </a>
+          <div className="flex flex-wrap mt-6 text-secondary text-xl">
+            <div className="w-1/2">
+              <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                <small>Forgot password?</small>
+              </a>
+            </div>
+            <div className="w-1/2 text-right">
+              <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                <small onClick={() => navigate("/register")}>
+                  Create new account
+                </small>
+              </a>
+            </div>
           </div>
         </div>
       </div>

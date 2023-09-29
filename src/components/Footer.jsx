@@ -7,7 +7,7 @@ export default function Footer() {
   const { currentUser, logout } = useAuth();
   // const { isDark } = useTheme();
   return (
-    <footer className="dark:bg-slate-950 dark:border-gray-800 border-t-[1px] dark:text-white p-5 md:p-24 md:text-left text-center">
+    <footer className="bg-white p-5 md:p-24 md:text-left text-center">
       <div className="md:flex gap-10 max-w-7xl mx-auto">
         <div className="basis-1/2 md:text-justify text-center">
           <Brand />

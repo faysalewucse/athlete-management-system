@@ -1,4 +1,3 @@
-import { Container } from "../../components/Container";
 import athlete from "../../assets/athlete.png";
 import Button from "../../components/shared/Button";
 import { motion } from "framer-motion";
@@ -8,8 +7,8 @@ export const Banner = () => {
   //TODO3: set autoplat delay 2500
   return (
     <div className="relative md:min-h-[90vh] p-5 flex items-center bg-white text-slate-700">
-      <Container>
-        <div className="md:w-1/2 text-center md:text-start relative z-10">
+      <div className="container mx-auto flex">
+        <div className="lg:w-1/2 text-center md:text-start relative z-10">
           <motion.h1
             animate={{ fontSize: "2.25rem" }}
             className="text-xl md:text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-r to-primary from-secondary"
@@ -44,11 +43,11 @@ export const Banner = () => {
           initial={{ x: "100vw" }}
           animate={{ x: 0 }}
           transition={{ delay: 0.2, duration: 0.1 }}
-          className="z-0 absolute bottom-0 right-0 sm:opacity-100 opacity-40"
+          className="z-0 absolute bottom-0 right-0 lg:opacity-100 opacity-40"
           src={athlete}
           alt=""
         />
-      </Container>
+      </div>
     </div>
   );
 };

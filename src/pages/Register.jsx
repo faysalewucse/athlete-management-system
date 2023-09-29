@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import Brand from "../components/Brand";
 
 export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -67,13 +68,16 @@ export const Register = () => {
   };
 
   return (
-    <div className="dark:bg-gray-900 text-slate-700 dark:text-white min-h-[85vh] flex items-center justify-center">
+    <div className=" text-dark bg-light min-h-[90vh] flex items-center justify-center">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="p-5 lg:w-1/2">
+      <div className="p-5 lg:w-1/2 bg-primary/10 rounded-xl shadow-lg">
+        <div className="flex justify-center mb-5">
+          <Brand />
+        </div>
         <h2 className="text-3xl font-bold mb-8 text-center">Registration</h2>
         <form
           onSubmit={handleSubmit(registerHandler)}
-          className="md:grid grid-cols-2 gap-x-6 bg-gray-200 dark:bg-gray-800 p-10 rounded shadow-lg"
+          className="md:grid grid-cols-2 gap-x-6 p-10"
         >
           <div className="mb-4">
             <label htmlFor="name" className="block mb-2">

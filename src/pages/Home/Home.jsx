@@ -1,12 +1,17 @@
-import LinkBtn from "../../components/LinkBtn";
+import { Banner } from "./Banner";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Contact from "./Contact";
 
+AOS.init();
+// TODO: Add Blog Sections
 export const Home = () => {
   return (
-    <div className="lg:p-10 p-3 min-h-screen">
-      <div className="flex justify-between items-center">
-        <h1 className="lg:text-4xl text-2xl font-bold">Players</h1>
-        <LinkBtn to="/add-athlete">Add Athlete</LinkBtn>
-      </div>  
-     </div>  
+    <div className="overflow-hidden">
+      <>
+        <Banner />
+        <Contact />
+      </>
+    </div>
   );
 };

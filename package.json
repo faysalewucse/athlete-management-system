@@ -10,18 +10,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@material-tailwind/react": "^2.0.1",
-    "antd": "^5.9.2",
-    "axios": "^1.5.1",
+    "@nextui-org/react": "^1.0.0-beta.13",
+    "@stripe/react-stripe-js": "^2.1.0",
+    "@stripe/stripe-js": "^1.54.0",
+    "@tanstack/react-query": "^4.29.12",
+    "aos": "^2.3.4",
+    "axios": "^1.4.0",
+    "chart.js": "^4.3.0",
     "firebase": "^9.22.1",
+    "framer-motion": "^10.12.16",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.44.3",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",
+    "react-player": "^2.12.0",
     "react-router-dom": "^6.11.2",
-    "sort-by": "^1.2.0"
+    "react-spinners": "^0.13.8",
+    "sort-by": "^1.2.0",
+    "sweetalert2": "^11.7.11",
+    "swiper": "^9.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

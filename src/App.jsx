@@ -1,26 +1,19 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/router";
-import { ConfigProvider } from "antd";
-import { AuthProvider } from "./context/AuthContext";
-import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./contexts/AuthContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <ConfigProvider
-      theme={{
-        token: {
-          // Seed Token
-          fontFamily: "Poppins",
-          colorPrimary: "#0b818e",
-          borderRadius: 5,
-        },
-      }}
-    >
-      <AuthProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        {/* <ThemeProvider> */}
         <RouterProvider router={router} />
-      </AuthProvider>
-      <Toaster position="top-center" reverseOrder={false} />
-    </ConfigProvider>
+        {/* </ThemeProvider> */}
+      </QueryClientProvider>
+    </AuthProvider>
   );
 }
 

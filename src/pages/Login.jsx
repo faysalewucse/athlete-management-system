@@ -39,7 +39,7 @@ export const Login = () => {
     <div className="flex items-center justify-center h-[90vh] bg-white">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div className="w-full md:w-1/3 p-5">
+      <div className="w-full lg:w-1/2 md:w-2/3 p-5">
         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-primary/10 border-0 text-slate-700 p-5">
           <div className="flex justify-center">
             <Brand />
@@ -115,20 +115,20 @@ export const Login = () => {
                   {!showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </div>
               </div>
-              <div>
-                <label className="inline-flex items-center cursor-pointer">
-                  <input
-                    id="customCheckLogin"
-                    type="checkbox"
-                    className="form-checkbox border-0 rounded ml-1 w-5 h-5"
-                    style={{ transition: "all .15s ease" }}
-                  />
-                  <span className="ml-2 text-sm font-semibold 0">
-                    Remember me
-                  </span>
-                </label>
+              <div className="flex flex-wrap mt-6 text-secondary text-xl">
+                <div className="w-1/2">
+                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <small>Forgot password?</small>
+                  </a>
+                </div>
+                <div className="w-1/2 text-right">
+                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                    <small onClick={() => navigate("/register")}>
+                      Create new account
+                    </small>
+                  </a>
+                </div>
               </div>
-
               <div className="text-center mt-6">
                 <input
                   disabled={loading}
@@ -140,20 +140,6 @@ export const Login = () => {
                 />
               </div>
             </form>
-          </div>
-          <div className="flex flex-wrap mt-6 text-secondary text-xl">
-            <div className="w-1/2">
-              <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                <small>Forgot password?</small>
-              </a>
-            </div>
-            <div className="w-1/2 text-right">
-              <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                <small onClick={() => navigate("/register")}>
-                  Create new account
-                </small>
-              </a>
-            </div>
           </div>
         </div>
       </div>

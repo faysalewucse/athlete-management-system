@@ -54,10 +54,10 @@ export default function Footer() {
           <p className="text-secondary">
             10 Shantinagar, Gulshan, Dhaka 1212, Bangladesh
           </p>
-          <p className="mt-5">+880 175-1234567</p>
-          <p className="text-secondary">+880 175-7654321</p>
-          <p className="mt-5">faysal.ewucse@gmail.com</p>
-          <p className="text-secondary">faysal65438@gmail.com</p>
+          <p className="mt-5">+880 000-000000</p>
+          <p className="text-secondary">+880 000-0000000</p>
+          <p className="mt-5">example@gmail.com</p>
+          <p className="text-secondary">example@gmail.com</p>
         </div>
         <div className="grow mt-5 md:mt-0">
           <h1 className="font-bold text-2xl font-display mb-8">Subscribe</h1>

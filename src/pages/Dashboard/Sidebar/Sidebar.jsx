@@ -1,199 +1,134 @@
+import { HiSquares2X2 } from "react-icons/hi2";
+import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
+import { BsFillChatDotsFill } from "react-icons/bs";
+import { MdCalendarMonth, MdClose } from "react-icons/md";
 import {
-  MdClass,
-  MdManageAccounts,
-  MdOutlineFlightClass,
-  MdOutlineKeyboardBackspace,
-  MdSpaceDashboard,
-} from "react-icons/md";
-import { AiOutlineSetting } from "react-icons/ai";
-import { BiSelectMultiple, BiHelpCircle } from "react-icons/bi";
-import { GiNinjaArmor } from "react-icons/gi";
-import { FaUserShield } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { BsCreditCard } from "react-icons/bs";
+  RiAdminLine,
+  RiArrowLeftRightFill,
+  RiParentLine,
+} from "react-icons/ri";
+import { BiChart, BiSolidBarChartSquare } from "react-icons/bi";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import { SlClose } from "react-icons/sl";
+import Brand from "../../../components/Brand";
+import { CgMiniPlayer } from "react-icons/cg";
 
-export const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const menuItems = [
-    {
-      route: "Dashboard",
-      path: "/dashboard",
-      icon: <MdSpaceDashboard />,
-    },
-    {
-      route: "Selected Classes",
-      path: "selectedClasses",
-      icon: <BiSelectMultiple />,
-      role: "student",
-    },
-    {
-      route: "Enrolled Classes",
-      path: "enrolledClasses",
-      icon: <GiNinjaArmor />,
-      role: "student",
-    },
-    {
-      route: "Payments",
-      path: "payments",
-      icon: <BsCreditCard />,
-      role: "student",
-    },
-    {
-      route: "Add Class",
-      path: "addClass",
-      icon: <MdOutlineFlightClass />,
-      role: "instructor",
-    },
-    {
-      route: "My Classes",
-      path: "classes",
-      icon: <MdClass />,
-      role: "instructor",
-    },
-    {
-      route: "Manage Classes",
-      path: "manageClasses",
-      icon: <MdManageAccounts />,
-      role: "admin",
-    },
-    {
-      route: "Manage Users",
-      path: "manageUsers",
-      icon: <FaUserShield />,
-      role: "admin",
-    },
-  ];
-
-  const menuItems2 = [
-    {
-      route: "Settings",
-      path: "/settings",
-      icon: <AiOutlineSetting />,
-    },
-    {
-      route: "Get Help",
-      path: "/help",
-      icon: <BiHelpCircle />,
-    },
-  ];
-
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const { currentUser } = useAuth();
 
-  console.log(isSidebarOpen);
+  const sidebarItems = {
+    general: [
+      {
+        key: 0,
+        label: "Dashboard",
+        route: "/dashboard",
+        icon: <HiSquares2X2 />,
+      },
+    ],
+    sadmin: [
+      {
+        key: 1,
+        label: "Admins",
+        route: "/admins",
+        icon: <RiAdminLine />,
+      },
+      {
+        key: 2,
+        label: "Coaches",
+        route: "/coaches",
+        icon: <FaChalkboardTeacher />,
+      },
+      {
+        key: 3,
+        label: "Athletes",
+        route: "/athletes",
+        icon: <CgMiniPlayer />,
+      },
+      {
+        key: 4,
+        label: "Parennts",
+        route: "/parents",
+        icon: <RiParentLine />,
+      },
+    ],
+
+    admin: [
+      {
+        key: 2,
+        label: "Squad",
+        icon: <FaUsers />,
+      },
+      {
+        key: 3,
+        label: "Messenger",
+        icon: <BsFillChatDotsFill />,
+      },
+      {
+        key: 4,
+        label: "Statistic",
+        icon: <BiSolidBarChartSquare />,
+      },
+      {
+        key: 5,
+        label: "Calender",
+        icon: <MdCalendarMonth />,
+      },
+    ],
+  };
+
+  const items = [
+    ...sidebarItems["general"],
+    ...sidebarItems[currentUser?.role],
+  ];
+
+  const currentPath = useLocation();
 
   return (
-    <div
-      className={`min-h-screen md:relative md:left-0 absolute bottom-0 transition-all duration-200 ${
-        isSidebarOpen ? "left-0" : "-left-full"
-      } lg:block dark:bg-slate-950 w-80 bg-white dark:text-white dark:shadow-none dark:border-none shadow-lg border-r-[1px]`}
+    <aside
+      className={`md:block hidden border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto p-10`}
     >
-      {/* First Section */}
-      <div className="p-10">
-        <SlClose
-          onClick={() => setIsSidebarOpen(false)}
-          className="dark:text-white absolute right-6 top-10 text-3xl z-20 md:hidden"
-        />
-        <h1 className="flex items-center font-bold text-2xl text-center">
-          Ninja School
-        </h1>
-        <h1 className="mt-10 mb-5">Menu</h1>
-        <ul className="flex flex-col gap-7">
-          {menuItems.map((item, index) => {
-            if (item?.role) {
-              if (item?.role === "student" && currentUser?.role === "student") {
-                return (
-                  <NavLink
-                    key={index}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-primary flex gap-3 font-bold items-center"
-                        : "flex hover:text-primary hover:font-bold gap-3 items-center transition-all duration-300"
-                    }
-                  >
-                    <div className="text-2xl">{item.icon}</div>
-                    <h1 className="text-lg">{item.route}</h1>
-                  </NavLink>
-                );
-              } else if (
-                item?.role === "instructor" &&
-                currentUser?.role === "instructor"
-              ) {
-                return (
-                  <NavLink
-                    key={index}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-primary flex gap-3 font-bold items-center"
-                        : "flex hover:text-primary hover:font-bold gap-3 items-center transition-all duration-300"
-                    }
-                  >
-                    <div className="text-2xl">{item.icon}</div>
-                    <h1 className="text-lg">{item.route}</h1>
-                  </NavLink>
-                );
-              } else if (
-                item?.role === "admin" &&
-                currentUser?.role === "admin"
-              ) {
-                return (
-                  <NavLink
-                    key={index}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      isActive
-                        ? "text-primary flex gap-3 font-bold items-center"
-                        : "flex hover:text-primary hover:font-bold gap-3 items-center transition-all duration-300"
-                    }
-                  >
-                    <div className="text-2xl">{item.icon}</div>
-                    <h1 className="text-lg">{item.route}</h1>
-                  </NavLink>
-                );
-              }
-            } else if (item.route === "Dashboard")
-              return (
-                <NavLink
-                  key={index}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-primary flex gap-3 font-bold items-center"
-                      : "flex hover:text-primary hover:font-bold gap-3 items-center transition-all duration-300"
-                  }
-                >
-                  <div className="text-2xl">{item.icon}</div>
-                  <h1 className="text-lg">{item.route}</h1>
-                </NavLink>
-              );
-            return null;
-          })}
-        </ul>
+      <Brand />
+      <div
+        onClick={() => setSidebarOpen(false)}
+        className="absolute bg-dark text-white p-2 rounded-r text-2xl -right-10 top-0 md:hidden"
+      >
+        <MdClose />
       </div>
-      <hr />
-      {/* Third Section */}
-      <div className="p-10">
-        <ul className="flex flex-col gap-8">
-          {menuItems2.map((item, index) => {
-            return (
-              <NavLink
-                key={index}
-                to={item.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-primary flex gap-3 font-bold items-center"
-                    : "flex hover:text-primary hover:font-bold gap-3 items-center transition-all duration-300"
-                }
-              >
-                <div className="text-2xl">{item.icon}</div>
-                <h1 className="text-lg">{item.route}</h1>
-              </NavLink>
-            );
-          })}
-        </ul>
+      <div className="mt-10 flex flex-col gap-5">
+        {items?.map((item) => (
+          <div key={item.key}>
+            <Link
+              className={`flex items-center gap-4 p-3 text-lg font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary ${
+                currentPath.pathname === item.route
+                  ? "bg-gradient text-white"
+                  : ""
+              }`}
+              to={item.route}
+            >
+              {item.icon} {item.label}
+            </Link>
+          </div>
+        ))}
+        <div className="border-t-2 border-primary/25 border-opacity-50 mx-4"></div>
+        <div className="flex flex-col gap-5">
+          <Link
+            to={"/"}
+            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
+          >
+            <RiArrowLeftRightFill />
+            Transfer
+          </Link>
+          <Link
+            to={"/"}
+            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
+          >
+            <BiChart />
+            Youth academy
+          </Link>
+        </div>
       </div>
-    </div>
+    </aside>
   );
 };
+
+export default Sidebar;

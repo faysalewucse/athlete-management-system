@@ -6,7 +6,7 @@ export const Banner = () => {
   // const { isDark } = useTheme();
   //TODO3: set autoplat delay 2500
   return (
-    <div className="relative md:min-h-[90vh] p-5 flex items-center bg-white text-slate-700">
+    <div className="relative lg:min-h-[90vh] md:min-h-[70vh] min-h-[50vh] p-5 flex items-center bg-white text-slate-700">
       <div className="container mx-auto flex">
         <div className="lg:w-1/2 text-center md:text-start relative z-10">
           <motion.h1

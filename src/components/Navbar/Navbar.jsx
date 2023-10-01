@@ -122,7 +122,7 @@ export const Navbar = () => {
             {open ? (
               <SlClose className=" absolute right-6 top-9 text-3xl z-20" />
             ) : (
-              <CgMenuRound className="text-[40px] text-dark" />
+              <CgMenuRound strokeWidth={0} className="text-[40px] text-dark" />
             )}
           </div>
         </div>

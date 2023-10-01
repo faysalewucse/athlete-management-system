@@ -37,11 +37,11 @@ export const Register = () => {
         );
         if (response?.data?.status === 200) {
           photoURL = response.data.data.display_url;
-          signup(email, password, name, photoURL);
         }
       }
 
-      // Regardless of whether a photo was uploaded or not, send user data to the server
+      signup(email, password, name, photoURL);
+
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, {
         email,
         name,
@@ -50,6 +50,7 @@ export const Register = () => {
         gender,
         phoneNumber,
         role,
+        teams: [],
       });
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(

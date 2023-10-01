@@ -1,7 +1,6 @@
 import { AddClass } from "../pages/Dashboard/AddClass";
 import { MyClasses } from "../pages/Dashboard/MyClasses";
 import { Dashboard } from "../pages/Dashboard/Dashboard";
-import { EnrolledClasses } from "../pages/Dashboard/EnrolledClasses";
 import { Payments } from "../pages/Dashboard/Payments";
 import { SelectedClasses } from "../pages/Dashboard/SelectedClasses";
 import PrivateRoute from "./PrivateRoute";
@@ -10,6 +9,7 @@ import { AdminRoute } from "./AdminRoute";
 import { ManageClasses } from "../pages/Dashboard/ManageClasses";
 import { ManageUsers } from "../pages/Dashboard/ManageUsers";
 import { StudentRoute } from "./StudentRoute";
+import { Athletes } from "../pages/Dashboard/Athletes";
 
 export const dashboardRouter = [
   {
@@ -29,12 +29,8 @@ export const dashboardRouter = [
     ),
   },
   {
-    path: "enrolledClasses",
-    element: (
-      <StudentRoute>
-        <EnrolledClasses />
-      </StudentRoute>
-    ),
+    path: "athletes",
+    element: <Athletes />,
   },
   {
     path: "payments",

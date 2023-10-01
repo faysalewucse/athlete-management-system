@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Container } from "../../components/Container";
 import { useAuth } from "../../contexts/AuthContext";
 import { DashboardCard } from "../../components/cards/DashboardCard";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import HashLoader from "react-spinners/HashLoader";
+import Button from "../../components/shared/Button";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,9 +12,10 @@ export const Dashboard = () => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
 
-  const { data: users, isLoading } = useQuery({
+  const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
+      if (currentUser?.role !== "sadmin") return [];
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}/users`
       );
@@ -22,21 +23,23 @@ export const Dashboard = () => {
     },
   });
 
-  const quantity = {
-    admin: 0,
-    coach: 0,
-    athlete: 0,
-    parents: 0,
-  };
-
-  users?.forEach((user) => {
-    quantity[user.role]++;
-  });
+  const quantity = users?.reduce(
+    (acc, user) => {
+      acc[user.role]++;
+      return acc;
+    },
+    {
+      admin: 0,
+      coach: 0,
+      athlete: 0,
+      parents: 0,
+    }
+  );
 
   return (
     <div className="min-h-[90vh] p-5">
       {!isLoading ? (
-        <Container>
+        <div className="max-w-7xl">
           {currentUser?.role === "sadmin" && (
             <div>
               <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
@@ -60,7 +63,15 @@ export const Dashboard = () => {
               </div>
             </div>
           )}
-        </Container>
+          {currentUser?.role === "parents" && (
+            <div>
+              <Button text={"Add Athlete +"} />
+              <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                <DashboardCard number={users?.length} title={"Total Users"} />
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">
           <HashLoader

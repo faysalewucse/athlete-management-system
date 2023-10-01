@@ -10,7 +10,7 @@ const Brand = () => {
       <RxStopwatch strokeWidth={0.5} className={"text-[40px] text-secondary"} />
       <span
         style={{ fontFamily: "Luckiest Guy" }}
-        className="mt-1 tracking-widest"
+        className="mt-2 tracking-widest"
       >
         VERTIME
       </span>

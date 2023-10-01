@@ -29,25 +29,25 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       {
         key: 1,
         label: "Admins",
-        route: "/admins",
+        route: "admins",
         icon: <RiAdminLine />,
       },
       {
         key: 2,
         label: "Coaches",
-        route: "/coaches",
+        route: "coaches",
         icon: <FaChalkboardTeacher />,
       },
       {
         key: 3,
         label: "Athletes",
-        route: "/athletes",
+        route: "athletes",
         icon: <CgMiniPlayer />,
       },
       {
         key: 4,
         label: "Parennts",
-        route: "/parents",
+        route: "parents",
         icon: <RiParentLine />,
       },
     ],
@@ -76,10 +76,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     ],
   };
 
-  const items = [
-    ...sidebarItems["general"],
-    ...sidebarItems[currentUser?.role],
-  ];
+  let items = [...sidebarItems["general"]];
+
+  if (sidebarItems[currentUser?.role]) {
+    items = [...items, ...sidebarItems[currentUser?.role]];
+  }
 
   const currentPath = useLocation();
 

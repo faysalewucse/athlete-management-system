@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Input, Select, Radio, Button, Upload } from "antd";
+import { Form, Input, Select, Radio, Button, Upload, DatePicker } from "antd";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdFileUpload } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,6 +8,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import Brand from "../components/Brand";
 import { useNavigate } from "react-router-dom";
+import moment from "moment/moment";
 
 const { Option } = Select;
 
@@ -66,14 +67,27 @@ export const Register = () => {
     }
   };
 
+  const validateDateOfBirth = (rule, value) => {
+    if (value && value.isAfter()) {
+      return Promise.reject("Date of Birth cannot be in the future");
+    }
+
+    const eighteenYearsAgo = moment().subtract(18, "years");
+    if (value && value.isAfter(eighteenYearsAgo)) {
+      return Promise.reject("You must be at least 18 years old");
+    }
+
+    return Promise.resolve();
+  };
+
   return (
-    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center p-5">
+    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="p-5 lg:w-1/2 w-full bg-primary/10 rounded-xl shadow-lg">
+      <div className="max-w-3xl p-5 lg:w-1/2 w-full bg-primary/5 rounded-xl shadow-lg">
         <div className="flex justify-center mb-5">
           <Brand />
         </div>
-        <h2 className="text-3xl font-bold mb-8 text-center">Registration</h2>
+        <h2 className="text-3xl font-bold text-center">Registration</h2>
         <Form
           layout="vertical"
           onFinish={onFinish}
@@ -119,11 +133,6 @@ export const Register = () => {
                 min: 6,
                 message: "Password must be at least 6 characters long",
               },
-              {
-                pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/,
-                message:
-                  "Password must contain at least one capital letter and one special character",
-              },
             ]}
           >
             <Input.Password
@@ -156,8 +165,8 @@ export const Register = () => {
               size="large"
             />
           </Form.Item>
+
           <Form.Item
-            className="col-span-2"
             name="photoUrl"
             label="Photo"
             rules={[{ required: false }]}
@@ -183,6 +192,21 @@ export const Register = () => {
                 Upload Photo
               </Button>
             </Upload>
+          </Form.Item>
+
+          <Form.Item
+            name="dateOfBirth"
+            label="Date of Birth"
+            rules={[
+              { required: true, message: "Date of Birth is required" },
+              { validator: validateDateOfBirth },
+            ]}
+          >
+            <DatePicker
+              className="w-full px-4 py-2 rounded-lg"
+              size="large"
+              format="YYYY-MM-DD"
+            />
           </Form.Item>
 
           <Form.Item

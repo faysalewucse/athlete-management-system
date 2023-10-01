@@ -48,7 +48,7 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <div className="z-50 sticky top-0">
-      <div className="flex bg-primary2 items-center md:justify-end justify-between p-5">
+      <div className="flex bg-transparent items-center md:justify-end justify-between p-5">
         <MdDashboard className="md:hidden text-4xl text-primary" />
 
         <div></div>

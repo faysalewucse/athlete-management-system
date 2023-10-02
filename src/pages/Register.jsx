@@ -21,8 +21,16 @@ export const Register = () => {
   const onFinish = async (data) => {
     try {
       setLoading(true);
-      const { address, email, gender, name, password, phoneNumber, role } =
-        data;
+      const {
+        address,
+        email,
+        gender,
+        name,
+        password,
+        phoneNumber,
+        role,
+        dateOfBirth,
+      } = data;
 
       const photo = data.photoUrl && data.photoUrl[0];
       const formdata = new FormData();
@@ -49,6 +57,7 @@ export const Register = () => {
         photoURL: photo ? photoURL : "",
         address,
         gender,
+        dateOfBirth,
         phoneNumber,
         role,
         teams: [],

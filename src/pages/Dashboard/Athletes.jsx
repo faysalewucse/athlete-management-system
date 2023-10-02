@@ -76,8 +76,8 @@ export const Athletes = () => {
               </tbody>
             </table>
           ) : (
-            <h1 className="border p-5 mt-20 border-primary text-xl text-center">
-              No class Enrolled yet.
+            <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
+              No Atheltes here.
             </h1>
           )}
         </Container>

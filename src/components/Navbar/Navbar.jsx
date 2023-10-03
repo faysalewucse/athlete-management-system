@@ -1,6 +1,5 @@
 import avatar from "/avatar.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { dropdownItems, navItems } from "./navItems";
 import { Container } from "../Container";
 import { SlClose } from "react-icons/sl";
 import { CgMenuRound } from "react-icons/cg";
@@ -24,6 +23,25 @@ export const Navbar = () => {
   //   setIsSidebarOpen(!isSidebarOpen);
   // };
 
+  const navItems = [
+    { route: "/", pathName: "Home" },
+    {
+      route: "/dashboard",
+      pathName: "Dashboard",
+      condition: currentUser?.role === "approved" ? true : false,
+    },
+  ];
+
+  const dropdownItems = [
+    { route: "/profile", pathName: "Profile" },
+    {
+      route: "/dashboard",
+      pathName: "Dashboard",
+      condition: currentUser?.role === "approved" ? true : false,
+    },
+    { route: "/", pathName: "Settings" },
+  ];
+
   return (
     <div className="p-5 bg-white z-[999]">
       <Container>
@@ -34,38 +52,19 @@ export const Navbar = () => {
               open ? "top-5 bg-white" : "-top-full"
             } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-lg items-center z-20`}
           >
-            {navItems.map((navItem, index) => {
-              if (!navItem.condition) {
-                return (
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "font-semibold text-transparent bg-clip-text bg-gradient-to-r to-primary from-secondary"
-                        : "dark:hover:text-primary "
-                    }
-                    to={navItem.path}
-                    key={index}
-                  >
-                    {navItem.pathName}
-                  </NavLink>
-                );
-              } else if (navItem.condition && currentUser) {
-                return (
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? "font-semibold text-secondary"
-                        : "dark:hover:text-secondary "
-                    }
-                    to={navItem.path}
-                    key={index}
-                  >
-                    {navItem.pathName}
-                  </NavLink>
-                );
-              }
-              return null;
-            })}
+            {navItems.map((item, index) => (
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-semibold text-gradient"
+                    : "hover:text-primary"
+                }
+                to={item.route}
+                key={index}
+              >
+                {item.pathName}
+              </NavLink>
+            ))}
             <div className="flex items-center gap-8">
               {/* Dropdown Avatar */}
               {currentUser ? (

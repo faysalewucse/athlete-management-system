@@ -71,6 +71,23 @@ export const Dashboard = () => {
               </div>
             </div>
           )}
+          {currentUser?.role === "admin" && (
+            <div>
+              {currentUser.status === "pending" ? (
+                <div>You are in a pending position</div>
+              ) : (
+                <div>
+                  <Button text={"Add Team +"} />
+                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                    <DashboardCard
+                      number={users?.length}
+                      title={"Total Users"}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

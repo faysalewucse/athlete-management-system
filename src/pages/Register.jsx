@@ -51,7 +51,7 @@ export const Register = () => {
 
       signup(email, password, name, photoURL);
 
-      await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, {
+      const userData = {
         email,
         name,
         photoURL: photo ? photoURL : "",
@@ -60,8 +60,12 @@ export const Register = () => {
         dateOfBirth,
         phoneNumber,
         role,
-        teams: [],
-      });
+        status: "pending",
+      };
+
+      if (role == "athlete") userData.teams = [];
+
+      await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
         () => {
@@ -106,10 +110,10 @@ export const Register = () => {
           <h1 className="font-semibold text-lg">What is your role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
             <Radio.Group>
-              <Radio value="athlete">Athlete</Radio>
-              <Radio value="parents">Parents</Radio>
-              <Radio value="coach">Coach</Radio>
               <Radio value="admin">Admin</Radio>
+              <Radio value="coach">Coach</Radio>
+              <Radio value="parents">Parents</Radio>
+              <Radio value="athlete">Athlete</Radio>
             </Radio.Group>
           </Form.Item>
 

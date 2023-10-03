@@ -55,23 +55,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     admin: [
       {
         key: 2,
-        label: "Squad",
+        label: "Athletes",
+        route: "athletes",
         icon: <FaUsers />,
-      },
-      {
-        key: 3,
-        label: "Messenger",
-        icon: <BsFillChatDotsFill />,
-      },
-      {
-        key: 4,
-        label: "Statistic",
-        icon: <BiSolidBarChartSquare />,
-      },
-      {
-        key: 5,
-        label: "Calender",
-        icon: <MdCalendarMonth />,
       },
     ],
   };

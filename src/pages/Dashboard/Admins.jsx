@@ -6,12 +6,19 @@ import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
+import { async } from "@firebase/util";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 
 export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
 
-  const { isLoading, data: admins = [] } = useQuery({
+  const {
+    isLoading,
+    data: admins = [],
+    refetch,
+  } = useQuery({
     queryKey: ["admins", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
@@ -20,6 +27,16 @@ export const Admins = () => {
       return data;
     },
   });
+
+  const handleApprove = async (id) => {
+    await axiosSecure
+      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
+      .then((res) => {
+        if (res.status === 200) {
+          refetch().then(() => toast.success("Admin approved"));
+        }
+      });
+  };
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
@@ -55,9 +72,14 @@ export const Admins = () => {
 
                       <td>
                         <div className="flex text-sm items-center space-x-4 justify-center">
-                          <h1 className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                          <button
+                            disabled={admin.status === "approved"}
+                            onClick={() => handleApprove(admin?._id)}
+                            className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-700"
+                          >
                             {admin.status === "pending" && "Approve"}
-                          </h1>
+                            {admin.status === "approved" && "Approved"}
+                          </button>
                           <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
                         </div>
                       </td>

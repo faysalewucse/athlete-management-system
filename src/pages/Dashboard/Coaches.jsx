@@ -107,14 +107,14 @@ const Coaches = () => {
             </table>
           ) : (
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
-              No Atheltes here.
+              No Coaches here.
             </h1>
           )}
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
           <HashLoader
-            color={"#FF3607"}
+            color={"#3b82f6"}
             loading={isLoading}
             size={60}
             aria-label="Loading Spinner"

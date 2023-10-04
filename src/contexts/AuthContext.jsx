@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
 import "../firebase";
 import {
   createUserWithEmailAndPassword,
@@ -23,12 +24,57 @@ const auth = getAuth();
 
 export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [currentUser, setCurrentUser] = useState(null);
 
+  // TODO1: remove setLoading function
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+
+      // getUsersData from Database if not found save to database
+      if (user) {
+        await axios
+          .get(`${import.meta.env.VITE_BASE_API_URL}/users/${user.email}`)
+          .then(({ data: userData }) => {
+            if (userData) {
+              setCurrentUser(userData);
+            } else {
+              const newUser = {
+                name: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                address: "",
+                gender: "",
+                phoneNumber: "",
+                role: "student",
+              };
+              axios
+                .post(`${import.meta.env.VITE_BASE_API_URL}/user`, newUser)
+                .then((response) => {
+                  if (response.status === 200) {
+                    setCurrentUser(newUser);
+                  }
+                });
+            }
+          });
+      } else {
+        setCurrentUser(user);
+      }
+
+      // TODO: update it to by storing access token to cookie
+      // get jwt token and save it to local storage
+      // TODO: change the URL
+      if (user) {
+        axios
+          .post(`${import.meta.env.VITE_BASE_API_URL}/jwt`, {
+            email: user.email,
+          })
+          .then((response) => {
+            localStorage.setItem("access_token", response.data.token);
+          });
+      } else {
+        localStorage.removeItem("access_token");
+      }
       setLoading(false);
     });
 
@@ -43,6 +89,7 @@ export function AuthProvider({ children }) {
     await updateUserProfile(username, photoURL);
 
     const user = auth.currentUser;
+
     setCurrentUser({ ...user });
   }
 
@@ -60,16 +107,8 @@ export function AuthProvider({ children }) {
 
   // signin with google
   async function googleSignIn() {
-    setLoading(true);
     const googleAuthProvider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleAuthProvider)
-      .then((result) => {
-        const user = result.user;
-        setCurrentUser({ ...user });
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    return signInWithPopup(auth, googleAuthProvider);
   }
 
   //logout function
@@ -83,7 +122,6 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
-    error,
     loading,
     setLoading,
     signup,

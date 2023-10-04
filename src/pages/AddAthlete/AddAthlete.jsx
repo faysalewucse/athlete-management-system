@@ -20,8 +20,7 @@ const AddAthelete = () => {
 
   // Form validation rules
   const onFinish = async (values) => {
-    // setSubmitting(true);
-
+    setSubmitting(true);
     const {
       fullName,
       dob,
@@ -90,7 +89,7 @@ const AddAthelete = () => {
       consentAndLiabilityAgreement,
     };
 
-    console.log("Received values=", athleteData);
+    console.log("Received values", athleteData);
 
     //  replace with your API endpoint
     await axios

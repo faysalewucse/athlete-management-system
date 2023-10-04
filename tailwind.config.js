@@ -2,13 +2,18 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    fontFamily: {
-      sans: ["Poppins", "sans-serif", "Roboto", "sans-serif"],
-    },
     extend: {
       colors: {
-        primary: "#0b818e",
-        primary2: "#cee6e8",
+        primary: "#3b82f6",
+        primary2: "#2563eb",
+        secondary: "#6366f1",
+        secondary2: "#4f46e5",
+        dark: "#334155",
+        light: "#f9fafb",
+        danger: "#ef4444",
+        danger2: "#dc2626",
+        success: "#22c55e",
+        success2: "#16a34a",
       },
     },
   },

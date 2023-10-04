@@ -46,7 +46,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       },
       {
         key: 4,
-        label: "Parennts",
+        label: "Parents",
         route: "parents",
         icon: <RiParentLine />,
       },
@@ -57,6 +57,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         key: 2,
         label: "Athletes",
         route: "athletes",
+        icon: <FaUsers />,
+      },
+      {
+        key: 3,
+        label: "Coaches",
+        route: "coaches",
         icon: <FaUsers />,
       },
     ],

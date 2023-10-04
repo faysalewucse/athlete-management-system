@@ -8,19 +8,19 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 
-export const Athletes = () => {
+const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
 
   const {
     isLoading,
-    data: athletes = [],
+    data: coaches = [],
     refetch,
   } = useQuery({
-    queryKey: ["athletes", currentUser?.email],
+    queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=coach`
       );
       return data;
     },
@@ -35,7 +35,7 @@ export const Athletes = () => {
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("Athlete approved"));
+          refetch().then(() => toast.success("approved"));
         }
       });
   };
@@ -44,8 +44,8 @@ export const Athletes = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Athletes"} />
-          {athletes?.length > 0 ? (
+          <SectionHeader title={"Coaches"} />
+          {coaches?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
@@ -56,11 +56,11 @@ export const Athletes = () => {
               </thead>
 
               <tbody>
-                {athletes.map((athlete) => {
-                  const { name, photoURL } = athlete;
+                {coaches.map((coach) => {
+                  const { name, photoURL } = coach;
                   return (
                     <tr
-                      key={athlete._id}
+                      key={coach._id}
                       className="border-b dark:border-gray-700"
                     >
                       <td className="py-2">
@@ -73,10 +73,10 @@ export const Athletes = () => {
                       <td>{name}</td>
 
                       <td>
-                        {athlete?.status === "pending" ? (
+                        {coach?.status === "pending" ? (
                           <div>
                             <button
-                              onClick={() => handleApprove(athlete?._id)}
+                              onClick={() => handleApprove(coach?._id)}
                               className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                             >
                               Approve
@@ -125,3 +125,5 @@ export const Athletes = () => {
     </div>
   );
 };
+
+export default Coaches;

@@ -5,12 +5,15 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import HashLoader from "react-spinners/HashLoader";
 import Button from "../../components/shared/Button";
+import { useState } from "react";
+import AddTeam from "../AddTeam/AddTeam";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const Dashboard = () => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
@@ -77,7 +80,11 @@ export const Dashboard = () => {
                 <div>You are in a pending position</div>
               ) : (
                 <div>
-                  <Button text={"Add Team +"} />
+                  <Button
+                    onClickHandler={() => setIsModalOpen(true)}
+                    text={"Add Team +"}
+                  />
+                  <AddTeam isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard
                       number={users?.length}

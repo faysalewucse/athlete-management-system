@@ -1,13 +1,7 @@
-import { async } from "@firebase/util";
-import {
-  Form,
-  Input,
-  Button,
-  Select,
-  Modal,
-} from "antd";
+import { Form, Input, Button, Select, Modal } from "antd";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const { Option } = Select;
 
@@ -15,10 +9,12 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useAuth();
+  const [axiosSecure] = useAxiosSecure();
 
   const onFinish = async (values) => {
-    console.log(values);
-    
+    await axiosSecure
+      .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, values)
+      .then((res) => console.log(res));
   };
   return (
     <Modal

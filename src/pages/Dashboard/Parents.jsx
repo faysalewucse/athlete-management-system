@@ -21,7 +21,7 @@ const Parents = () => {
     data: parents = [],
     refetch,
   } = useQuery({
-    queryKey: ["athletes", currentUser?.email],
+    queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents`
@@ -75,11 +75,11 @@ const Parents = () => {
               </thead>
 
               <tbody>
-                {currentParents.map((athlete) => {
-                  const { name, photoURL } = athlete;
+                {currentParents.map((parent) => {
+                  const { name, photoURL } = parent;
                   return (
                     <tr
-                      key={athlete._id}
+                      key={parent._id}
                       className="border-b dark:border-gray-700"
                     >
                       <td className="py-2">
@@ -94,10 +94,10 @@ const Parents = () => {
                       <td>
                         {currentUser?.role !== "sadmin" &&
                           currentUser?.role !== "admin" &&
-                          (athlete?.status === "pending" ? (
+                          (parent?.status === "pending" ? (
                             <div>
                               <button
-                                onClick={() => handleApprove(athlete?._id)}
+                                onClick={() => handleApprove(parent?._id)}
                                 className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                               >
                                 Approve

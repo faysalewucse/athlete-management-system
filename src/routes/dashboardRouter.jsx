@@ -14,6 +14,7 @@ import { Admins } from "../pages/Dashboard/Admins";
 import Coaches from "../pages/Dashboard/Coaches";
 import AddTeam from "../pages/AddTeam/AddTeam";
 import Parents from "../pages/Dashboard/Parents";
+import Teams from "../pages/Dashboard/Teams";
 
 export const dashboardRouter = [
   {
@@ -48,6 +49,10 @@ export const dashboardRouter = [
   {
     path: "parents",
     element: <Parents />,
+  },
+  {
+    path: "teams",
+    element: <Teams />,
   },
 
   {

@@ -2,6 +2,8 @@ import { Form, Input, Button, Select, Modal } from "antd";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const { Option } = Select;
 
@@ -11,24 +13,42 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
 
+  const { data: coaches = [] } = useQuery({
+    queryKey: ["coaches", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=coach`
+      );
+      return data;
+    },
+  });
+
   const onFinish = async (values) => {
+    setSubmitting(true);
     await axiosSecure
       .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, values)
-      .then((res) => console.log(res));
+      .then((res) => {
+        if (res.status === 200) {
+          setSubmitting(false);
+          form.resetFields();
+          setIsModalOpen(false);
+          toast.success("Team created");
+        }
+      });
   };
   return (
     <Modal
       open={isModalOpen}
       onOk={() => setIsModalOpen(false)}
       onCancel={() => setIsModalOpen(false)}
-      okText="Submit"
-      okType="dashed"
       footer
     >
       <Form
         form={form}
         name="add-team"
-        initialValues={{ adminEmail: currentUser?.email, sports: "choose" }}
+        initialValues={{
+          adminEmail: currentUser?.email,
+        }}
         onFinish={onFinish}
         layout="vertical"
         size="large"
@@ -45,7 +65,7 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
           label="Sports"
           rules={[{ required: true, message: "Please select sport!" }]}
         >
-          <Select>
+          <Select placeholder="Select sports">
             <Option value="football">Football</Option>
             <Option value="cricket">Cricket</Option>
             <Option value="basketball">Basketball</Option>
@@ -59,20 +79,16 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
           label="Admin Email"
           rules={[{ required: true, type: "email" }]}
         >
-          <Input />
+          <Input disabled />
         </Form.Item>
-        <Form.Item
-          name="coachEmail"
-          label="Coach Email"
-          rules={[
-            {
-              required: true,
-              type: "email",
-              message: "Please enter a valid email",
-            },
-          ]}
-        >
-          <Input />
+        <Form.Item name="coachEmail" label="Select Coach">
+          <Select placeholder="Select Coach">
+            {coaches.map((coach) => (
+              <Option key={coach._id} value={coach?.email}>
+                {coach?.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item>
           <Button

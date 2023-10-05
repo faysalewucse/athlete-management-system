@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { Pagination } from "antd";
 import { useState } from "react";
 
-const Coaches = () => {
+const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,13 +18,13 @@ const Coaches = () => {
 
   const {
     isLoading,
-    data: coaches = [],
+    data: teams = [],
     refetch,
   } = useQuery({
-    queryKey: ["coaches", currentUser?.email],
+    queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=coach`
+        `${import.meta.env.VITE_BASE_API_URL}/teams`
       );
       return data;
     },
@@ -52,69 +52,42 @@ const Coaches = () => {
   };
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentCoaches = coaches.slice(startIndex, endIndex);
+  const currentTeams = teams.slice(startIndex, endIndex);
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Coaches"} />
-          {currentCoaches?.length > 0 ? (
+          <SectionHeader title={"Teams"} />
+          {currentTeams?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
-                  <th className="py-2">Image</th>
-                  <th>Name</th>
+                  <th className="py-2">Name</th>
+                  <th>Sports</th>
                   {/* access by role */}
-                  {currentUser?.role === "sadmin" || <th>Actions</th>}
+                  {currentUser?.role === "sadmin" || <th>Coach</th>}
                 </tr>
               </thead>
 
               <tbody>
-                {currentCoaches.map((coach) => {
-                  const { name, photoURL } = coach;
+                {currentTeams.map((team) => {
+                  const { teamName, sports } = team;
                   return (
                     <tr
-                      key={coach._id}
+                      key={team._id}
                       className="border-b dark:border-gray-700"
                     >
-                      <td className="py-2">
-                        <img
-                          src={photoURL ? photoURL : avatar}
-                          alt="Class"
-                          className="bg-dark p-1 w-10 h-10 mx-auto rounded-full"
-                        />
-                      </td>
-                      <td>{name}</td>
+                      <td className="py-2">{teamName}</td>
+                      <td>{sports}</td>
 
                       <td>
-                        {/* access by role */}
-                        {currentUser?.role !== "sadmin" &&
-                        coach?.status === "pending" ? (
-                          <div>
-                            <button
-                              onClick={() => handleApprove(coach?._id)}
-                              className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                            >
-                              Approve
-                            </button>
-                          </div>
+                        {team?.coachEmail === undefined ? (
+                          <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded">
+                            Assign
+                          </button>
                         ) : (
-                          <div className="flex text-sm items-center space-x-4 justify-center">
-                            <button className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                              Assign to a team
-                            </button>
-                            <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                              Change Role
-                            </button>
-                            <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                              Edit
-                            </button>
-                            <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                              Delete
-                            </button>
-                            <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
-                          </div>
+                          team?.coachEmail
                         )}
                       </td>
                     </tr>
@@ -141,7 +114,7 @@ const Coaches = () => {
       )}
       <Pagination
         current={currentPage}
-        total={coaches.length}
+        total={teams.length}
         pageSize={pageSize}
         onChange={handlePageChange}
         style={{ marginTop: "16px", textAlign: "right" }}
@@ -150,4 +123,4 @@ const Coaches = () => {
   );
 };
 
-export default Coaches;
+export default Teams;

@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { Pagination } from "antd";
 
-export const Athletes = () => {
+const Parents = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,13 +18,13 @@ export const Athletes = () => {
 
   const {
     isLoading,
-    data: athletes = [],
+    data: parents = [],
     refetch,
   } = useQuery({
-    queryKey: ["athletes", currentUser?.email],
+    queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents`
       );
       return data;
     },
@@ -40,7 +40,7 @@ export const Athletes = () => {
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("Athlete approved"));
+          refetch().then(() => toast.success("approved"));
         }
       });
   };
@@ -53,14 +53,14 @@ export const Athletes = () => {
   };
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentAthletes = athletes.slice(startIndex, endIndex);
+  const currentParents = parents.slice(startIndex, endIndex);
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Athletes"} />
-          {currentAthletes?.length > 0 ? (
+          <SectionHeader title={"Parents"} />
+          {currentParents?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
@@ -75,11 +75,11 @@ export const Athletes = () => {
               </thead>
 
               <tbody>
-                {currentAthletes.map((athlete) => {
-                  const { name, photoURL } = athlete;
+                {currentParents.map((parent) => {
+                  const { name, photoURL } = parent;
                   return (
                     <tr
-                      key={athlete._id}
+                      key={parent._id}
                       className="border-b dark:border-gray-700"
                     >
                       <td className="py-2">
@@ -94,10 +94,10 @@ export const Athletes = () => {
                       <td>
                         {currentUser?.role !== "sadmin" &&
                           currentUser?.role !== "admin" &&
-                          (athlete?.status === "pending" ? (
+                          (parent?.status === "pending" ? (
                             <div>
                               <button
-                                onClick={() => handleApprove(athlete?._id)}
+                                onClick={() => handleApprove(parent?._id)}
                                 className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                               >
                                 Approve
@@ -128,7 +128,7 @@ export const Athletes = () => {
             </table>
           ) : (
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
-              No Atheltes here.
+              No Parents here.
             </h1>
           )}
         </Container>
@@ -145,7 +145,7 @@ export const Athletes = () => {
       )}
       <Pagination
         current={currentPage}
-        total={athletes.length}
+        total={parents.length}
         pageSize={pageSize}
         onChange={handlePageChange}
         style={{ marginTop: "16px", textAlign: "right" }}
@@ -153,3 +153,5 @@ export const Athletes = () => {
     </div>
   );
 };
+
+export default Parents;

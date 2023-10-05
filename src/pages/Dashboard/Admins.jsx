@@ -6,8 +6,6 @@ import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
-import { async } from "@firebase/util";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 
 export const Admins = () => {
@@ -28,12 +26,12 @@ export const Admins = () => {
     },
   });
 
-  const handleApprove = async (id) => {
+  const handleStatus = async (id, status) => {
     await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
+      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=${status}`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("Admin approved"));
+          refetch().then(() => toast("Admin status updated successfully!"));
         }
       });
   };
@@ -72,13 +70,22 @@ export const Admins = () => {
 
                       <td>
                         <div className="flex text-sm items-center space-x-4 justify-center">
+                          {admin.status === "pending" && (
+                            <button
+                              onClick={() =>
+                                handleStatus(admin?._id, "approved")
+                              }
+                              className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer "
+                            >
+                              Approve
+                            </button>
+                          )}
                           <button
-                            disabled={admin.status === "approved"}
-                            onClick={() => handleApprove(admin?._id)}
-                            className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-700"
+                            disabled={admin.status === "deleted"}
+                            onClick={() => handleStatus(admin?._id, "deleted")}
+                            className="md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-700"
                           >
-                            {admin.status === "pending" && "Approve"}
-                            {admin.status === "approved" && "Approved"}
+                            {admin?.status === "deleted" ? "Deleted" : "Delete"}
                           </button>
                           <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
                         </div>
@@ -97,7 +104,7 @@ export const Admins = () => {
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
           <HashLoader
-            color={"#FF3607"}
+            color={"#3b82f6"}
             loading={isLoading}
             size={60}
             aria-label="Loading Spinner"

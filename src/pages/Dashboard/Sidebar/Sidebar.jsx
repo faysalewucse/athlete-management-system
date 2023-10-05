@@ -7,6 +7,7 @@ import {
   RiArrowLeftRightFill,
   RiParentLine,
 } from "react-icons/ri";
+import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
 import { BiChart, BiSolidBarChartSquare } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
@@ -63,6 +64,26 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         key: 3,
         label: "Coaches",
         route: "coaches",
+        icon: <FaChalkboardTeacher />,
+      },
+      {
+        key: 4,
+        label: "Parents",
+        route: "parents",
+        icon: <RiParentLine />,
+      },
+      {
+        key: 5,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+    ],
+    coach: [
+      {
+        key: 1,
+        label: "Athletes",
+        route: "athletes",
         icon: <FaUsers />,
       },
     ],

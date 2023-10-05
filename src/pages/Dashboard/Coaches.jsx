@@ -7,10 +7,14 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
+import { Pagination } from "antd";
+import { useState } from "react";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const {
     isLoading,
@@ -35,28 +39,39 @@ const Coaches = () => {
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("approved"));
+          refetch().then(() => toast.success("Approved"));
         }
       });
   };
+
+  // pagination
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    setPageSize(10);
+    refetch();
+  };
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentCoaches = coaches.slice(startIndex, endIndex);
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Coaches"} />
-          {coaches?.length > 0 ? (
+          {currentCoaches?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
                   <th className="py-2">Image</th>
                   <th>Name</th>
-                  <th>Actions</th>
+                  {/* access by role */}
+                  {currentUser?.role === "sadmin" || <th>Actions</th>}
                 </tr>
               </thead>
 
               <tbody>
-                {coaches.map((coach) => {
+                {currentCoaches.map((coach) => {
                   const { name, photoURL } = coach;
                   return (
                     <tr
@@ -73,7 +88,9 @@ const Coaches = () => {
                       <td>{name}</td>
 
                       <td>
-                        {coach?.status === "pending" ? (
+                        {/* access by role */}
+                        {currentUser?.role !== "sadmin" &&
+                        coach?.status === "pending" ? (
                           <div>
                             <button
                               onClick={() => handleApprove(coach?._id)}
@@ -122,6 +139,13 @@ const Coaches = () => {
           />
         </div>
       )}
+      <Pagination
+        current={currentPage}
+        total={coaches.length}
+        pageSize={pageSize}
+        onChange={handlePageChange}
+        style={{ marginTop: "16px", textAlign: "right" }}
+      />
     </div>
   );
 };

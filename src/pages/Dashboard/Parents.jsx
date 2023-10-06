@@ -59,7 +59,7 @@ const Parents = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Parents"} />
+          <SectionHeader title={"Parents"} quantity={parents.length} />
           {currentParents?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">

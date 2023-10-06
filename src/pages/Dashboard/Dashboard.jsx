@@ -19,16 +19,18 @@ export const Dashboard = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
-      if (
-        currentUser?.role === "sadmin" ||
-        currentUser.role === "admin" ||
-        currentUser?.role === "coach"
-      ) {
+      let URL = "/users";
+      if (currentUser?.role === "admin") URL = "/users/coach-athlete-parents";
+      else if (currentUser?.role === "coach") URL = "/users/athlete-parents";
+      else if (currentUser?.role === "parents") URL = "/users/athlete";
+
+      if (currentUser?.role === "sadmin" || currentUser?.role === "admin") {
         const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/users`
+          `${import.meta.env.VITE_BASE_API_URL}${URL}`
         );
         return data;
-      } else return [];
+      }
+      return [];
     },
   });
 

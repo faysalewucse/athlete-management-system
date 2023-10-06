@@ -1,12 +1,12 @@
 import avatar from "/avatar.png";
 import { useQuery } from "@tanstack/react-query";
-import HashLoader from "react-spinners/HashLoader";
 import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
+import CustomLoader from "../../components/CustomLoader";
 
 export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -37,7 +37,7 @@ export const Admins = () => {
   };
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Admins"} />
@@ -103,13 +103,7 @@ export const Admins = () => {
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
-          <HashLoader
-            color={"#3b82f6"}
-            loading={isLoading}
-            size={60}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <CustomLoader isLoading={isLoading} />
         </div>
       )}
     </div>

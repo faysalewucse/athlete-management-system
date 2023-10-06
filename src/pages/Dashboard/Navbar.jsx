@@ -9,7 +9,7 @@ import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
 
-export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
+export const Navbar = ({ setSidebarOpen }) => {
   // const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   // const [isOpen, setIsOpen] = useState(false);
@@ -47,9 +47,12 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   return (
-    <div className="z-50 sticky top-0">
+    <div className="z-10 sticky top-0">
       <div className="flex bg-transparent items-center md:justify-end justify-between p-5">
-        <MdDashboard className="md:hidden text-4xl text-primary" />
+        <MdDashboard
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden text-4xl text-primary"
+        />
 
         <div></div>
         {/* user info */}

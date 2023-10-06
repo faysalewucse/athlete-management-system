@@ -3,10 +3,10 @@ import { useAuth } from "../../contexts/AuthContext";
 import { DashboardCard } from "../../components/cards/DashboardCard";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import HashLoader from "react-spinners/HashLoader";
 import Button from "../../components/shared/Button";
 import { useState } from "react";
 import AddTeam from "../AddTeam/AddTeam";
+import CustomLoader from "../../components/CustomLoader";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,7 +47,7 @@ export const Dashboard = () => {
             <div>
               <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                 <DashboardCard
-                  number={users?.length - 1}
+                  number={users?.length != 0 ? users.length - 1 : 0}
                   title={"Total Users"}
                 />
                 <DashboardCard number={quantity.admin} title={"Total Admins"} />
@@ -84,7 +84,10 @@ export const Dashboard = () => {
                     onClickHandler={() => setIsModalOpen(true)}
                     text={"Add Team +"}
                   />
-                  <AddTeam isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                  <AddTeam
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                  />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard
                       number={users?.length}
@@ -98,13 +101,7 @@ export const Dashboard = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">
-          <HashLoader
-            color={"#43a7ca"}
-            loading={isLoading}
-            size={60}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <CustomLoader isLoading={isLoading} />
         </div>
       )}
     </div>

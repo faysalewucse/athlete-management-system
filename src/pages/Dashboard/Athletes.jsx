@@ -1,6 +1,5 @@
 import avatar from "/avatar.png";
 import { useQuery } from "@tanstack/react-query";
-import HashLoader from "react-spinners/HashLoader";
 import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
@@ -9,6 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { Pagination } from "antd";
+import CustomLoader from "../../components/CustomLoader";
 
 export const Athletes = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -56,7 +56,7 @@ export const Athletes = () => {
   const currentAthletes = athletes.slice(startIndex, endIndex);
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Athletes"} />
@@ -134,13 +134,7 @@ export const Athletes = () => {
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
-          <HashLoader
-            color={"#FF3607"}
-            loading={isLoading}
-            size={60}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <CustomLoader isLoading={isLoading} />
         </div>
       )}
       <Pagination

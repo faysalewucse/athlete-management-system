@@ -1,5 +1,3 @@
-import React from "react";
-
 export const SectionHeader = ({ heading, title, description }) => {
   return (
     <div className="text-center">

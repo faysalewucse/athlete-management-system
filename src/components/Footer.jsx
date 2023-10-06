@@ -7,10 +7,12 @@ export default function Footer() {
   const { currentUser, logout } = useAuth();
   // const { isDark } = useTheme();
   return (
-    <footer className="bg-white p-5 md:p-24 md:text-left text-center">
-      <div className="md:flex gap-10 max-w-7xl mx-auto">
+    <footer className="bg-white p-5 md:p-10 md:text-left text-center">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-10 max-w-7xl mx-auto">
         <div className="basis-1/2 md:text-justify text-center">
-          <Brand />
+          <div className="flex items-center md:justify-start justify-center">
+            <Brand />
+          </div>
           <p className="text-secondary2 my-5">
             Our martial arts academy is not just a place to learn self-defense
             techniques; it&apos;s a sanctuary where you can unleash your
@@ -66,7 +68,7 @@ export default function Footer() {
           </p>
           <form>
             <input
-              className="w-full border-0 rounded py-2 px-4 focus:outline-none font-bold dark:bg-white dark:placeholder-gray-400 bg-slate-900 placeholder-gray-200"
+              className="w-full border rounded py-2 px-4 focus:outline-none font-bold dark:bg-white dark:placeholder-gray-400 bg-slate-900 placeholder-gray-200"
               type="text"
               placeholder="Email Address"
             />
@@ -82,14 +84,11 @@ export default function Footer() {
       <hr className="border border-gray-200 my-5" />
       <div className="flex justify-between">
         <h1 className="text-secondary">
-          &copy; 2023{" "}
-          <span className="dark:text-white text-black font-bold">
-            Overtime.
-          </span>{" "}
+          &copy; 2023 <span className="text-gradient font-bold">Overtime.</span>{" "}
           All Rights Reserved
         </h1>
         <h1 className="text-secondary">
-          Powered by <b className="dark:text-white text-black">ArtifConnect</b>
+          Powered by <b className="text-gradient">ArtifConnect</b>
         </h1>
       </div>
     </footer>

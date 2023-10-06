@@ -17,15 +17,15 @@ export const Navbar = ({ setSidebarOpen }) => {
   const items = [
     {
       label: <Link to={"/"}>Home</Link>,
-      key: "0",
-    },
-    {
-      label: <Link to={"/profile"}>Profile</Link>,
       key: "1",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "2",
+    },
+    {
+      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      key: "3",
     },
     {
       type: "divider",
@@ -33,7 +33,7 @@ export const Navbar = ({ setSidebarOpen }) => {
     {
       label: <div onClick={logout}>Logout</div>,
       danger: true,
-      key: "3",
+      key: "4",
     },
   ];
 

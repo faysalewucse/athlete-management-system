@@ -4,9 +4,9 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import CustomLoader from "../../components/CustomLoader";
+import { Button, Space, Table } from "antd";
 
 export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -36,16 +36,66 @@ export const Admins = () => {
       });
   };
 
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (img) => (
+        <img
+          src={img}
+          alt="Class"
+          className="bg-dark p-1 w-10 h-10 rounded-full"
+        />
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          {record.status === "pending" && (
+            <Button onClick={() => handleStatus(record?._id, "approved")}>
+              Approve
+            </Button>
+          )}
+          <Button
+            type="primary"
+            danger
+            onClick={() => handleStatus(record?._id, "deleted")}
+          >
+            {record.status == "deleted" ? "Deleted" : "Delete"}
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const data = admins?.map((admin) => {
+    return {
+      key: admin._id,
+      image: admin.photoURL ? admin.photoURL : avatar,
+      name: admin.name,
+      status: admin.status,
+    };
+  });
+
   return (
     <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Admins"} />
-          {admins?.length > 0 ? (
+          <SectionHeader title={"Admins"} quantity={admins?.length} />
+          {/* {admins?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
-                  <th className="py-2">Image</th>
+                  <th className="p-2">Image</th>
                   <th>Name</th>
                   <th>Actions</th>
                 </tr>
@@ -99,7 +149,8 @@ export const Admins = () => {
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
               No Admins here.
             </h1>
-          )}
+          )} */}
+          <Table className="mt-5" columns={columns} dataSource={data} />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">

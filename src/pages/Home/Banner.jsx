@@ -19,7 +19,7 @@ export const Banner = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2.5 }}
-            className="text-5xl md:text-7xl font-bold my-5"
+            className="text-3xl md:text-5xl font-bold my-5"
           >
             Unlock the Full Potential of Your Athletes
           </motion.p>

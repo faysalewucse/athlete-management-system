@@ -7,6 +7,7 @@ import Button from "../../components/shared/Button";
 import { useState } from "react";
 import AddTeam from "../AddTeam/AddTeam";
 import CustomLoader from "../../components/CustomLoader";
+import Pending from "./Pending";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -18,11 +19,16 @@ export const Dashboard = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
-      if (currentUser?.role !== "sadmin") return [];
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users`
-      );
-      return data;
+      if (
+        currentUser?.role === "sadmin" ||
+        currentUser.role === "admin" ||
+        currentUser?.role === "coach"
+      ) {
+        const { data } = await axiosSecure.get(
+          `${import.meta.env.VITE_BASE_API_URL}/users`
+        );
+        return data;
+      } else return [];
     },
   });
 
@@ -90,8 +96,52 @@ export const Dashboard = () => {
                   />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard
-                      number={users?.length}
-                      title={"Total Users"}
+                      number={quantity.coach}
+                      title={"Total Coaches"}
+                    />
+                    <DashboardCard
+                      number={quantity.athlete}
+                      title={"Total Atheletes"}
+                    />
+                    <DashboardCard
+                      number={quantity.parents}
+                      title={"Total Parents"}
+                    />
+                    <DashboardCard
+                      number={quantity.parents}
+                      title={"Total Teams"}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {currentUser?.role === "coach" && (
+            <div className="min-h-[80vh]">
+              {currentUser.status === "pending" ? (
+                <Pending />
+              ) : (
+                <div>
+                  <Button
+                    onClickHandler={() => setIsModalOpen(true)}
+                    text={"Add Team +"}
+                  />
+                  <AddTeam
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                    <DashboardCard
+                      number={quantity.athlete}
+                      title={"Total Atheletes"}
+                    />
+                    <DashboardCard
+                      number={quantity.parents}
+                      title={"Total Parents"}
+                    />
+                    <DashboardCard
+                      number={quantity.parents}
+                      title={"Total Teams"}
                     />
                   </div>
                 </div>

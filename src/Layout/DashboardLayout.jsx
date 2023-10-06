@@ -3,8 +3,10 @@ import { Toaster } from "react-hot-toast";
 import Sidebar from "../pages/Dashboard/Sidebar/Sidebar";
 import { Navbar } from "../pages/Dashboard/Navbar";
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export const DashboardLayout = () => {
+  const { currentUser } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -14,6 +16,9 @@ export const DashboardLayout = () => {
         <div className="flex-1">
           <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <Outlet />
+        </div>
+        <div className="absolute bottom-5 right-5 bg-secondary py-3 px-6 rounded-md text-light">
+          <p className="font-bold capitalize">{currentUser?.role}</p>
         </div>
       </div>
       <Toaster position="top-center" reverseOrder={false} />

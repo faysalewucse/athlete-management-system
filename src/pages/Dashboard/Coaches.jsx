@@ -58,7 +58,7 @@ const Coaches = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Coaches"} />
+          <SectionHeader title={"Coaches"} quantity={coaches?.length} />
           {currentCoaches?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
@@ -88,7 +88,6 @@ const Coaches = () => {
                       <td>{name}</td>
 
                       <td>
-                        {/* access by role */}
                         {currentUser?.role !== "sadmin" &&
                         coach?.status === "pending" ? (
                           <div>

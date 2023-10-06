@@ -1,13 +1,8 @@
 import { HiSquares2X2 } from "react-icons/hi2";
 import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import {
-  RiAdminLine,
-  RiArrowLeftRightFill,
-  RiParentLine,
-} from "react-icons/ri";
+import { RiAdminLine, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
-import { BiChart } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
@@ -90,13 +85,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   let items = [...sidebarItems["general"]];
 
-  if (sidebarItems[currentUser?.role]) {
+  if (currentUser?.status !== "pending" && sidebarItems[currentUser?.role]) {
     items = [...items, ...sidebarItems[currentUser?.role]];
   }
 
   const currentPath = useLocation();
 
-  console.log(currentPath);
   return (
     <aside
       className={`md:block ${
@@ -126,23 +120,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </Link>
           </div>
         ))}
-        <div className="border-t-2 border-primary/25 border-opacity-50 mx-4"></div>
-        <div className="flex flex-col gap-5">
-          <Link
-            to={"/"}
-            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
-          >
-            <RiArrowLeftRightFill />
-            Transfer
-          </Link>
-          <Link
-            to={"/"}
-            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
-          >
-            <BiChart />
-            Youth academy
-          </Link>
-        </div>
       </div>
     </aside>
   );

@@ -51,6 +51,7 @@ export const Athletes = () => {
     setPageSize(10);
     refetch();
   };
+
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentAthletes = athletes.slice(startIndex, endIndex);
@@ -59,7 +60,7 @@ export const Athletes = () => {
     <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Athletes"} />
+          <SectionHeader title={"Athletes"} quantity={athletes?.length} />
           {currentAthletes?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
@@ -131,19 +132,19 @@ export const Athletes = () => {
               No Atheltes here.
             </h1>
           )}
+          <Pagination
+            current={currentPage}
+            total={athletes.length}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            style={{ marginTop: "16px", textAlign: "right" }}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
           <CustomLoader isLoading={isLoading} />
         </div>
       )}
-      <Pagination
-        current={currentPage}
-        total={athletes.length}
-        pageSize={pageSize}
-        onChange={handlePageChange}
-        style={{ marginTop: "16px", textAlign: "right" }}
-      />
     </div>
   );
 };

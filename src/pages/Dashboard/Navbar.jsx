@@ -9,7 +9,7 @@ import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
 
-export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
+export const Navbar = ({ setSidebarOpen }) => {
   // const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   // const [isOpen, setIsOpen] = useState(false);
@@ -17,15 +17,15 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   const items = [
     {
       label: <Link to={"/"}>Home</Link>,
-      key: "0",
-    },
-    {
-      label: <Link to={"/profile"}>Profile</Link>,
       key: "1",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "2",
+    },
+    {
+      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      key: "3",
     },
     {
       type: "divider",
@@ -33,7 +33,7 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
     {
       label: <div onClick={logout}>Logout</div>,
       danger: true,
-      key: "3",
+      key: "4",
     },
   ];
 
@@ -47,9 +47,12 @@ export const Navbar = ({ sidebarOpen, setSidebarOpen }) => {
   };
 
   return (
-    <div className="z-50 sticky top-0">
+    <div className="z-10 sticky top-0">
       <div className="flex bg-transparent items-center md:justify-end justify-between p-5">
-        <MdDashboard className="md:hidden text-4xl text-primary" />
+        <MdDashboard
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden text-4xl text-primary"
+        />
 
         <div></div>
         {/* user info */}

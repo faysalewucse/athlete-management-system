@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const { Option } = Select;
 
-const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
+const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useAuth();
@@ -24,18 +24,25 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
   });
 
   const onFinish = async (values) => {
+    const teamData = {
+      ...values,
+      coaches: values.coaches ? [values.coaches] : [],
+    };
+
     setSubmitting(true);
     await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, values)
+      .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, teamData)
       .then((res) => {
         if (res.status === 200) {
           setSubmitting(false);
           form.resetFields();
           setIsModalOpen(false);
           toast.success("Team created");
+          refetch();
         }
       });
   };
+
   return (
     <Modal
       open={isModalOpen}
@@ -81,11 +88,17 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
         >
           <Input disabled />
         </Form.Item>
-        <Form.Item name="coachEmail" label="Select Coach">
+        <Form.Item name="coaches" label="Select Coach">
           <Select placeholder="Select Coach">
             {coaches.map((coach) => (
-              <Option key={coach._id} value={coach?.email}>
-                {coach?.name}
+              <Option
+                disabled={coach.status === "pending"}
+                key={coach._id}
+                value={coach?.status === "approved" ? coach?.email : null}
+              >
+                {coach?.status === "approved"
+                  ? coach?.name
+                  : `${coach?.name}(Not Approved)`}
               </Option>
             ))}
           </Select>
@@ -104,4 +117,4 @@ const AddTeam = ({ isModalOpen, setIsModalOpen }) => {
   );
 };
 
-export default AddTeam;
+export default AddTeamModal;

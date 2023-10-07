@@ -11,7 +11,7 @@ export default function Button({
     <button
       disabled={disable}
       onClick={onClickHandler}
-      className={`rounded px-6 bg-gradient-to-r to-primary from-secondary py-2 font-semibold text-white hover:shadow-lg  transition-all duration-200 ${style}`}
+      className={`rounded cursor-pointer px-6 bg-gradient-to-r to-primary from-secondary py-2 font-semibold text-white hover:shadow-lg  transition-all duration-200 ${style}`}
     >
       <SpinnerText text={text} loading={loading} />
     </button>

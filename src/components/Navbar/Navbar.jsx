@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Container } from "../Container";
 import { SlClose } from "react-icons/sl";
 import { CgMenuRound } from "react-icons/cg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import ButtonOutline from "../shared/ButtonOutline";
 import Brand from "../Brand";
@@ -14,6 +14,7 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -22,6 +23,23 @@ export const Navbar = () => {
   // const toggleSidebar = () => {
   //   setIsSidebarOpen(!isSidebarOpen);
   // };
+
+  // navbar scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolling(true);
+      } else {
+        setIsScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const navItems = [
     { route: "/", pathName: "Home" },
@@ -43,21 +61,27 @@ export const Navbar = () => {
   ];
 
   return (
-    <div className="p-5 bg-white z-[999]">
+    <div
+      className={`fixed top-0 left-0 right-0 p-5 z-10 ${
+        isScrolling
+          ? "bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% py-3"
+          : "bg-transparent"
+      }`}
+    >
       <Container>
         <div className="flex items-center justify-between">
           <Brand />
           <nav
             className={`flex flex-col md:flex-row md:relative absolute ${
-              open ? "top-5 bg-white" : "-top-full"
-            } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-lg items-center z-20`}
+              open ? "top-5" : "-top-full"
+            } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-base items-center z-20`}
           >
             {navItems.map((item, index) => (
               <NavLink
                 className={({ isActive }) =>
                   isActive
-                    ? "font-semibold text-gradient"
-                    : "hover:text-primary"
+                    ? "font-semibold text-purple-400"
+                    : "hover:text-primary text-white"
                 }
                 to={item.route}
                 key={index}

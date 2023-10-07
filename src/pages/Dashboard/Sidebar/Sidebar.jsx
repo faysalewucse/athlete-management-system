@@ -1,20 +1,14 @@
 import { HiSquares2X2 } from "react-icons/hi2";
 import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
-import { BsFillChatDotsFill } from "react-icons/bs";
-import { MdCalendarMonth, MdClose } from "react-icons/md";
-import {
-  RiAdminLine,
-  RiArrowLeftRightFill,
-  RiParentLine,
-} from "react-icons/ri";
+import { MdClose } from "react-icons/md";
+import { RiAdminLine, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
-import { BiChart, BiSolidBarChartSquare } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
 import { CgMiniPlayer } from "react-icons/cg";
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   const { currentUser } = useAuth();
 
   const sidebarItems = {
@@ -91,7 +85,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   let items = [...sidebarItems["general"]];
 
-  if (sidebarItems[currentUser?.role]) {
+  if (currentUser?.status !== "pending" && sidebarItems[currentUser?.role]) {
     items = [...items, ...sidebarItems[currentUser?.role]];
   }
 
@@ -99,7 +93,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <aside
-      className={`md:block hidden border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto p-10`}
+      ref={sideRef}
+      className={`md:block ${
+        sidebarOpen ? "absolute bg-white z-50" : "hidden"
+      } border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto  p-10`}
     >
       <Brand />
       <div
@@ -113,33 +110,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
           <div key={item.key}>
             <Link
               className={`flex items-center gap-4 p-3 text-lg font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary ${
-                currentPath.pathname === item.route
+                currentPath.pathname.endsWith(item.route)
                   ? "bg-gradient text-white"
                   : ""
               }`}
               to={item.route}
+              onClick={() => setSidebarOpen(false)}
             >
               {item.icon} {item.label}
             </Link>
           </div>
         ))}
-        <div className="border-t-2 border-primary/25 border-opacity-50 mx-4"></div>
-        <div className="flex flex-col gap-5">
-          <Link
-            to={"/"}
-            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
-          >
-            <RiArrowLeftRightFill />
-            Transfer
-          </Link>
-          <Link
-            to={"/"}
-            className="flex items-center gap-4 p-4 text-xl font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary"
-          >
-            <BiChart />
-            Youth academy
-          </Link>
-        </div>
       </div>
     </aside>
   );

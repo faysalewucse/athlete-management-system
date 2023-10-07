@@ -1,16 +1,20 @@
 import avatar from "/avatar.png";
 import { useQuery } from "@tanstack/react-query";
-import HashLoader from "react-spinners/HashLoader";
 import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
+import CustomLoader from "../../components/CustomLoader";
+import { Button, Pagination, Space, Table } from "antd";
+import { useState } from "react";
 
 export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(3);
+
 
   const {
     isLoading,
@@ -31,21 +35,84 @@ export const Admins = () => {
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=${status}`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast("Admin status updated successfully!"));
+          refetch().then(() =>
+            toast.success("Admin status updated successfully!")
+          );
         }
       });
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    setPageSize(3);
+    refetch();
+  };
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentAdmins = admins.slice(startIndex, endIndex);
+
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (img) => (
+        <img
+          src={img}
+          alt="Class"
+          className="bg-dark p-1 w-10 h-10 rounded-full"
+        />
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          {record.status === "pending" && (
+            <Button onClick={() => handleStatus(record?.key, "approved")}>
+              Approve
+            </Button>
+          )}
+          <Button
+            type="primary"
+            danger
+            disabled={record.status === "deleted"}
+            onClick={() => handleStatus(record?.key, "deleted")}
+          >
+            {record.status == "deleted" ? "Deleted" : "Delete"}
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const data = currentAdmins?.map((admin) => {
+    return {
+      key: admin._id,
+      image: admin.photoURL ? admin.photoURL : avatar,
+      name: admin.name,
+      status: admin.status,
+    };
+  });
+
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Admins"} />
-          {admins?.length > 0 ? (
+          <SectionHeader title={"Admins"} quantity={admins?.length} />
+          {/* {admins?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
-                  <th className="py-2">Image</th>
+                  <th className="p-2">Image</th>
                   <th>Name</th>
                   <th>Actions</th>
                 </tr>
@@ -99,17 +166,24 @@ export const Admins = () => {
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
               No Admins here.
             </h1>
-          )}
+          )} */}
+          <Table
+            className="mt-5"
+            columns={columns}
+            pagination={false}
+            dataSource={data}
+          />
+          <Pagination
+            current={currentPage}
+            total={admins.length}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            style={{ marginTop: "16px", textAlign: "right" }}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
-          <HashLoader
-            color={"#3b82f6"}
-            loading={isLoading}
-            size={60}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <CustomLoader isLoading={isLoading} />
         </div>
       )}
     </div>

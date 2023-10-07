@@ -1,6 +1,5 @@
 import avatar from "/avatar.png";
 import { useQuery } from "@tanstack/react-query";
-import HashLoader from "react-spinners/HashLoader";
 import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
@@ -8,7 +7,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { Pagination } from "antd";
+import { Pagination, Space, Table } from "antd";
+import CustomLoader from "../../components/CustomLoader";
 
 export const Athletes = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -51,105 +51,115 @@ export const Athletes = () => {
     setPageSize(10);
     refetch();
   };
+
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentAthletes = athletes.slice(startIndex, endIndex);
 
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (img) => (
+        <img
+          src={img}
+          alt="Class"
+          className="bg-dark p-1 w-10 h-10 rounded-full"
+        />
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Teams",
+      dataIndex: "teams",
+      key: "teams",
+      // render: (_, record) => (
+      //   <div>
+      //     {team.map((t) => (
+      //       <p>{t}</p>
+      //     ))}
+      //   </div>
+      // ),
+    },
+    {
+      title: currentUser?.role !== "sadmin" ? "Action" : "",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          {currentUser?.role !== "sadmin" && (
+            <div>
+              {record?.status === "pending" ? (
+                <div>
+                  <button
+                    onClick={() => handleApprove(record?._id)}
+                    className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+                  >
+                    Approve
+                  </button>
+                </div>
+              ) : (
+                <div className="flex text-sm items-center space-x-4 justify-center">
+                  <button
+                    onClick={() => modalHandler(record)}
+                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+                  >
+                    Assign to a team
+                  </button>
+
+                  <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                    Change Role
+                  </button>
+                  <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                    Edit
+                  </button>
+                  <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                    Delete
+                  </button>
+                  <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                </div>
+              )}
+            </div>
+          )}
+        </Space>
+      ),
+    },
+  ];
+
+  const data = currentAthletes?.map((athlete) => {
+    return {
+      key: athlete._id,
+      image: athlete.photoURL ? athlete.photoURL : avatar,
+      name: athlete.name,
+      // teams:"",
+      status: athlete.status,
+    };
+  });
+
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Athletes"} />
-          {currentAthletes?.length > 0 ? (
-            <table className="w-full bg-transparent border-collapse my-10 text-center">
-              <thead className="text-center bg-gradient text-white">
-                <tr className="border-b dark:border-gray-700">
-                  <th className="py-2">Image</th>
-                  <th>Name</th>
-                  <th>
-                    {currentUser?.role !== "admin" &&
-                      currentUser?.role !== "sadmin" &&
-                      "Actions"}
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {currentAthletes.map((athlete) => {
-                  const { name, photoURL } = athlete;
-                  return (
-                    <tr
-                      key={athlete._id}
-                      className="border-b dark:border-gray-700"
-                    >
-                      <td className="py-2">
-                        <img
-                          src={photoURL ? photoURL : avatar}
-                          alt="Class"
-                          className="bg-dark p-1 w-10 h-10 mx-auto rounded-full"
-                        />
-                      </td>
-                      <td>{name}</td>
-
-                      <td>
-                        {currentUser?.role !== "sadmin" &&
-                          currentUser?.role !== "admin" &&
-                          (athlete?.status === "pending" ? (
-                            <div>
-                              <button
-                                onClick={() => handleApprove(athlete?._id)}
-                                className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                              >
-                                Approve
-                              </button>
-                            </div>
-                          ) : (
-                            <div className="flex text-sm items-center space-x-4 justify-center">
-                              <button className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                                Assign to a team
-                              </button>
-                              <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                                Change Role
-                              </button>
-                              <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                                Edit
-                              </button>
-                              <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                                Delete
-                              </button>
-                              <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
-                            </div>
-                          ))}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          ) : (
-            <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
-              No Atheltes here.
-            </h1>
-          )}
+          <SectionHeader title={"Athletes"} quantity={athletes?.length} />
+          <Table dataSource={data} columns={columns} pagination={false} />
+          <Pagination
+            current={currentPage}
+            total={athletes.length}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            style={{ marginTop: "16px", textAlign: "right" }}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">
-          <HashLoader
-            color={"#FF3607"}
-            loading={isLoading}
-            size={60}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <CustomLoader isLoading={isLoading} />
         </div>
       )}
-      <Pagination
-        current={currentPage}
-        total={athletes.length}
-        pageSize={pageSize}
-        onChange={handlePageChange}
-        style={{ marginTop: "16px", textAlign: "right" }}
-      />
     </div>
   );
 };

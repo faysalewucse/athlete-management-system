@@ -18,7 +18,7 @@ export const DashboardLayout = () => {
           <Outlet />
         </div>
         <div className="absolute bottom-5 right-5 bg-secondary py-3 px-6 rounded-md text-light">
-          <p className="font-bold capitalize">{currentUser?.role}</p>
+          <p className="font-bold capitalize">Role : {currentUser?.role}</p>
         </div>
       </div>
       <Toaster position="top-center" reverseOrder={false} />

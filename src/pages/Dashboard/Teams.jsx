@@ -7,6 +7,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Pagination, Select } from "antd";
 import { useState } from "react";
 import { Option } from "antd/es/mentions";
+import Button from "../../components/shared/Button";
+import AddTeam from "../AddTeam/AddTeam";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -22,7 +24,7 @@ const Teams = () => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams`
+        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
       );
       return data;
     },
@@ -63,11 +65,23 @@ const Teams = () => {
   const endIndex = startIndex + pageSize;
   const currentTeams = teams.slice(startIndex, endIndex);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Teams"} quantity={teams.length} />
+          <div className="flex justify-between">
+            <SectionHeader title={"Teams"} quantity={teams.length} />
+            <Button
+              onClickHandler={() => setIsModalOpen(true)}
+              text={"Add Team +"}
+            />
+            <AddTeam
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+            />
+          </div>
           {currentTeams?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
@@ -110,7 +124,7 @@ const Teams = () => {
             </table>
           ) : (
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
-              No Coaches here.
+              No Teams here.
             </h1>
           )}
           <Pagination

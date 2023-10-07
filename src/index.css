@@ -17,3 +17,9 @@
 .transition-300 {
   @apply transition-all duration-300;
 }
+
+.ant-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

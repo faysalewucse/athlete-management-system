@@ -34,6 +34,23 @@ export const Dashboard = () => {
     },
   });
 
+  const {
+    isLoadingTeamData,
+    data: teams = [],
+    refetch,
+  } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      if (currentUser?.role === "admin") {
+        const { data } = await axiosSecure.get(
+          `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
+        );
+        return data;
+      }
+      return [];
+    },
+  });
+
   const quantity = users?.reduce(
     (acc, user) => {
       acc[user.role]++;
@@ -74,18 +91,10 @@ export const Dashboard = () => {
               </div>
             </div>
           )}
-          {currentUser?.role === "parents" && (
-            <div>
-              <Button text={"Add Athlete +"} />
-              <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                <DashboardCard number={users?.length} title={"Total Users"} />
-              </div>
-            </div>
-          )}
           {currentUser?.role === "admin" && (
             <div>
               {currentUser.status === "pending" ? (
-                <div>You are in a pending position</div>
+                <Pending role={currentUser?.role} />
               ) : (
                 <div>
                   <Button
@@ -95,6 +104,7 @@ export const Dashboard = () => {
                   <AddTeam
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
+                    refetch={refetch}
                   />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard
@@ -110,7 +120,7 @@ export const Dashboard = () => {
                       title={"Total Parents"}
                     />
                     <DashboardCard
-                      number={quantity.parents}
+                      number={teams.length}
                       title={"Total Teams"}
                     />
                   </div>
@@ -142,8 +152,19 @@ export const Dashboard = () => {
                       title={"Total Parents"}
                     />
                     <DashboardCard
-                      number={quantity.parents}
+                      number={teams.length}
                       title={"Total Teams"}
+                    />
+                  </div>
+                </div>
+              )}
+              {currentUser?.role === "parents" && (
+                <div>
+                  <Button text={"Add Athlete +"} />
+                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                    <DashboardCard
+                      number={users?.length}
+                      title={"Total Users"}
                     />
                   </div>
                 </div>
@@ -153,7 +174,7 @@ export const Dashboard = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">
-          <CustomLoader isLoading={isLoading} />
+          <CustomLoader isLoading={isLoading || isLoadingTeamData} />
         </div>
       )}
     </div>

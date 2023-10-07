@@ -31,7 +31,9 @@ export const Admins = () => {
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=${status}`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast("Admin status updated successfully!"));
+          refetch().then(() =>
+            toast.success("Admin status updated successfully!")
+          );
         }
       });
   };
@@ -61,14 +63,14 @@ export const Admins = () => {
       render: (_, record) => (
         <Space size="middle">
           {record.status === "pending" && (
-            <Button onClick={() => handleStatus(record?._id, "approved")}>
+            <Button onClick={() => handleStatus(record?.key, "approved")}>
               Approve
             </Button>
           )}
           <Button
             type="primary"
             danger
-            onClick={() => handleStatus(record?._id, "deleted")}
+            onClick={() => handleStatus(record?.key, "deleted")}
           >
             {record.status == "deleted" ? "Deleted" : "Delete"}
           </Button>

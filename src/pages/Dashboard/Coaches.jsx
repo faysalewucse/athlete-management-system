@@ -9,12 +9,15 @@ import toast from "react-hot-toast";
 import { Pagination } from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
+import TeamListModal from "../../components/modals/TeamListModal";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCoach, setSelectedCoach] = useState("");
   const [pageSize, setPageSize] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     isLoading,
@@ -54,6 +57,11 @@ const Coaches = () => {
   const endIndex = startIndex + pageSize;
   const currentCoaches = coaches.slice(startIndex, endIndex);
 
+  const modalHandler = (coach) => {
+    setSelectedCoach(coach);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
@@ -65,6 +73,7 @@ const Coaches = () => {
                 <tr className="border-b dark:border-gray-700">
                   <th className="py-2">Image</th>
                   <th>Name</th>
+                  <th>Teams</th>
                   {/* access by role */}
                   {currentUser?.role === "sadmin" || <th>Actions</th>}
                 </tr>
@@ -86,7 +95,7 @@ const Coaches = () => {
                         />
                       </td>
                       <td>{name}</td>
-
+                      <td>{}</td>
                       <td>
                         {currentUser?.role !== "sadmin" &&
                         coach?.status === "pending" ? (
@@ -100,9 +109,13 @@ const Coaches = () => {
                           </div>
                         ) : (
                           <div className="flex text-sm items-center space-x-4 justify-center">
-                            <button className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                            <button
+                              onClick={() => modalHandler(coach)}
+                              className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+                            >
                               Assign to a team
                             </button>
+
                             <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                               Change Role
                             </button>
@@ -126,6 +139,11 @@ const Coaches = () => {
               No Coaches here.
             </h1>
           )}
+          <TeamListModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            selectedCoach={selectedCoach}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">

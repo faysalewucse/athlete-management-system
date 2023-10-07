@@ -34,10 +34,6 @@ const Coaches = () => {
   });
 
   const handleApprove = async (id) => {
-    if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Super Admin!");
-      return;
-    }
     await axiosSecure
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
@@ -68,8 +64,8 @@ const Coaches = () => {
         <Container>
           <SectionHeader title={"Coaches"} quantity={coaches?.length} />
           {currentCoaches?.length > 0 ? (
-            <table className="w-full bg-transparent border-collapse my-10 text-center">
-              <thead className="text-center bg-gradient text-white">
+            <table className="w-full bg-transparent border-collapse my-10">
+              <thead className="bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
                   <th className="py-2">Image</th>
                   <th>Name</th>

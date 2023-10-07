@@ -94,7 +94,7 @@ const Teams = () => {
               </thead>
 
               <tbody>
-                {currentTeams.map((team) => {
+                {currentTeams.map((team, index) => {
                   const { teamName, sports } = team;
                   return (
                     <tr
@@ -105,7 +105,7 @@ const Teams = () => {
                       <td>{sports}</td>
 
                       <td>
-                        {team?.coachEmail === undefined ? (
+                        {team?.coaches.length === 0 ? (
                           <Select placeholder="Assign Coach">
                             {coaches.map((coach) => (
                               <Option key={coach._id} value={coach?.email}>
@@ -114,7 +114,13 @@ const Teams = () => {
                             ))}
                           </Select>
                         ) : (
-                          team?.coachEmail
+                          <div className="flex flex-col">
+                            {teams[index]?.coachData?.map((coach, i) => (
+                              <div className="" key={coach}>
+                                {i + 1}. {coach.name}
+                              </div>
+                            ))}
+                          </div>
                         )}
                       </td>
                     </tr>

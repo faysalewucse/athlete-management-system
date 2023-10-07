@@ -5,7 +5,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import Button from "../../components/shared/Button";
 import { useState } from "react";
-import AddTeam from "../AddTeam/AddTeam";
+import AddTeamModal from "../../components/modals/AddTeamModal";
 import CustomLoader from "../../components/CustomLoader";
 import Pending from "./Pending";
 
@@ -101,7 +101,7 @@ export const Dashboard = () => {
                     onClickHandler={() => setIsModalOpen(true)}
                     text={"Add Team +"}
                   />
-                  <AddTeam
+                  <AddTeamModal
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
                     refetch={refetch}

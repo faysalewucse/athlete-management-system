@@ -6,11 +6,15 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import CustomLoader from "../../components/CustomLoader";
-import { Button, Space, Table } from "antd";
+import { Button, Pagination, Space, Table } from "antd";
+import { useState } from "react";
 
 export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(3);
+
 
   const {
     isLoading,
@@ -37,6 +41,16 @@ export const Admins = () => {
         }
       });
   };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    setPageSize(3);
+    refetch();
+  };
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentAdmins = admins.slice(startIndex, endIndex);
 
   const columns = [
     {
@@ -70,6 +84,7 @@ export const Admins = () => {
           <Button
             type="primary"
             danger
+            disabled={record.status === "deleted"}
             onClick={() => handleStatus(record?.key, "deleted")}
           >
             {record.status == "deleted" ? "Deleted" : "Delete"}
@@ -79,7 +94,7 @@ export const Admins = () => {
     },
   ];
 
-  const data = admins?.map((admin) => {
+  const data = currentAdmins?.map((admin) => {
     return {
       key: admin._id,
       image: admin.photoURL ? admin.photoURL : avatar,
@@ -152,7 +167,19 @@ export const Admins = () => {
               No Admins here.
             </h1>
           )} */}
-          <Table className="mt-5" columns={columns} dataSource={data} />
+          <Table
+            className="mt-5"
+            columns={columns}
+            pagination={false}
+            dataSource={data}
+          />
+          <Pagination
+            current={currentPage}
+            total={admins.length}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+            style={{ marginTop: "16px", textAlign: "right" }}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">

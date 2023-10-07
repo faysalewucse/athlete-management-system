@@ -8,7 +8,7 @@ import { Pagination, Select } from "antd";
 import { useState } from "react";
 import { Option } from "antd/es/mentions";
 import Button from "../../components/shared/Button";
-import AddTeam from "../AddTeam/AddTeam";
+import AddTeamModal from "../../components/modals/AddTeamModal";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -77,7 +77,7 @@ const Teams = () => {
               onClickHandler={() => setIsModalOpen(true)}
               text={"Add Team +"}
             />
-            <AddTeam
+            <AddTeamModal
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
             />

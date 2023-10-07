@@ -12,7 +12,6 @@ import { StudentRoute } from "./StudentRoute";
 import { Athletes } from "../pages/Dashboard/Athletes";
 import { Admins } from "../pages/Dashboard/Admins";
 import Coaches from "../pages/Dashboard/Coaches";
-import AddTeam from "../pages/AddTeam/AddTeam";
 import Parents from "../pages/Dashboard/Parents";
 import Teams from "../pages/Dashboard/Teams";
 

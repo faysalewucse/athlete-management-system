@@ -8,7 +8,7 @@ import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
 import { CgMiniPlayer } from "react-icons/cg";
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   const { currentUser } = useAuth();
 
   const sidebarItems = {
@@ -93,9 +93,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <aside
+      ref={sideRef}
       className={`md:block ${
         sidebarOpen ? "absolute bg-white z-50" : "hidden"
-      } border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto p-10`}
+      } border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto  p-10`}
     >
       <Brand />
       <div

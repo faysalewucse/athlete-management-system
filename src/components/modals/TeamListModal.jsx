@@ -32,7 +32,7 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
 
   // Filter teams based on the search input
   const filteredTeams = teams.filter((team) =>
-    team.teamName.toLowerCase().includes(searchValue.toLowerCase())
+    team?.teamName?.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   // Paginate the filtered teams

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 const { Option } = Select;
 
-const AddTeam = ({ isModalOpen, setIsModalOpen, refetch }) => {
+const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useAuth();
@@ -91,8 +91,14 @@ const AddTeam = ({ isModalOpen, setIsModalOpen, refetch }) => {
         <Form.Item name="coaches" label="Select Coach">
           <Select placeholder="Select Coach">
             {coaches.map((coach) => (
-              <Option key={coach._id} value={coach?.email}>
-                {coach?.name}
+              <Option
+                disabled={coach.status === "pending"}
+                key={coach._id}
+                value={coach?.status === "approved" ? coach?.email : null}
+              >
+                {coach?.status === "approved"
+                  ? coach?.name
+                  : `${coach?.name}(Not Approved)`}
               </Option>
             ))}
           </Select>
@@ -111,4 +117,4 @@ const AddTeam = ({ isModalOpen, setIsModalOpen, refetch }) => {
   );
 };
 
-export default AddTeam;
+export default AddTeamModal;

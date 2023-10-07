@@ -35,7 +35,7 @@ const Coaches = () => {
 
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Super Admin!");
+      toast.error("You are not approved by Admin!");
       return;
     }
     await axiosSecure
@@ -75,7 +75,7 @@ const Coaches = () => {
                   <th>Name</th>
                   <th>Teams</th>
                   {/* access by role */}
-                  {currentUser?.role === "sadmin" || <th>Actions</th>}
+                  <th>{currentUser?.role === "sadmin" || "Actions"}</th>
                 </tr>
               </thead>
 

@@ -70,6 +70,7 @@ export const Admins = () => {
           <Button
             type="primary"
             danger
+            disabled={record.status === "deleted"}
             onClick={() => handleStatus(record?.key, "deleted")}
           >
             {record.status == "deleted" ? "Deleted" : "Delete"}

@@ -15,7 +15,6 @@ export const Admins = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(3);
 
-
   const {
     isLoading,
     data: admins = [],
@@ -108,7 +107,8 @@ export const Admins = () => {
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Admins"} quantity={admins?.length} />
-          {/* {admins?.length > 0 ? (
+          {/* <div>
+            {admins?.length > 0 ? (
             <table className="w-full bg-transparent border-collapse my-10 text-center">
               <thead className="text-center bg-gradient text-white">
                 <tr className="border-b dark:border-gray-700">
@@ -166,7 +166,8 @@ export const Admins = () => {
             <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
               No Admins here.
             </h1>
-          )} */}
+          )}
+          </div> */}
           <Table
             className="mt-5"
             columns={columns}

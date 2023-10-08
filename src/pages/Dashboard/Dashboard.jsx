@@ -16,6 +16,7 @@ export const Dashboard = () => {
   const [axiosSecure] = useAxiosSecure();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  console.log(currentUser);
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
@@ -138,7 +139,7 @@ export const Dashboard = () => {
                     onClickHandler={() => setIsModalOpen(true)}
                     text={"Add Team +"}
                   />
-                  <AddTeam
+                  <AddTeamModal
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
                   />

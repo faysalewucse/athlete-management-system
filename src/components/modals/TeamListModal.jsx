@@ -21,7 +21,7 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
       try {
         const response = await axiosSecure.patch(
           `${import.meta.env.VITE_BASE_API_URL}/users/assignTeam/${
-            selectedCoach.email
+            selectedCoach.key
           }`,
           selectedTeam
         );

@@ -28,11 +28,7 @@ export const Banner = () => {
           />
         </div>
         <div className="md:w-1/2 text-center md:text-start">
-<<<<<<< HEAD
-          <h1 className="lg:text-6xl text-4xl text-gradient font-semibold leading-tight">
-=======
           <h1 className="lg:text-6xl text-4xl text-white font-semibold tracking-wide">
->>>>>>> 59fe230c93198e3eab64c2865891ee101f33157e
             Maximize Athletic Performance
           </h1>
 
@@ -40,11 +36,7 @@ export const Banner = () => {
             initial={{ x: "-100vw" }}
             animate={{ x: 0 }}
             transition={{ delay: 0.2, duration: 0.1 }}
-<<<<<<< HEAD
-            className="md:text-xl md:text-justify text-center my-5"
-=======
             className="md:w-3/4 md:text-justify text-gray-300 text-center my-5"
->>>>>>> 59fe230c93198e3eab64c2865891ee101f33157e
           >
             Our athlete management system empowers coaches and organizations to
             maximize athlete performance.

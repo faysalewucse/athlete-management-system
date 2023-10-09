@@ -72,9 +72,9 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           <Brand />
           <nav
-            className={`flex flex-col md:flex-row md:relative absolute ${
-              open ? "top-5" : "-top-full"
-            } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-base items-center z-20`}
+            className={`flex flex-col md:flex-row md:static absolute ${
+              open ? "top-[4.5rem]" : "-top-96"
+            } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-base md:bg-none bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% items-center z-20`}
           >
             {navItems.map((item, index) => (
               <NavLink

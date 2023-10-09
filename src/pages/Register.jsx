@@ -14,8 +14,8 @@ const { Option } = Select;
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState(null);
   const { signup } = useAuth();
-
   const navigate = useNavigate();
 
   const onFinish = async (data) => {
@@ -30,6 +30,8 @@ export const Register = () => {
         phoneNumber,
         role,
         dateOfBirth,
+        institute,
+        selectedInstitute,
       } = data;
 
       const photo = data.photoUrl && data.photoUrl[0];
@@ -63,8 +65,11 @@ export const Register = () => {
         status: "pending",
       };
 
-      if (role == "athlete") userData.teams = [];
+      if (role === "athlete") userData.teams = [];
+      if (role === "admin") userData.institute = institute;
+      if (role === "coach") userData.selectedInstitute = selectedInstitute;
 
+      // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
@@ -109,7 +114,7 @@ export const Register = () => {
         >
           <h1 className="font-semibold text-lg">What is your role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
-            <Radio.Group>
+            <Radio.Group onChange={(e) => setRole(e.target.value)}>
               <Radio value="admin">Admin</Radio>
               <Radio value="coach">Coach</Radio>
               <Radio value="parents">Parents</Radio>
@@ -118,70 +123,9 @@ export const Register = () => {
           </Form.Item>
 
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Name is required" }]}
-          >
-            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: "Email is required" },
-              {
-                type: "email",
-                message: "Invalid email address",
-              },
-            ]}
-          >
-            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            label="Password"
-            rules={[
-              { required: true, message: "Password is required" },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters long",
-              },
-            ]}
-          >
-            <Input.Password
-              className="w-full px-4 py-2 rounded-lg"
-              iconRender={(visible) =>
-                visible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
-              }
-              size="large"
-            />
-          </Form.Item>
-          <Form.Item
-            name="confirmPassword"
-            label="Confirm Password"
-            dependencies={["password"]}
-            hasFeedback
-            rules={[
-              { required: true, message: "Confirm Password is required" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject("Passwords should match!");
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              className="w-full px-4 py-2 rounded-lg"
-              size="large"
-            />
-          </Form.Item>
-
-          <Form.Item
             name="photoUrl"
             label="Photo"
+            className="col-span-2"
             rules={[{ required: false }]}
             valuePropName="fileList"
             getValueFromEvent={(e) => {
@@ -208,8 +152,73 @@ export const Register = () => {
           </Form.Item>
 
           <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: "Name is required" }]}
+          >
+            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Email is required" },
+              {
+                type: "email",
+                message: "Invalid email address",
+              },
+            ]}
+          >
+            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[
+              { required: true, message: "Password is required" },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters long",
+              },
+            ]}
+          >
+            <Input.Password
+              className="w-full px-4 py-2 rounded-lg"
+              iconRender={(visible) =>
+                visible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
+              }
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              { required: true, message: "Confirm Password is required" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject("Passwords should match!");
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              className="w-full px-4 py-2 rounded-lg"
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
             name="dateOfBirth"
             label="Date of Birth"
+            className={role !== "admin" && role !== "coach" ? "col-span-2" : ""}
             rules={[
               { required: true, message: "Date of Birth is required" },
               { validator: validateDateOfBirth },
@@ -221,6 +230,37 @@ export const Register = () => {
               format="YYYY-MM-DD"
             />
           </Form.Item>
+
+          {role === "admin" && (
+            <Form.Item
+              name="institute"
+              label="Institute Name"
+              rules={[
+                { required: true, message: "Institute is required for admin!" },
+              ]}
+            >
+              <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+            </Form.Item>
+          )}
+
+          {role === "coach" && (
+            <Form.Item
+              name="selectedInstitute"
+              label="Select Institute"
+              rules={[
+                {
+                  required: true,
+                  message: "Institute selection is required for coach!",
+                },
+              ]}
+            >
+              <Select placeholder="Choose" className="w-full" size="large">
+                <Option value="any">any</Option>
+                <Option value="any2">any2</Option>
+                <Option value="any3">any3</Option>
+              </Select>
+            </Form.Item>
+          )}
 
           <Form.Item
             name="gender"

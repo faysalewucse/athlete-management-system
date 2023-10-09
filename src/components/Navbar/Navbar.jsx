@@ -1,12 +1,11 @@
 import avatar from "/avatar.png";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Container } from "../Container";
-import { SlClose } from "react-icons/sl";
-import { CgMenuRound } from "react-icons/cg";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import ButtonOutline from "../shared/ButtonOutline";
 import Brand from "../Brand";
+import { Button } from "antd";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 
 export const Navbar = () => {
   // const { isDark, toggleDarkMode } = useTheme();
@@ -23,6 +22,11 @@ export const Navbar = () => {
   // const toggleSidebar = () => {
   //   setIsSidebarOpen(!isSidebarOpen);
   // };
+
+  const loginBtnHandler = () => {
+    setOpen(false);
+    navigate("/login");
+  };
 
   // navbar scrolling
   useEffect(() => {
@@ -64,7 +68,7 @@ export const Navbar = () => {
     <div
       className={`fixed top-0 left-0 right-0 p-5 z-10 ${
         isScrolling
-          ? "bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% py-3"
+          ? "bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% py-5"
           : "bg-transparent"
       }`}
     >
@@ -73,7 +77,7 @@ export const Navbar = () => {
           <Brand />
           <nav
             className={`flex flex-col md:flex-row md:static absolute ${
-              open ? "top-[4.5rem]" : "-top-96"
+              open ? "top-0 h-screen justify-center" : "-top-96"
             } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-base md:bg-none bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% items-center z-20`}
           >
             {navItems.map((item, index) => (
@@ -84,6 +88,7 @@ export const Navbar = () => {
                     : "hover:text-primary text-white"
                 }
                 to={item.route}
+                onClick={() => setOpen(false)}
                 key={index}
               >
                 {item.pathName}
@@ -134,18 +139,21 @@ export const Navbar = () => {
                   </div>
                 </div>
               ) : (
-                <ButtonOutline
-                  text={"Login"}
-                  onClickHandler={() => navigate("/login")}
-                />
+                <Button
+                  onClick={loginBtnHandler}
+                  type="primary"
+                  className="bg-white text-secondary"
+                >
+                  Login
+                </Button>
               )}
             </div>
           </nav>
           <div onClick={() => setOpen(!open)} className="md:hidden text-2xl">
             {open ? (
-              <SlClose className=" absolute right-6 top-9 text-3xl z-20" />
+              <AiOutlineClose className="text-light absolute right-6 top-5 text-3xl z-20" />
             ) : (
-              <CgMenuRound strokeWidth={0} className="text-[40px] text-dark" />
+              <AiOutlineMenu strokeWidth={0} className={`text-4xl`} />
             )}
           </div>
         </div>

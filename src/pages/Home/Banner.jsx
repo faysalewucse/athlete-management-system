@@ -15,10 +15,10 @@ export const Banner = () => {
     >
       <Container
         extraStyle={
-          "md:flex flex-row md:flex-row-reverse items-center justify-between pt-10 z-10"
+          "md:flex flex-row md:flex-row-reverse items-center justify-between py-20 md:py-10 z-10"
         }
       >
-        <div className="md:w-1/2 p-16 drop-shadow-md">
+        <div className="md:w-1/2 p-16 drop-shadow-md hidden md:block">
           <motion.img
             initial={{ x: "100vw" }}
             animate={{ x: 0 }}

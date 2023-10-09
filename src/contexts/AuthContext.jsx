@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
                 address: "",
                 gender: "",
                 phoneNumber: "",
-                role: "student",
+                role: "admin",
               };
               axios
                 .post(`${import.meta.env.VITE_BASE_API_URL}/user`, newUser)
@@ -61,9 +61,6 @@ export function AuthProvider({ children }) {
         setCurrentUser(user);
       }
 
-      // TODO: update it to by storing access token to cookie
-      // get jwt token and save it to local storage
-      // TODO: change the URL
       if (user) {
         axios
           .post(`${import.meta.env.VITE_BASE_API_URL}/jwt`, {

@@ -106,7 +106,7 @@ export const Athletes = () => {
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
                   <button
-                    onClick={() => modalHandler(record)}
+                    // onClick={() => modalHandler(record)}
                     className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Assign to a team

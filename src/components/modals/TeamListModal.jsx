@@ -5,15 +5,35 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import CustomLoader from "../CustomLoader";
 import { Loading } from "@nextui-org/react";
+import toast from "react-hot-toast";
 
 const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [searchValue, setSearchValue] = useState(""); // State for search input
   const [currentPage, setCurrentPage] = useState(1); // State for pagination
+  const [selectedTeam, setSelectedTeam] = useState([]); // State for pagination
 
-  const handleOk = () => {
-    setIsModalOpen(false);
+  const handleOk = async () => {
+    if (selectedTeam.length === 0) {
+      toast.error("Please select a team");
+    } else {
+      try {
+        const response = await axiosSecure.patch(
+          `${import.meta.env.VITE_BASE_API_URL}/users/assignTeam/${
+            selectedCoach.key
+          }`,
+          selectedTeam
+        );
+
+        if (response.status === 200) {
+          setIsModalOpen(false);
+          toast.success("Team Assigned Successfully");
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    }
   };
 
   const handleCancel = () => {
@@ -24,7 +44,7 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams`
+        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
       );
       return data;
     },
@@ -54,7 +74,7 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
   });
 
   const onChange = (checkedValues) => {
-    console.log("checked = ", checkedValues);
+    setSelectedTeam(checkedValues);
   };
 
   const handleSearch = (value) => {
@@ -67,16 +87,17 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
       title={
         <div className="">
           <p className="text-gradient">
-            Add Teams for coach{" "}
-            <span className="font-bold">{selectedCoach.name}</span>
+            Add Teams for coach
+            <span className="font-bold"> {selectedCoach.name}</span>
           </p>
           <h1>Teams</h1>
         </div>
       }
       open={isModalOpen}
       onOk={handleOk}
+      okText="Add"
+      okType="default"
       onCancel={handleCancel}
-      footer={null}
     >
       <Input.Search
         placeholder="Search teams by name"

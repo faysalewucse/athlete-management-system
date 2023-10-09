@@ -33,17 +33,6 @@ const Coaches = () => {
     },
   });
 
-  // get teams based on coach
-  const { data: teams = [] } = useQuery({
-    queryKey: ["teams", currentUser?.email],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/coach-teams`
-      );
-      return data;
-    },
-  });
-
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
       toast.error("You are not approved by Admin!");
@@ -64,6 +53,7 @@ const Coaches = () => {
     setPageSize(5);
     refetch();
   };
+
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentCoaches = coaches.slice(startIndex, endIndex);
@@ -72,7 +62,17 @@ const Coaches = () => {
     setSelectedCoach(coach);
     setIsModalOpen(true);
   };
-  // const team = teams.map((team) => team.teamNames);
+
+  const data = currentCoaches?.map((coach) => {
+    return {
+      key: coach?._id,
+      image: coach?.photoURL ? coach.photoURL : avatar,
+      name: coach?.name,
+      teams: coach?.teams,
+      status: coach?.status,
+    };
+  });
+
   const columns = [
     {
       title: "Image",
@@ -94,23 +94,24 @@ const Coaches = () => {
     },
     {
       title: "Teams",
+      dataIndex: "teams",
       key: "teams",
-      // render: (_, record) => (
-      //   <div>
-      //     {team.map((t) => (
-      //       <p>{t}</p>
-      //     ))}
-      //   </div>
-      // ),
+      render: (teams) => (
+        <div>
+          {teams.map((team) => (
+            <div key={team._id}>{team.teamName}</div>
+          ))}
+        </div>
+      ),
     },
     {
-      title: currentUser?.role !== "sadmin" ? "Action" : "",
+      title: currentUser?.role === "admin" ? "Action" : "",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {currentUser?.role !== "sadmin" && (
+          {currentUser?.role === "admin" && (
             <div>
-              {record?.status === "pending" ? (
+              {record.role === "admin" && record?.status === "pending" ? (
                 <div>
                   <button
                     onClick={() => handleApprove(record?._id)}
@@ -147,17 +148,6 @@ const Coaches = () => {
     },
   ];
 
-  console.log();
-  const data = currentCoaches?.map((coach) => {
-    return {
-      key: coach._id,
-      image: coach.photoURL ? coach.photoURL : avatar,
-      name: coach.name,
-      // teams:"",
-      status: coach.status,
-    };
-  });
-
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
@@ -174,11 +164,13 @@ const Coaches = () => {
             style={{ marginTop: "16px", textAlign: "right" }}
           />
 
-          <TeamListModal
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-            selectedCoach={selectedCoach}
-          />
+          {currentUser.role == "admin" && (
+            <TeamListModal
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              selectedCoach={selectedCoach}
+            />
+          )}
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">

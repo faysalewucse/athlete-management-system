@@ -36,7 +36,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-[90vh] bg-white">
+    <div className="flex items-center justify-center h-[90vh] bg-white mt-20">
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="max-w-xl lg:w-1/2 md:w-2/3 p-5">

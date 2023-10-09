@@ -12,7 +12,7 @@ export const Home = () => {
       <>
         <Banner />
         <Promo />
-        <Contact />
+        {/* <Contact /> */}
       </>
     </div>
   );

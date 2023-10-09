@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Sidebar from "../pages/Dashboard/Sidebar/Sidebar";
 import { Navbar } from "../pages/Dashboard/Navbar";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
 export const DashboardLayout = () => {

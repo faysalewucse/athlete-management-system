@@ -39,7 +39,7 @@ export default function Footer() {
             <h1 className="font-semibold text-xl mb-2 md:mb-3">
               Useful Links
             </h1>
-            <ul className="flex flex-col gap-1 font-light underline text-gray-300">
+            <ul className="flex flex-col font-light underline text-gray-300">
               <Link className="hover:text-secondary" to="/">
                 Home
               </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
           </div>
           <div className="mt-5 md:mt-0">
             <h1 className="font-semibold text-xl mb-2 md:mb-3">Follow Us</h1>
-            <ul className="flex flex-col gap-1 font-light underline text-gray-300">
+            <ul className="flex flex-col font-light underline text-gray-300">
               <Link className="hover:text-secondary" to="/">
                 Facebook
               </Link>

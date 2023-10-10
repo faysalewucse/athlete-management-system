@@ -94,7 +94,7 @@ export default function Footer() {
         </h1>
       </div>
       <div className="absolute -top-1 ">
-        <img src={shape} alt="" />
+        <img className="w-full" src={shape} alt="" />
       </div>
     </footer>
   );

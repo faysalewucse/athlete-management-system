@@ -4,6 +4,7 @@ import "aos/dist/aos.css";
 import Contact from "./Contact";
 import Promo from "./Promo";
 import Features from "./Features";
+import About from "./About";
 
 AOS.init();
 // TODO: Add Blog Sections
@@ -14,6 +15,7 @@ export const Home = () => {
         <Banner />
         <Promo />
         <Features />
+        <About />
       </>
     </div>
   );

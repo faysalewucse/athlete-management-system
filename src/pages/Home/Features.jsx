@@ -6,7 +6,7 @@ const Features = () => {
   return (
     <div
       style={{ backgroundImage: `url(${bgShape})` }}
-      className="bg-white bg-none bg-cover py-28 my-10"
+      className="bg-white bg-none bg-cover py-28 mt-10"
     >
       <Container extraStyle={"grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10"}>
         <div className="px-3 md:px-0">

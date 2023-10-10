@@ -8,6 +8,7 @@ import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
 import CustomLoader from "../../components/CustomLoader";
 import Pending from "./Pending";
+import { Container } from "../../components/Container";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -68,7 +69,7 @@ export const Dashboard = () => {
   return (
     <div className="min-h-[90vh] p-5">
       {!isLoading ? (
-        <div className="max-w-7xl">
+        <Container>
           {currentUser?.role === "sadmin" && (
             <div>
               <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
@@ -99,6 +100,7 @@ export const Dashboard = () => {
               ) : (
                 <div>
                   <Button
+                    style={"rounded-lg"}
                     onClickHandler={() => setIsModalOpen(true)}
                     text={"Add Team +"}
                   />
@@ -172,7 +174,7 @@ export const Dashboard = () => {
               )}
             </div>
           )}
-        </div>
+        </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">
           <CustomLoader isLoading={isLoading || isLoadingTeamData} />

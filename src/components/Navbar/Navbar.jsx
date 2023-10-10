@@ -74,7 +74,7 @@ export const Navbar = () => {
     >
       <Container>
         <div className="flex items-center justify-between">
-          <Brand />
+          <Brand white={true} />
           <nav
             className={`flex flex-col md:flex-row md:static absolute ${
               open ? "top-0 h-screen justify-center" : "-top-96"

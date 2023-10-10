@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="relative bg-gradient-2 md:text-left text-center text-white">
       <div className=" flex flex-col md:flex-row justify-between max-w-7xl mx-auto pt-16 md:pt-24 z-10">
         {/* news letter */}
-        <div className="md:pr-16 px-10 mb-5 md:mb-0">
+        <div className="md:pr-16 px-10 md:px-0 mb-5 md:mb-0">
           <h1 className="font-semibold text-2xl font-display mb-3">
             Newsletter
           </h1>
@@ -36,9 +36,7 @@ export default function Footer() {
         {/* others */}
         <div className="grid grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-3">
           <div className="mt-5 md:mt-0">
-            <h1 className="font-semibold text-xl mb-2 md:mb-3">
-              Useful Links
-            </h1>
+            <h1 className="font-semibold text-xl mb-2 md:mb-3">Useful Links</h1>
             <ul className="flex flex-col font-light underline text-gray-300">
               <Link className="hover:text-secondary" to="/">
                 Home

@@ -9,6 +9,8 @@ import Swal from "sweetalert2";
 import Brand from "../components/Brand";
 import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const { Option } = Select;
 
@@ -16,7 +18,18 @@ export const Register = () => {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState(null);
   const { signup } = useAuth();
+  const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
+
+  const { data: admins = [] } = useQuery({
+    queryKey: ["admins"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=admin`
+      );
+      return data;
+    },
+  });
 
   const onFinish = async (data) => {
     try {
@@ -67,7 +80,7 @@ export const Register = () => {
 
       if (role === "athlete") userData.teams = [];
       if (role === "admin") userData.institute = institute;
-      if (role === "coach") userData.selectedInstitute = selectedInstitute;
+      if (role === "coach") userData.adminEmail = selectedInstitute;
 
       // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
@@ -255,9 +268,14 @@ export const Register = () => {
               ]}
             >
               <Select placeholder="Choose" className="w-full" size="large">
-                <Option value="any">any</Option>
-                <Option value="any2">any2</Option>
-                <Option value="any3">any3</Option>
+                {admins.map((admin) => (
+                  <Option key={admin?._id} value={admin?.email}>
+                    {admin?.institute}{" "}
+                    <span className="text-xs text-slate-400">
+                      ({admin?.name})
+                    </span>
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           )}

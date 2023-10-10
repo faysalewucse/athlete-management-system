@@ -30,7 +30,7 @@ export const DashboardLayout = () => {
 
   return (
     <div
-      className={`h-screen bg-gradient-to-tl from-indigo-100 from-10% via-[rgba(222,235,236,1)] via-55% to-primary/20 relative `}
+      className={`h-screen overflow-auto bg-gradient-to-tl from-indigo-100 from-10% via-[rgba(222,235,236,1)] via-55% to-primary/20 relative `}
     >
       <div className="flex">
         <Sidebar

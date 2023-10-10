@@ -96,7 +96,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       ref={sideRef}
       className={`md:block ${
         sidebarOpen ? "absolute bg-white z-50" : "hidden"
-      } border-r-2 border-primary/25 border-opacity-50 h-screen overscroll-y-auto  p-10`}
+      } bg-white shadow-lg shadow-blue-500 border-r-[3px] border-primary/25 border-opacity-50 min-h-screen overscroll-auto px-3 md:px-10   py-10`}
     >
       <Brand />
       <div

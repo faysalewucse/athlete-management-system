@@ -114,7 +114,7 @@ export const Register = () => {
   return (
     <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="max-w-3xl p-5 lg:w-1/2 w-full bg-primary/5 rounded-xl shadow-lg">
+      <div className="max-w-3xl p-5 lg:w-1/2 w-full bg-primary/5 rounded-xl shadow-lg my-5">
         <div className="flex justify-center mb-5">
           <Brand />
         </div>

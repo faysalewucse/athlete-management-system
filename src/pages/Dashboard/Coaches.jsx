@@ -27,7 +27,9 @@ const Coaches = () => {
     queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=coach`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/users/byRole?role=coach?adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -109,6 +111,7 @@ const Coaches = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
+          {console.log(record.status)}
           {currentUser?.role === "admin" && (
             <div>
               {record.role === "admin" && record?.status === "pending" ? (
@@ -164,7 +167,7 @@ const Coaches = () => {
             style={{ marginTop: "16px", textAlign: "right" }}
           />
 
-          {currentUser.role == "admin" && (
+          {currentUser?.role == "admin" && (
             <TeamListModal
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}

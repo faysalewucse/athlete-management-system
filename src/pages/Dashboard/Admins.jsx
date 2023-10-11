@@ -13,7 +13,7 @@ export const Admins = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(7);
 
   const {
     isLoading,
@@ -43,7 +43,7 @@ export const Admins = () => {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    setPageSize(3);
+    setPageSize(7);
     refetch();
   };
 

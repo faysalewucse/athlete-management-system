@@ -1,5 +1,5 @@
 import avatar from "/avatar.png";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Container } from "../Container";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
@@ -14,6 +14,8 @@ export const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const location = useLocation();
+  console.log(location.pathname);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -45,6 +47,11 @@ export const Navbar = () => {
     };
   }, []);
 
+  // for login and registration page
+  // if () {
+  //   setIsScrolling(true);
+  // }
+
   const navItems = [
     { route: "/", pathName: "Home" },
     {
@@ -67,7 +74,9 @@ export const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 right-0 p-5 z-10 ${
-        isScrolling
+        isScrolling ||
+        location.pathname === "/login" ||
+        location.pathname === "/register"
           ? "bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% py-5"
           : "bg-transparent"
       }`}

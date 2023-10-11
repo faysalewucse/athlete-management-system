@@ -4,7 +4,7 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { Button, Pagination, Table } from "antd";
+import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
 
@@ -34,13 +34,11 @@ const Teams = () => {
       const { data } = await axiosSecure.get(
         `${
           import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach?adminEmail=${currentUser?.email}`
+        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
     },
   });
-
-  console.log(coaches);
 
   // const handleApprove = async (id) => {
   //   if (currentUser?.status === "pending") {
@@ -69,29 +67,6 @@ const Teams = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Sports",
-      dataIndex: "sports",
-      key: "sports",
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: "Coaches",
-      dataIndex: "coaches",
-      key: "coaches",
-      render: (coaches) => (
-        <div>{coaches.length === 0 ? <Button>Add Coaches</Button> : "+"}</div>
-      ),
-    },
-  ];
-
   const data = currentTeams?.map((team) => {
     return {
       key: team._id,
@@ -100,6 +75,48 @@ const Teams = () => {
       coaches: team.coachData,
     };
   });
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <p>{text}</p>,
+    },
+    {
+      title: "Sports",
+      dataIndex: "sports",
+      key: "sports",
+      render: (text) => <p className="capitalize">{text}</p>,
+    },
+    {
+      title: "Coaches",
+      dataIndex: "coaches",
+      key: "coaches",
+      render: (coaches) => (
+        <div>
+          {coaches.length === 0 ? (
+            <div className="flex gap-2">
+              <Button>Assign Coaches</Button>
+            </div>
+          ) : (
+            <Dropdown
+              menu={{
+                items: coaches.map((coach) => (
+                  <div key={coach._id}>{coach.name}</div>
+                )),
+              }}
+              trigger={["click"]}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>View Coaches</Space>
+              </a>
+            </Dropdown>
+          )}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
@@ -115,8 +132,10 @@ const Teams = () => {
               Add Team +
             </Button>
             <AddTeamModal
+              refetch={refetch}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
+              coaches={coaches}
             />
           </div>
           <Table dataSource={data} columns={columns} pagination={false} />

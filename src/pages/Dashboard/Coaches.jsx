@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
-import { Pagination, Space, Table } from "antd";
+import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
 import TeamListModal from "../../components/modals/TeamListModal";
@@ -29,11 +29,13 @@ const Coaches = () => {
       const { data } = await axiosSecure.get(
         `${
           import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach?adminEmail=${currentUser?.email}`
+        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
     },
   });
+
+  console.log(coaches);
 
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
@@ -98,11 +100,24 @@ const Coaches = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
-      render: (teams) => (
+      render: (teams, record) => (
         <div>
-          {teams.map((team) => (
-            <div key={team._id}>{team.teamName}</div>
-          ))}
+          {teams.length > 0 ? (
+            <Dropdown
+              menu={{
+                items: teams.map((team) => (
+                  <div key={team._id}>{team.teamName}</div>
+                )),
+              }}
+              trigger={["click"]}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>View Teams</Space>
+              </a>
+            </Dropdown>
+          ) : (
+            <Button onClick={() => modalHandler(record)}>Assign Team</Button>
+          )}
         </div>
       ),
     },
@@ -111,10 +126,9 @@ const Coaches = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {console.log(record.status)}
           {currentUser?.role === "admin" && (
             <div>
-              {record.role === "admin" && record?.status === "pending" ? (
+              {currentUser?.role === "admin" && record?.status === "pending" ? (
                 <div>
                   <button
                     onClick={() => handleApprove(record?._id)}

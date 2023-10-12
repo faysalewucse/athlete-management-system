@@ -7,12 +7,17 @@ import CustomLoader from "../CustomLoader";
 import { Loading } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
-const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
+const AssignTeamModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  selectedCoach,
+  refetch,
+}) => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
-  const [searchValue, setSearchValue] = useState(""); // State for search input
-  const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [selectedTeam, setSelectedTeam] = useState([]); // State for pagination
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTeam, setSelectedTeam] = useState([]);
 
   const handleOk = async () => {
     if (selectedTeam.length === 0) {
@@ -20,14 +25,15 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/users/assignTeam/${
-            selectedCoach.key
+          `${import.meta.env.VITE_BASE_API_URL}/coach/assignTeam/${
+            selectedCoach.email
           }`,
           selectedTeam
         );
 
         if (response.status === 200) {
           setIsModalOpen(false);
+          refetch();
           toast.success("Team Assigned Successfully");
         }
       } catch (error) {
@@ -64,9 +70,10 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
   const options = paginatedTeams.map((team) => {
     return {
       label: (
-        <div className="flex gap-5 items-center rounded-md p-2 bg-gradient text-white">
-          <h1 className="">{team.teamName}</h1>
-          <h4 className="capitalize">Sport: {team.sports}</h4>
+        <div className="flex gap-5 items-center">
+          <h1 className="text-gradient font-bold">{team.teamName}</h1>
+          <small>{"->"}</small>
+          <h4 className="capitalize">Sports: {team.sports}</h4>
         </div>
       ),
       value: team._id,
@@ -124,4 +131,4 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
   );
 };
 
-export default TeamListModal;
+export default AssignTeamModal;

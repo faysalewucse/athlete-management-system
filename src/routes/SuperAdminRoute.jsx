@@ -1,8 +1,8 @@
 import { useAuth } from "../contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 
-export const InstructorRoute = ({ children }) => {
+export const SuperAdminRoute = ({ children }) => {
   const { currentUser } = useAuth();
 
-  return currentUser?.role === "instructor" ? children : <Navigate to={"/"} />;
+  return currentUser?.role === "sadmin" ? children : <Navigate to={"/"} />;
 };

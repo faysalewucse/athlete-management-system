@@ -6,10 +6,11 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
-import { Pagination, Space, Table } from "antd";
+import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
-import TeamListModal from "../../components/modals/TeamListModal";
+import AssignTeamModal from "../../components/modals/AssignTeamModal";
+import { BiChevronDown } from "react-icons/bi";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -29,17 +30,13 @@ const Coaches = () => {
       const { data } = await axiosSecure.get(
         `${
           import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach?adminEmail=${currentUser?.email}`
+        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
     },
   });
 
   const handleApprove = async (id) => {
-    if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Admin!");
-      return;
-    }
     await axiosSecure
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
@@ -62,12 +59,15 @@ const Coaches = () => {
 
   const modalHandler = (coach) => {
     setSelectedCoach(coach);
-    setIsModalOpen(true);
+    if (coach.status === "pending") {
+      toast.error("Approve coach before assinging team");
+    } else setIsModalOpen(true);
   };
 
   const data = currentCoaches?.map((coach) => {
     return {
       key: coach?._id,
+      email: coach?.email,
       image: coach?.photoURL ? coach.photoURL : avatar,
       name: coach?.name,
       teams: coach?.teams,
@@ -98,11 +98,30 @@ const Coaches = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
-      render: (teams) => (
+      render: (teams, record) => (
         <div>
-          {teams.map((team) => (
-            <div key={team._id}>{team.teamName}</div>
-          ))}
+          {teams.length > 0 ? (
+            <Dropdown
+              menu={{
+                items: teams.map((team) => {
+                  return {
+                    key: team._id,
+                    label: <p>{team.teamName}</p>,
+                  };
+                }),
+              }}
+              trigger={["click"]}
+            >
+              <Button>
+                <Space>
+                  View Teams ({teams.length})
+                  <BiChevronDown />
+                </Space>
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button onClick={() => modalHandler(record)}>Assign Team</Button>
+          )}
         </div>
       ),
     },
@@ -113,10 +132,10 @@ const Coaches = () => {
         <Space size="middle">
           {currentUser?.role === "admin" && (
             <div>
-              {record.role === "admin" && record?.status === "pending" ? (
+              {currentUser?.role === "admin" && record?.status === "pending" ? (
                 <div>
                   <button
-                    onClick={() => handleApprove(record?._id)}
+                    onClick={() => handleApprove(record?.key)}
                     className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Approve
@@ -124,13 +143,6 @@ const Coaches = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button
-                    onClick={() => modalHandler(record)}
-                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                  >
-                    Assign to a team
-                  </button>
-
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>
@@ -167,7 +179,8 @@ const Coaches = () => {
           />
 
           {currentUser?.role == "admin" && (
-            <TeamListModal
+            <AssignTeamModal
+              refetch={refetch}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               selectedCoach={selectedCoach}

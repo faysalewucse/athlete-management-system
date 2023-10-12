@@ -32,15 +32,11 @@ const Parents = () => {
 
   // status update
   const handleApprove = async (id) => {
-    if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Super Admin!");
-      return;
-    }
     await axiosSecure
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("approved"));
+          refetch().then(() => toast.success("Parents approved"));
         }
       });
   };
@@ -88,7 +84,7 @@ const Parents = () => {
               {record?.status === "pending" ? (
                 <div>
                   <button
-                    onClick={() => handleApprove(record?._id)}
+                    onClick={() => handleApprove(record?.key)}
                     className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Approve
@@ -96,13 +92,6 @@ const Parents = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button
-                    // onClick={() => modalHandler(record)}
-                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                  >
-                    Assign to a team
-                  </button>
-
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>

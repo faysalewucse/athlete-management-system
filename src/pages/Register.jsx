@@ -78,7 +78,6 @@ export const Register = () => {
         status: "pending",
       };
 
-      if (role === "athlete") userData.teams = [];
       if (role === "admin") userData.institute = institute;
       if (role === "coach") userData.adminEmail = selectedInstitute;
 
@@ -231,7 +230,6 @@ export const Register = () => {
           <Form.Item
             name="dateOfBirth"
             label="Date of Birth"
-            className={role !== "admin" && role !== "coach" ? "col-span-2" : ""}
             rules={[
               { required: true, message: "Date of Birth is required" },
               { validator: validateDateOfBirth },
@@ -244,7 +242,7 @@ export const Register = () => {
             />
           </Form.Item>
 
-          {role === "admin" && (
+          {role === "admin" ? (
             <Form.Item
               name="institute"
               label="Institute Name"
@@ -254,16 +252,14 @@ export const Register = () => {
             >
               <Input className="w-full px-4 py-2 rounded-lg" size="large" />
             </Form.Item>
-          )}
-
-          {role === "coach" && (
+          ) : (
             <Form.Item
               name="selectedInstitute"
               label="Select Institute"
               rules={[
                 {
                   required: true,
-                  message: "Institute selection is required for coach!",
+                  message: `Institute selection is required for ${role}!`,
                 },
               ]}
             >

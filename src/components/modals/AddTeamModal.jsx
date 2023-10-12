@@ -16,6 +16,7 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
     const teamData = {
       ...values,
       coaches: values.coaches ? [values.coaches] : [],
+      athletes: [],
     };
 
     setSubmitting(true);

@@ -113,7 +113,7 @@ const Teams = () => {
                     return {
                       key: coach._id,
                       label: (
-                        <div className="flex items-center justify-between gap-5 text-lg">
+                        <div className="flex items-center justify-between gap-5">
                           <p onClick={() => detailsModalHandler(coach)}>
                             {coach.name}
                           </p>

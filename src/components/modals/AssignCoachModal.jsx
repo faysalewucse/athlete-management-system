@@ -1,4 +1,4 @@
-import { Checkbox, Modal, Input, Pagination } from "antd";
+import { Checkbox, Modal, Input, Pagination, Button } from "antd";
 import { useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
@@ -95,17 +95,18 @@ const AssignCoachModal = ({
       onCancel={handleCancel}
       footer={
         coaches.length === 0 ? null : (
-          <div className="flex items-center justify-end gap-4">
-            <button
-              className="bg-primary font-medium text-white px-3 py-1 rounded"
+          <div className="">
+            <Button key="cancel" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button
+              type="btn"
               key="submit"
+              className="text-white bg-success hover:bg-success2"
               onClick={handleOk}
             >
               Add
-            </button>
-            <button key="cancel" onClick={handleCancel}>
-              Cancel
-            </button>
+            </Button>
           </div>
         )
       }

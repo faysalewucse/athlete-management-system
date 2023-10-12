@@ -7,6 +7,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
+import { BiChevronDown } from "react-icons/bi";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -102,15 +104,26 @@ const Teams = () => {
           ) : (
             <Dropdown
               menu={{
-                items: coaches.map((coach) => (
-                  <div key={coach._id}>{coach.name}</div>
-                )),
+                items: coaches.map((coach) => {
+                  return {
+                    key: coach._id,
+                    label: (
+                      <div className="flex items-center justify-between gap-5 text-lg">
+                        <p>{coach.name}</p>
+                        <AiTwotoneDelete className="text-danger hover:text-danger2" />
+                      </div>
+                    ),
+                  };
+                }),
               }}
               trigger={["click"]}
             >
-              <a onClick={(e) => e.preventDefault()}>
-                <Space>View Coaches</Space>
-              </a>
+              <Button>
+                <Space>
+                  View Coaches ({coaches.length})
+                  <BiChevronDown />
+                </Space>
+              </Button>
             </Dropdown>
           )}
         </div>

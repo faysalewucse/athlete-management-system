@@ -1,18 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
 import { Checkbox, Modal, Input, Pagination } from "antd";
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import CustomLoader from "../CustomLoader";
-import { Loading } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
-const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
+const AssignTeamModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  selectedCoach,
+  refetch,
+  teams,
+}) => {
   const [axiosSecure] = useAxiosSecure();
-  const { currentUser } = useAuth();
-  const [searchValue, setSearchValue] = useState(""); // State for search input
-  const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [selectedTeam, setSelectedTeam] = useState([]); // State for pagination
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTeam, setSelectedTeam] = useState([]);
 
   const handleOk = async () => {
     if (selectedTeam.length === 0) {
@@ -20,14 +21,15 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/users/assignTeam/${
-            selectedCoach.key
+          `${import.meta.env.VITE_BASE_API_URL}/coach/assignTeam/${
+            selectedCoach.email
           }`,
           selectedTeam
         );
 
         if (response.status === 200) {
           setIsModalOpen(false);
+          refetch();
           toast.success("Team Assigned Successfully");
         }
       } catch (error) {
@@ -40,18 +42,8 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
     setIsModalOpen(false);
   };
 
-  const { isLoading, data: teams = [] } = useQuery({
-    queryKey: ["teams", currentUser?.email],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-      );
-      return data;
-    },
-  });
-
   // Filter teams based on the search input
-  const filteredTeams = teams.filter((team) =>
+  const filteredTeams = teams?.filter((team) =>
     team?.teamName?.toLowerCase().includes(searchValue.toLowerCase())
   );
 
@@ -64,9 +56,10 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
   const options = paginatedTeams.map((team) => {
     return {
       label: (
-        <div className="flex gap-5 items-center rounded-md p-2 bg-gradient text-white">
-          <h1 className="">{team.teamName}</h1>
-          <h4 className="capitalize">Sport: {team.sports}</h4>
+        <div className="flex gap-5 items-center">
+          <h1 className="text-gradient font-bold">{team.teamName}</h1>
+          <small>{"->"}</small>
+          <h4 className="capitalize">Sports: {team.sports}</h4>
         </div>
       ),
       value: team._id,
@@ -98,6 +91,22 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
       okText="Add"
       okType="default"
       onCancel={handleCancel}
+      footer={
+        teams.length === 0 ? null : (
+          <div className="flex items-center justify-end gap-4">
+            <button
+              className="bg-primary font-medium text-white px-3 py-1 rounded"
+              key="submit"
+              onClick={handleOk}
+            >
+              Add
+            </button>
+            <button key="cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        )
+      }
     >
       <Input.Search
         placeholder="Search teams by name"
@@ -105,23 +114,20 @@ const TeamListModal = ({ isModalOpen, setIsModalOpen, selectedCoach }) => {
         className="mb-2"
         size="large"
       />
-      {isLoading ? (
-        <CustomLoader isLoading={Loading} />
-      ) : (
-        <div>
-          <Checkbox.Group options={options} onChange={onChange} />
 
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={totalTeams}
-            onChange={(page) => setCurrentPage(page)}
-            className="mt-2"
-          />
-        </div>
-      )}
+      <div>
+        <Checkbox.Group options={options} onChange={onChange} />
+
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={totalTeams}
+          onChange={(page) => setCurrentPage(page)}
+          className="mt-2"
+        />
+      </div>
     </Modal>
   );
 };
 
-export default TeamListModal;
+export default AssignTeamModal;

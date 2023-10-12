@@ -2,26 +2,15 @@ import { Form, Input, Button, Select, Modal } from "antd";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 const { Option } = Select;
 
-const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
+const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
-
-  const { data: coaches = [] } = useQuery({
-    queryKey: ["coaches", currentUser?.email],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=coach`
-      );
-      return data;
-    },
-  });
 
   const onFinish = async (values) => {
     const teamData = {
@@ -90,7 +79,7 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         </Form.Item>
         <Form.Item name="coaches" label="Select Coach">
           <Select placeholder="Select Coach">
-            {coaches.map((coach) => (
+            {coaches?.map((coach) => (
               <Option
                 disabled={coach.status === "pending"}
                 key={coach._id}

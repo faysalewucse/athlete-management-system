@@ -6,10 +6,13 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
-import { Pagination, Space, Table } from "antd";
+import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
-import TeamListModal from "../../components/modals/TeamListModal";
+import AssignTeamModal from "../../components/modals/AssignTeamModal";
+import { BiChevronDown } from "react-icons/bi";
+import { AiTwotoneDelete } from "react-icons/ai";
+import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -18,6 +21,8 @@ const Coaches = () => {
   const [selectedCoach, setSelectedCoach] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTeamDetailsModal, setIsTeamDetailsModal] = useState(false);
+  const [teamDetails, setTeamDetails] = useState([]);
 
   const {
     isLoading,
@@ -29,7 +34,17 @@ const Coaches = () => {
       const { data } = await axiosSecure.get(
         `${
           import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach?adminEmail=${currentUser?.email}`
+        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
+      );
+      return data;
+    },
+  });
+
+  const { data: teams = [] } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
       );
       return data;
     },
@@ -37,7 +52,7 @@ const Coaches = () => {
 
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Admin!");
+      toast.error("you are not eligible to approve!");
       return;
     }
     await axiosSecure
@@ -62,12 +77,29 @@ const Coaches = () => {
 
   const modalHandler = (coach) => {
     setSelectedCoach(coach);
-    setIsModalOpen(true);
+    if (coach.status === "pending") {
+      toast.error("Approve coach before assigning team");
+    } else setIsModalOpen(true);
+  };
+
+  const handleTeamDetails = (team) => {
+    setTeamDetails(team);
+    setIsTeamDetailsModal(true);
+  };
+
+  const getFilteredTeam = () => {
+    const selectedTeamsId = selectedCoach.teams.map((team) => team._id);
+
+    const filteredTeams = teams.filter(
+      (team) => !selectedTeamsId.includes(team?._id)
+    );
+    return filteredTeams;
   };
 
   const data = currentCoaches?.map((coach) => {
     return {
       key: coach?._id,
+      email: coach?.email,
       image: coach?.photoURL ? coach.photoURL : avatar,
       name: coach?.name,
       teams: coach?.teams,
@@ -98,11 +130,40 @@ const Coaches = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
-      render: (teams) => (
+      render: (teams, record) => (
         <div>
-          {teams.map((team) => (
-            <div key={team._id}>{team.teamName}</div>
-          ))}
+          {teams.length > 0 ? (
+            <div className="flex gap-2">
+              <Dropdown
+                menu={{
+                  items: teams.map((team) => {
+                    return {
+                      key: team._id,
+                      label: (
+                        <div className="flex items-center justify-between">
+                          <p onClick={() => handleTeamDetails(team)}>
+                            {team.teamName}
+                          </p>
+                          <AiTwotoneDelete className="text-danger text-base hover:text-danger2" />
+                        </div>
+                      ),
+                    };
+                  }),
+                }}
+                trigger={["click"]}
+              >
+                <Button>
+                  <Space>
+                    View Teams ({teams.length})
+                    <BiChevronDown />
+                  </Space>
+                </Button>
+              </Dropdown>
+              <Button onClick={() => modalHandler(record)}>+</Button>
+            </div>
+          ) : (
+            <Button onClick={() => modalHandler(record)}>Assign Team</Button>
+          )}
         </div>
       ),
     },
@@ -111,13 +172,12 @@ const Coaches = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {console.log(record.status)}
           {currentUser?.role === "admin" && (
             <div>
-              {record.role === "admin" && record?.status === "pending" ? (
+              {currentUser?.role === "admin" && record?.status === "pending" ? (
                 <div>
                   <button
-                    onClick={() => handleApprove(record?._id)}
+                    onClick={() => handleApprove(record?.key)}
                     className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Approve
@@ -125,13 +185,6 @@ const Coaches = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button
-                    onClick={() => modalHandler(record)}
-                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                  >
-                    Assign to a team
-                  </button>
-
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>
@@ -168,12 +221,19 @@ const Coaches = () => {
           />
 
           {currentUser?.role == "admin" && (
-            <TeamListModal
+            <AssignTeamModal
+              refetch={refetch}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               selectedCoach={selectedCoach}
+              teams={selectedCoach?.length !== 0 ? getFilteredTeam() : []}
             />
           )}
+          <TeamDetailsModal
+            teamDetails={teamDetails}
+            isTeamDetailsModal={isTeamDetailsModal}
+            setIsTeamDetailsModal={setIsTeamDetailsModal}
+          />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[60vh]">

@@ -1,4 +1,3 @@
-import avatar from "/avatar.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Dropdown, Modal } from "antd";
@@ -8,6 +7,7 @@ import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
+import AvatarDropdown from "../../components/AvatarDropdown";
 
 export const Navbar = ({ setSidebarOpen }) => {
   // const [open, setOpen] = useState(false);
@@ -72,25 +72,7 @@ export const Navbar = ({ setSidebarOpen }) => {
               <BiSolidBell className="text-3xl text-primary" />
             </a>
           </Dropdown>
-          <Dropdown
-            placement="bottomRight"
-            menu={{ items }}
-            trigger={["click"]}
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <img
-                className="border-2 border-primary rounded-full w-10 cursor-pointer"
-                src={
-                  currentUser
-                    ? currentUser?.photoURL !== ""
-                      ? currentUser?.photoURL
-                      : avatar
-                    : avatar
-                }
-                alt="avatar"
-              />
-            </a>
-          </Dropdown>
+          <AvatarDropdown currentUser={currentUser} items={items} />
         </div>
         <Modal
           title="Search"

@@ -101,7 +101,7 @@ const AssignCoachModal = ({
               key="submit"
               onClick={handleOk}
             >
-              OK
+              Add
             </button>
             <button key="cancel" onClick={handleCancel}>
               Cancel

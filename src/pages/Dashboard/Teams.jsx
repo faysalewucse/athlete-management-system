@@ -10,6 +10,7 @@ import AddTeamModal from "../../components/modals/AddTeamModal";
 import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import AssignCoachModal from "../../components/modals/AssignCoachModal";
+import DetailsModal from "../../components/modals/DetailsModal";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -57,11 +58,19 @@ const Teams = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [isCoachModalOpen, setIsCoachModalOpen] = useState(false);
+  const [isDetailsModal, setIsDetailsModal] = useState(false);
+  const [coachDetails, setCoachDetails] = useState([]);
 
   const coachModalHandler = (team) => {
     setSelectedTeam(team);
     setIsCoachModalOpen(true);
   };
+
+  const detailsModalHandler = (coach) => {
+    setCoachDetails(coach);
+    setIsDetailsModal(true);
+  };
+
   const data = currentTeams?.map((team) => {
     return {
       key: team._id,
@@ -105,7 +114,9 @@ const Teams = () => {
                       key: coach._id,
                       label: (
                         <div className="flex items-center justify-between gap-5 text-lg">
-                          <p>{coach.name}</p>
+                          <p onClick={() => detailsModalHandler(coach)}>
+                            {coach.name}
+                          </p>
                           <AiTwotoneDelete className="text-danger hover:text-danger2" />
                         </div>
                       ),
@@ -167,6 +178,11 @@ const Teams = () => {
               isModalOpen={isCoachModalOpen}
               setIsModalOpen={setIsCoachModalOpen}
               coaches={selectedTeam.length !== 0 ? getFilteredCoaches() : []}
+            />
+            <DetailsModal
+              coachDetails={coachDetails}
+              isDetailsModal={isDetailsModal}
+              setIsDetailsModal={setIsDetailsModal}
             />
           </div>
           <Table dataSource={data} columns={columns} pagination={false} />

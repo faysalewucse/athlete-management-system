@@ -1,10 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { Checkbox, Modal, Input, Pagination } from "antd";
 import { useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import CustomLoader from "../CustomLoader";
-import { Loading } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
 const AssignTeamModal = ({
@@ -12,9 +8,9 @@ const AssignTeamModal = ({
   setIsModalOpen,
   selectedCoach,
   refetch,
+  teams,
 }) => {
   const [axiosSecure] = useAxiosSecure();
-  const { currentUser } = useAuth();
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTeam, setSelectedTeam] = useState([]);
@@ -46,18 +42,8 @@ const AssignTeamModal = ({
     setIsModalOpen(false);
   };
 
-  const { isLoading, data: teams = [] } = useQuery({
-    queryKey: ["teams", currentUser?.email],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-      );
-      return data;
-    },
-  });
-
   // Filter teams based on the search input
-  const filteredTeams = teams.filter((team) =>
+  const filteredTeams = teams?.filter((team) =>
     team?.teamName?.toLowerCase().includes(searchValue.toLowerCase())
   );
 
@@ -105,6 +91,22 @@ const AssignTeamModal = ({
       okText="Add"
       okType="default"
       onCancel={handleCancel}
+      footer={
+        teams.length === 0 ? null : (
+          <div className="flex items-center justify-end gap-4">
+            <button
+              className="bg-primary font-medium text-white px-3 py-1 rounded"
+              key="submit"
+              onClick={handleOk}
+            >
+              Add
+            </button>
+            <button key="cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        )
+      }
     >
       <Input.Search
         placeholder="Search teams by name"
@@ -112,21 +114,18 @@ const AssignTeamModal = ({
         className="mb-2"
         size="large"
       />
-      {isLoading ? (
-        <CustomLoader isLoading={Loading} />
-      ) : (
-        <div>
-          <Checkbox.Group options={options} onChange={onChange} />
 
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={totalTeams}
-            onChange={(page) => setCurrentPage(page)}
-            className="mt-2"
-          />
-        </div>
-      )}
+      <div>
+        <Checkbox.Group options={options} onChange={onChange} />
+
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={totalTeams}
+          onChange={(page) => setCurrentPage(page)}
+          className="mt-2"
+        />
+      </div>
     </Modal>
   );
 };

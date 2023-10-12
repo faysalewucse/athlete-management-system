@@ -10,7 +10,7 @@ import AddTeamModal from "../../components/modals/AddTeamModal";
 import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import AssignCoachModal from "../../components/modals/AssignCoachModal";
-import DetailsModal from "../../components/modals/DetailsModal";
+import CoachDetailsModal from "../../components/modals/CoachDetailsModal";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -58,7 +58,7 @@ const Teams = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [isCoachModalOpen, setIsCoachModalOpen] = useState(false);
-  const [isDetailsModal, setIsDetailsModal] = useState(false);
+  const [isCoachDetailsModal, setIsCoachDetailsModal] = useState(false);
   const [coachDetails, setCoachDetails] = useState([]);
 
   const coachModalHandler = (team) => {
@@ -68,7 +68,7 @@ const Teams = () => {
 
   const detailsModalHandler = (coach) => {
     setCoachDetails(coach);
-    setIsDetailsModal(true);
+    setIsCoachDetailsModal(true);
   };
 
   const data = currentTeams?.map((team) => {
@@ -179,10 +179,10 @@ const Teams = () => {
               setIsModalOpen={setIsCoachModalOpen}
               coaches={selectedTeam.length !== 0 ? getFilteredCoaches() : []}
             />
-            <DetailsModal
+            <CoachDetailsModal
               coachDetails={coachDetails}
-              isDetailsModal={isDetailsModal}
-              setIsDetailsModal={setIsDetailsModal}
+              isCoachDetailsModal={isCoachDetailsModal}
+              setIsCoachDetailsModal={setIsCoachDetailsModal}
             />
           </div>
           <Table dataSource={data} columns={columns} pagination={false} />

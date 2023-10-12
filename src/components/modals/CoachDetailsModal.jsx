@@ -1,12 +1,16 @@
 import { Modal } from "antd";
 import avatar from "/avatar.png";
 
-const DetailsModal = ({ isDetailsModal, setIsDetailsModal, coachDetails }) => {
+const CoachDetailsModal = ({
+  isCoachDetailsModal,
+  setIsCoachDetailsModal,
+  coachDetails,
+}) => {
   const handleCancel = () => {
-    setIsDetailsModal(false);
+    setIsCoachDetailsModal(false);
   };
   return (
-    <Modal open={isDetailsModal} footer onCancel={handleCancel}>
+    <Modal open={isCoachDetailsModal} footer onCancel={handleCancel}>
       <div>
         <h1 className="text-xl text-gradient font-semibold text-center border-b border-black mb-4">
           Coach Details
@@ -55,4 +59,4 @@ const DetailsModal = ({ isDetailsModal, setIsDetailsModal, coachDetails }) => {
   );
 };
 
-export default DetailsModal;
+export default CoachDetailsModal;

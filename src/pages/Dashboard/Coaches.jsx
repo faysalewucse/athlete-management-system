@@ -111,7 +111,6 @@ const Coaches = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {console.log(record.status)}
           {currentUser?.role === "admin" && (
             <div>
               {record.role === "admin" && record?.status === "pending" ? (

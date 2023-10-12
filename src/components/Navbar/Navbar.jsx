@@ -15,7 +15,6 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const location = useLocation();
-  console.log(location.pathname);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

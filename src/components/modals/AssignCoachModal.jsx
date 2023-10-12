@@ -14,7 +14,6 @@ const AssignCoachModal = ({
   const [searchValue, setSearchValue] = useState(""); // State for search input
   const [currentPage, setCurrentPage] = useState(1); // State for pagination
   const [selectedCoach, setSelectedCoach] = useState([]); // State for pagination
-
   const handleOk = async () => {
     if (selectedTeam.length === 0) {
       toast.error("Please select a team");
@@ -94,6 +93,22 @@ const AssignCoachModal = ({
       okText="Add"
       okType="default"
       onCancel={handleCancel}
+      footer={
+        coaches.length === 0 ? null : (
+          <div className="flex items-center justify-end gap-4">
+            <button
+              className="bg-primary font-medium text-white px-3 py-1 rounded"
+              key="submit"
+              onClick={handleOk}
+            >
+              OK
+            </button>
+            <button key="cancel" onClick={handleCancel}>
+              Cancel
+            </button>
+          </div>
+        )
+      }
     >
       <div>
         {coaches.length !== 0 ? (

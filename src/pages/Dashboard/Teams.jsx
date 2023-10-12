@@ -43,20 +43,6 @@ const Teams = () => {
     },
   });
 
-  // const handleApprove = async (id) => {
-  //   if (currentUser?.status === "pending") {
-  //     toast.error("You are not approved by Super Admin!");
-  //     return;
-  //   }
-  //   await axiosSecure
-  //     .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         refetch().then(() => toast.success("Approved"));
-  //       }
-  //     });
-  // };
-
   // pagination
   const handlePageChange = (page) => {
     setCurrentPage(page);

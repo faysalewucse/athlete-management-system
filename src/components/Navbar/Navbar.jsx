@@ -81,7 +81,7 @@ export const Navbar = () => {
   return (
     <div
       className={`fixed top-0 left-0 right-0 p-5 z-10 ${
-        isScrolling || location.pathname != "/"
+        isScrolling || location.pathname !== "/"
           ? "bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% py-5"
           : "bg-transparent"
       }`}

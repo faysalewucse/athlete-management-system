@@ -9,6 +9,7 @@ import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
 import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
+import AssignCoachModal from "../../components/modals/AssignCoachModal";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -68,7 +69,13 @@ const Teams = () => {
   const currentTeams = teams.slice(startIndex, endIndex);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState([]);
+  const [isCoachModalOpen, setIsCoachModalOpen] = useState(false);
 
+  const coachModalHandler = (team) => {
+    setSelectedTeam(team);
+    setIsCoachModalOpen(true);
+  };
   const data = currentTeams?.map((team) => {
     return {
       key: team._id,
@@ -95,41 +102,59 @@ const Teams = () => {
       title: "Coaches",
       dataIndex: "coaches",
       key: "coaches",
-      render: (coaches) => (
+      render: (coaches, record) => (
         <div>
           {coaches.length === 0 ? (
             <div className="flex gap-2">
-              <Button>Assign Coaches</Button>
+              <Button onClick={() => coachModalHandler(record)}>
+                Assign Coaches
+              </Button>
             </div>
           ) : (
-            <Dropdown
-              menu={{
-                items: coaches.map((coach) => {
-                  return {
-                    key: coach._id,
-                    label: (
-                      <div className="flex items-center justify-between gap-5 text-lg">
-                        <p>{coach.name}</p>
-                        <AiTwotoneDelete className="text-danger hover:text-danger2" />
-                      </div>
-                    ),
-                  };
-                }),
-              }}
-              trigger={["click"]}
-            >
-              <Button>
-                <Space>
-                  View Coaches ({coaches.length})
-                  <BiChevronDown />
-                </Space>
-              </Button>
-            </Dropdown>
+            <div className="flex gap-2">
+              <Dropdown
+                menu={{
+                  items: coaches.map((coach) => {
+                    return {
+                      key: coach._id,
+                      label: (
+                        <div className="flex items-center justify-between gap-5 text-lg">
+                          <p>{coach.name}</p>
+                          <AiTwotoneDelete className="text-danger hover:text-danger2" />
+                        </div>
+                      ),
+                    };
+                  }),
+                }}
+                trigger={["click"]}
+              >
+                <Button>
+                  <Space>
+                    View Coaches ({coaches.length})
+                    <BiChevronDown />
+                  </Space>
+                </Button>
+              </Dropdown>
+              <Button onClick={() => coachModalHandler(record)}>+</Button>
+            </div>
           )}
         </div>
       ),
     },
   ];
+
+  const getFilteredCoaches = () => {
+    const selectedCoachEmails = selectedTeam.coaches.map(
+      (coach) => coach.email
+    );
+
+    // Filter coaches whose email matches any of the coach emails in the selected team
+    const filteredCoaches = coaches.filter(
+      (coach) => !selectedCoachEmails.includes(coach.email)
+    );
+
+    return filteredCoaches;
+  };
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
@@ -149,6 +174,13 @@ const Teams = () => {
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
               coaches={coaches}
+            />
+            <AssignCoachModal
+              refetch={refetch}
+              selectedTeam={selectedTeam}
+              isModalOpen={isCoachModalOpen}
+              setIsModalOpen={setIsCoachModalOpen}
+              coaches={selectedTeam.length !== 0 ? getFilteredCoaches() : []}
             />
           </div>
           <Table dataSource={data} columns={columns} pagination={false} />

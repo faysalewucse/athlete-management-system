@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
-import TeamListModal from "../../components/modals/TeamListModal";
+import AssignTeamModal from "../../components/modals/AssignTeamModal";
 import { BiChevronDown } from "react-icons/bi";
 
 const Coaches = () => {
@@ -179,7 +179,7 @@ const Coaches = () => {
           />
 
           {currentUser?.role == "admin" && (
-            <TeamListModal
+            <AssignTeamModal
               refetch={refetch}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}

@@ -7,7 +7,7 @@ import CustomLoader from "../CustomLoader";
 import { Loading } from "@nextui-org/react";
 import toast from "react-hot-toast";
 
-const TeamListModal = ({
+const AssignTeamModal = ({
   isModalOpen,
   setIsModalOpen,
   selectedCoach,
@@ -15,9 +15,9 @@ const TeamListModal = ({
 }) => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
-  const [searchValue, setSearchValue] = useState(""); // State for search input
-  const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [selectedTeam, setSelectedTeam] = useState([]); // State for pagination
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTeam, setSelectedTeam] = useState([]);
 
   const handleOk = async () => {
     if (selectedTeam.length === 0) {
@@ -25,7 +25,7 @@ const TeamListModal = ({
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/users/assignTeam/${
+          `${import.meta.env.VITE_BASE_API_URL}/coach/assignTeam/${
             selectedCoach.email
           }`,
           selectedTeam
@@ -131,4 +131,4 @@ const TeamListModal = ({
   );
 };
 
-export default TeamListModal;
+export default AssignTeamModal;

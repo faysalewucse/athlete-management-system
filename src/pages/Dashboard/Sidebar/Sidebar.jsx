@@ -112,6 +112,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         icon: <MdEvent />,
       },
     ],
+    athlete: [
+      {
+        key: 1,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+      {
+        key: 2,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
+      },
+    ],
   };
 
   let items = [...sidebarItems["general"]];

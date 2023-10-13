@@ -4,7 +4,7 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { Button, Dropdown, Pagination, Space, Table } from "antd";
+import { Button, Card, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
 import { BiChevronDown } from "react-icons/bi";
@@ -41,6 +41,23 @@ const Teams = () => {
         }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
+    },
+  });
+
+  // data for logged in as coach
+
+  const { data: coachTeams = [] } = useQuery({
+    queryKey: ["coachTeams", currentUser?.email],
+    queryFn: async () => {
+      if (currentUser?.role === "coach") {
+        const { data } = await axiosSecure.get(
+          `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
+            currentUser?.email
+          }`
+        );
+        return data;
+      }
+      return [];
     },
   });
 
@@ -159,13 +176,15 @@ const Teams = () => {
         <Container>
           <div className="flex justify-between">
             <SectionHeader title={"Teams"} quantity={teams.length} />
-            <Button
-              type="btn"
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gradient text-white"
-            >
-              Add Team +
-            </Button>
+            {currentUser?.role === "admin" && (
+              <Button
+                type="btn"
+                onClick={() => setIsModalOpen(true)}
+                className="bg-gradient text-white"
+              >
+                Add Team +
+              </Button>
+            )}
             <AddTeamModal
               refetch={refetch}
               isModalOpen={isModalOpen}
@@ -185,7 +204,19 @@ const Teams = () => {
               setIsCoachDetailsModal={setIsCoachDetailsModal}
             />
           </div>
-          <Table dataSource={data} columns={columns} pagination={false} />
+          {currentUser?.role === "admin" ? (
+            <Table dataSource={data} columns={columns} pagination={false} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {coachTeams.map((team) => (
+                <Card key={team?._id} bordered={false} title={team?.teamName}>
+                  <p>Sport: {team?.sports}</p>
+                  <p>Admin: {team?.adminEmail}</p>
+                  <p>Coaches: {team?.coaches}</p>
+                </Card>
+              ))}
+            </div>
+          )}
 
           <Pagination
             current={currentPage}

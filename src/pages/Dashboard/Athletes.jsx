@@ -32,6 +32,10 @@ export const Athletes = () => {
 
   // status update
   const handleApprove = async (id) => {
+    if (currentUser?.status === "pending") {
+      toast.error("you are not eligible to approve!");
+      return;
+    }
     await axiosSecure
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
@@ -75,13 +79,6 @@ export const Athletes = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
-      // render: (_, record) => (
-      //   <div>
-      //     {team.map((t) => (
-      //       <p>{t}</p>
-      //     ))}
-      //   </div>
-      // ),
     },
     {
       title: currentUser?.role !== "sadmin" ? "Action" : "",
@@ -130,6 +127,7 @@ export const Athletes = () => {
       status: athlete.status,
     };
   });
+  console.log(currentAthletes);
 
   return (
     <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">

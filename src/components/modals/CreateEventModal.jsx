@@ -19,6 +19,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const onCreate = async (values) => {
     const eventData = {
       ...values,
+      createdAt: Date.now(),
       adminEmail: currentUser?.email,
     };
 

@@ -24,7 +24,9 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/users/byRole?role=athlete&adminEmail=${currentUser?.email}}`
       );
       return data;
     },

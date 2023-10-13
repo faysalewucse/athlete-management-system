@@ -17,15 +17,27 @@ export const Navbar = () => {
 
   const avatarItems = [
     {
-      label: <Link to={"/"}>Home</Link>,
+      label: (
+        <div className="bg-dark/5 py-2 pr-10 pl-2 rounded-md text-left">
+          <p className="text-lg font-semibold">
+            {currentUser?.name}{" "}
+            <span className="capitalize">({currentUser?.role})</span>
+          </p>
+          <p className="text-xs">{currentUser?.email}</p>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      label: <Link to={"/dashboard"}>Dashboard</Link>,
       key: "1",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={"/"}>Home</Link>,
       key: "2",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "3",
     },
     {
@@ -69,14 +81,7 @@ export const Navbar = () => {
   //   setIsScrolling(true);
   // }
 
-  const navItems = [
-    { route: "/", pathName: "Home" },
-    {
-      route: "/dashboard",
-      pathName: "Dashboard",
-      condition: currentUser?.role === "approved" ? true : false,
-    },
-  ];
+  const navItems = [{ route: "/", pathName: "Home" }];
 
   return (
     <div
@@ -99,7 +104,7 @@ export const Navbar = () => {
                 className={({ isActive }) =>
                   isActive
                     ? "font-semibold text-purple-400"
-                    : "hover:text-primary text-white"
+                    : "hover:text-white transition-300 text-white"
                 }
                 to={item.route}
                 onClick={() => setOpen(false)}

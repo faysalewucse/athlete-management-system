@@ -9,6 +9,7 @@ import Teams from "../pages/Dashboard/Teams";
 import { SuperAdminRoute } from "./SuperAdminRoute";
 import { CoachRoute } from "./CoachRoute";
 import Events from "../pages/Dashboard/Events";
+import { ValidUserRoute } from "./ValidUserRoute";
 
 export const dashboardRouter = [
   {
@@ -42,9 +43,9 @@ export const dashboardRouter = [
   {
     path: "events",
     element: (
-      <AdminRoute>
+      <ValidUserRoute>
         <Events />
-      </AdminRoute>
+      </ValidUserRoute>
     ),
   },
   {

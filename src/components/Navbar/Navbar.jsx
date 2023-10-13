@@ -15,6 +15,7 @@ export const Navbar = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const location = useLocation();
 
+  console.log(currentUser);
   const avatarItems = [
     {
       label: (

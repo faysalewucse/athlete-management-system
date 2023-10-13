@@ -1,4 +1,3 @@
-import { FcGoogle } from "react-icons/fc";
 import { useAuth } from "../contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { googleSignIn, login } = useAuth();
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -47,7 +46,7 @@ export const Login = () => {
           <h2 className="text-3xl font-bold mb-8 text-center text-dark">
             Login
           </h2>
-          <div className="rounded-t mb-0 px-6 py-6">
+          {/* <div className="rounded-t mb-0 px-6 py-6">
             <h6
               onClick={googleSignIn}
               className="flex items-center justify-center gap-3 text-gray-600 dark:bg-slate-700 dark:text-white bg-white p-2 border rounded-lg font-bold hover:scale-105 transition-all duration-200 cursor-pointer"
@@ -56,11 +55,11 @@ export const Login = () => {
             </h6>
 
             <hr className="mt-6 border-b-1 border-gray-400" />
-          </div>
+          </div> */}
           <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-            <div className="text-center mb-3 font-bold">
-              <small>Or sign in with credentials</small>
-            </div>
+            {/* <div className="text-center mb-3 font-bold">
+              <small>Sign in with credentials</small>
+            </div> */}
             <form onSubmit={handleSubmit(loginHandler)}>
               <div className="relative w-full mb-3">
                 <label

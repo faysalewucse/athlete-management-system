@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Dropdown, Modal } from "antd";
-
+import { Modal } from "antd";
 import { BiSolidBell } from "react-icons/bi";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
@@ -14,17 +13,29 @@ export const Navbar = ({ setSidebarOpen }) => {
   const { currentUser, logout } = useAuth();
   // const [isOpen, setIsOpen] = useState(false);
 
-  const items = [
+  const avatarItems = [
     {
-      label: <Link to={"/"}>Home</Link>,
+      label: (
+        <div className="bg-dark/5 py-2 pr-10 pl-2 rounded-md text-left">
+          <p className="text-lg font-semibold">
+            {currentUser?.name}{" "}
+            <span className="capitalize">({currentUser?.role})</span>
+          </p>
+          <p className="text-xs">{currentUser?.email}</p>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      label: <Link to={"/dashboard"}>Dashboard</Link>,
       key: "1",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={"/"}>Home</Link>,
       key: "2",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "3",
     },
     {
@@ -62,17 +73,10 @@ export const Navbar = ({ setSidebarOpen }) => {
             size={20}
             className="text-primary cursor-pointer"
           />
-          <Dropdown
-            className="cursor-pointer"
-            menu={{ items }}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <BiSolidBell className="text-3xl text-primary" />
-            </a>
-          </Dropdown>
-          <AvatarDropdown currentUser={currentUser} items={items} />
+
+          <BiSolidBell className="text-3xl text-primary" />
+
+          <AvatarDropdown currentUser={currentUser} items={avatarItems} />
         </div>
         <Modal
           title="Search"

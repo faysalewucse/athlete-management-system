@@ -21,9 +21,12 @@ export const Dashboard = () => {
     queryKey: ["all-users"],
     queryFn: async () => {
       let URL = "/users";
-      if (currentUser?.role === "admin") URL = "/users/coach-athlete-parents";
-      else if (currentUser?.role === "coach") URL = "/users/athlete-parents";
-      else if (currentUser?.role === "parents") URL = "/users/athlete";
+      if (currentUser?.role === "admin")
+        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
+      else if (currentUser?.role === "coach")
+        URL = `/users/athlete-parents/${currentUser?.email}`;
+      else if (currentUser?.role === "parents")
+        URL = `/users/athlete/${currentUser?.email}`;
 
       if (currentUser?.role === "sadmin" || currentUser?.role === "admin") {
         const { data } = await axiosSecure.get(

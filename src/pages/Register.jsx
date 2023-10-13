@@ -79,7 +79,7 @@ export const Register = () => {
       };
 
       if (role === "admin") userData.institute = institute;
-      if (role === "coach") userData.adminEmail = selectedInstitute;
+      else userData.adminEmail = selectedInstitute;
 
       // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
@@ -264,14 +264,16 @@ export const Register = () => {
               ]}
             >
               <Select placeholder="Choose" className="w-full" size="large">
-                {admins.map((admin) => (
-                  <Option key={admin?._id} value={admin?.email}>
-                    {admin?.institute}{" "}
-                    <span className="text-xs text-slate-400">
-                      ({admin?.name})
-                    </span>
-                  </Option>
-                ))}
+                {admins
+                  .filter((admin) => admin.status === "approved")
+                  .map((admin) => (
+                    <Option key={admin?._id} value={admin?.email}>
+                      {admin?.institute}{" "}
+                      <span className="text-xs text-slate-400">
+                        ({admin?.name})
+                      </span>
+                    </Option>
+                  ))}
               </Select>
             </Form.Item>
           )}

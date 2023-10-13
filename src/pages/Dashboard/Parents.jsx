@@ -70,7 +70,12 @@ const Parents = () => {
       key: "name",
       render: (text) => <a>{text}</a>,
     },
-
+    {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a>{text}</a>,
+    },
     {
       title:
         currentUser?.role !== "sadmin" && currentUser?.role !== "admin"
@@ -116,6 +121,7 @@ const Parents = () => {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
       name: parent.name,
+      email: parent.email,
       status: parent.status,
     };
   });

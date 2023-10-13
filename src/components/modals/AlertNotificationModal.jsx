@@ -18,7 +18,7 @@ const AlertNotificationModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const onCreate = async (values) => {
     const notificationData = {
       ...values,
-      createdAt: Date.now(),
+      createdAt: new Date(Date.now()).toISOString(),
       adminEmail: currentUser?.email,
     };
 

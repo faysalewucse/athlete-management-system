@@ -9,12 +9,16 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
+import { tr } from "date-fns/locale";
+import ParentDetailsModal from "../../components/modals/ParentDetailsModal";
 
 const Parents = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isParentDetailsModal, setIsParentDetailsModal] = useState(false);
+  const [parentDetails, setParentDetails] = useState([]);
 
   const {
     isLoading,
@@ -51,6 +55,11 @@ const Parents = () => {
   const endIndex = startIndex + pageSize;
   const currentParents = parents.slice(startIndex, endIndex);
 
+  const handleParentDetailsModal = (parent) => {
+    setIsParentDetailsModal(true);
+    setParentDetails(parent);
+  };
+
   const columns = [
     {
       title: "Image",
@@ -68,7 +77,11 @@ const Parents = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      render: (parent) => (
+        <button onClick={() => handleParentDetailsModal(parent)}>
+          {parent?.name}
+        </button>
+      ),
     },
 
     {
@@ -115,7 +128,7 @@ const Parents = () => {
     return {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
-      name: parent.name,
+      name: parent,
       status: parent.status,
     };
   });
@@ -132,6 +145,11 @@ const Parents = () => {
             pageSize={pageSize}
             onChange={handlePageChange}
             style={{ marginTop: "16px", textAlign: "right" }}
+          />
+          <ParentDetailsModal
+            isParentDetailsModal={isParentDetailsModal}
+            setIsParentDetailsModal={setIsParentDetailsModal}
+            parentDetails={parentDetails}
           />
         </Container>
       ) : (

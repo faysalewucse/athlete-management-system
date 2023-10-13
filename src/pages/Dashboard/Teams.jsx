@@ -210,9 +210,9 @@ const Teams = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {coachTeams.map((team) => (
                 <Card key={team?._id} bordered={false} title={team?.teamName}>
-                  <p>Sport: {team?.sports}</p>
-                  <p>Admin: {team?.adminEmail}</p>
-                  <p>Coaches: {team?.coaches}</p>
+                  <p className="text-base font-medium text-gray-500">Sport: {team?.sports}</p>
+                  <p className="text-base font-medium text-gray-500">Admin: {team?.adminEmail}</p>
+                  <p className="text-base font-medium text-gray-500">Coaches: {team?.coaches}</p>
                 </Card>
               ))}
             </div>

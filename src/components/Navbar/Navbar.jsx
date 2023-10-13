@@ -81,7 +81,10 @@ export const Navbar = () => {
   //   setIsScrolling(true);
   // }
 
-  const navItems = [{ route: "/", pathName: "Home" }];
+  const navItems = [
+    { route: "/", pathName: "Home" },
+    { route: "/dashboard", pathName: "Dashboard" },
+  ];
 
   return (
     <div

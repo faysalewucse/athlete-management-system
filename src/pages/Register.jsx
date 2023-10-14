@@ -25,7 +25,7 @@ export const Register = () => {
     queryKey: ["admins"],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=admin`
+        `${import.meta.env.VITE_BASE_API_URL}/admins`
       );
       return data;
     },
@@ -64,7 +64,7 @@ export const Register = () => {
         }
       }
 
-      signup(email, password, name, photoURL);
+      await signup(email, password, name, photoURL);
 
       const userData = {
         email,
@@ -79,7 +79,7 @@ export const Register = () => {
       };
 
       if (role === "admin") userData.institute = institute;
-      if (role === "coach") userData.adminEmail = selectedInstitute;
+      else userData.adminEmail = selectedInstitute;
 
       // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
@@ -264,7 +264,7 @@ export const Register = () => {
               ]}
             >
               <Select placeholder="Choose" className="w-full" size="large">
-                {admins.map((admin) => (
+                {admins?.map((admin) => (
                   <Option key={admin?._id} value={admin?.email}>
                     {admin?.institute}{" "}
                     <span className="text-xs text-slate-400">

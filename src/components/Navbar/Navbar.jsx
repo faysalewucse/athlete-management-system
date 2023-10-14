@@ -6,6 +6,7 @@ import Brand from "../Brand";
 import { Button } from "antd";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import AvatarDropdown from "../AvatarDropdown";
+import toast from "react-hot-toast";
 
 export const Navbar = () => {
   // const { isDark, toggleDarkMode } = useTheme();
@@ -14,6 +15,11 @@ export const Navbar = () => {
   const { currentUser, logout } = useAuth();
   const [isScrolling, setIsScrolling] = useState(false);
   const location = useLocation();
+
+  const logoutHandler = () => {
+    logout();
+    toast.success("Logged out Successfully");
+  };
 
   const avatarItems = [
     {
@@ -44,7 +50,7 @@ export const Navbar = () => {
       type: "divider",
     },
     {
-      label: <div onClick={logout}>Logout</div>,
+      label: <div onClick={logoutHandler}>Logout</div>,
       danger: true,
       key: "4",
     },

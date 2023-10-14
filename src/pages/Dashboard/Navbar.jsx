@@ -1,37 +1,54 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Dropdown, Modal } from "antd";
-
+import { Modal } from "antd";
 import { BiSolidBell } from "react-icons/bi";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
+import toast from "react-hot-toast";
 
 export const Navbar = ({ setSidebarOpen }) => {
   // const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   // const [isOpen, setIsOpen] = useState(false);
 
-  const items = [
+  const logoutHandler = () => {
+    logout();
+    toast.success("Logged out Successfully");
+  };
+
+  const avatarItems = [
     {
-      label: <Link to={"/"}>Home</Link>,
+      label: (
+        <div className="bg-dark/5 py-2 pr-10 pl-2 rounded-md text-left">
+          <p className="text-lg font-semibold">
+            {currentUser?.name}{" "}
+            <span className="capitalize">({currentUser?.role})</span>
+          </p>
+          <p className="text-xs">{currentUser?.email}</p>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      label: <Link to={"/dashboard"}>Dashboard</Link>,
       key: "1",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={"/"}>Home</Link>,
       key: "2",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "3",
     },
     {
       type: "divider",
     },
     {
-      label: <div onClick={logout}>Logout</div>,
+      label: <div onClick={logoutHandler}>Logout</div>,
       danger: true,
       key: "4",
     },
@@ -62,17 +79,10 @@ export const Navbar = ({ setSidebarOpen }) => {
             size={20}
             className="text-primary cursor-pointer"
           />
-          <Dropdown
-            className="cursor-pointer"
-            menu={{ items }}
-            trigger={["click"]}
-            placement="bottomRight"
-          >
-            <a onClick={(e) => e.preventDefault()}>
-              <BiSolidBell className="text-3xl text-primary" />
-            </a>
-          </Dropdown>
-          <AvatarDropdown currentUser={currentUser} items={items} />
+
+          <BiSolidBell className="text-3xl text-primary" />
+
+          <AvatarDropdown currentUser={currentUser} items={avatarItems} />
         </div>
         <Modal
           title="Search"

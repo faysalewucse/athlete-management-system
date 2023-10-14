@@ -9,7 +9,7 @@ const AvatarDropdown = ({ items, currentUser }) => {
           className="border-2 border-primary rounded-full w-10 cursor-pointer"
           src={
             currentUser
-              ? currentUser?.photoURL !== ""
+              ? currentUser?.photoURL
                 ? currentUser?.photoURL
                 : avatar
               : avatar

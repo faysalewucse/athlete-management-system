@@ -210,7 +210,12 @@ const Coaches = () => {
         <Container>
           <SectionHeader title={"Coaches"} quantity={coaches?.length} />
 
-          <Table dataSource={data} pagination={false} columns={columns} />
+          <Table
+            className="mt-5"
+            dataSource={data}
+            pagination={false}
+            columns={columns}
+          />
 
           <Pagination
             current={currentPage}

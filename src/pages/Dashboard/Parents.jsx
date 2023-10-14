@@ -9,7 +9,6 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
-import { tr } from "date-fns/locale";
 import ParentDetailsModal from "../../components/modals/ParentDetailsModal";
 
 const Parents = () => {
@@ -83,7 +82,12 @@ const Parents = () => {
         </button>
       ),
     },
-
+    {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a>{text}</a>,
+    },
     {
       title:
         currentUser?.role !== "sadmin" && currentUser?.role !== "admin"
@@ -128,7 +132,8 @@ const Parents = () => {
     return {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
-      name: parent,
+      name: parent.name,
+      email: parent.email,
       status: parent.status,
     };
   });

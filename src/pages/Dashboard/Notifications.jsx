@@ -4,12 +4,14 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import CustomLoader from "../../components/CustomLoader";
+import { format, parseISO } from "date-fns";
 import { Container } from "../../components/Container";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Pagination } from "antd";
 import AlertNotificationModal from "../../components/modals/AlertNotificationModal";
 import { SectionHeader } from "../../components/shared/SectionHeader";
+import { RxClock } from "react-icons/rx";
 
 const Notifications = () => {
   const { currentUser } = useAuth();
@@ -64,10 +66,10 @@ const Notifications = () => {
                 No notification Created
               </div>
             ) : (
-              <div className="">
+              <div className="flex flex-col gap-2">
                 {visibleNotifications?.map((notification) => (
                   <div
-                    className="bg-white shadow-lg p-2 rounded-lg"
+                    className="bg-white shadow p-2 rounded-lg"
                     key={notification._id}
                   >
                     <div className="flex items-center justify-between">
@@ -79,12 +81,12 @@ const Notifications = () => {
                         </div>
                       )}
                     </div>
-                    {/* <div className="mt-10 flex items-center gap-2">
+                    <div className="mt-1 flex items-center text-xs gap-2">
                       <RxClock />
                       <p>
-                        {format(parse(notification.createdAt), "hh:mm a")}
+                        {format(parseISO(notification.createdAt), "hh:mm a")}
                       </p>
-                    </div> */}
+                    </div>
                   </div>
                 ))}
               </div>

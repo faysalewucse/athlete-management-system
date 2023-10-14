@@ -7,11 +7,17 @@ import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
+import toast from "react-hot-toast";
 
 export const Navbar = ({ setSidebarOpen }) => {
   // const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   // const [isOpen, setIsOpen] = useState(false);
+
+  const logoutHandler = () => {
+    logout();
+    toast.success("Logged out Successfully");
+  };
 
   const avatarItems = [
     {
@@ -42,7 +48,7 @@ export const Navbar = ({ setSidebarOpen }) => {
       type: "divider",
     },
     {
-      label: <div onClick={logout}>Logout</div>,
+      label: <div onClick={logoutHandler}>Logout</div>,
       danger: true,
       key: "4",
     },

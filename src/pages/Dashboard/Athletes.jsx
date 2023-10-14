@@ -26,7 +26,7 @@ export const Athletes = () => {
       const { data } = await axiosSecure.get(
         `${
           import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=athlete&adminEmail=${currentUser?.email}}`
+        }/users/byRole?role=athlete&adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -129,7 +129,6 @@ export const Athletes = () => {
       status: athlete.status,
     };
   });
-  console.log(currentAthletes);
 
   return (
     <div className="min-h-[90vh] bg-transparent p-5 text-slate-800">

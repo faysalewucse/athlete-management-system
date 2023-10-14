@@ -6,6 +6,7 @@ import Brand from "../Brand";
 import { Button } from "antd";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import AvatarDropdown from "../AvatarDropdown";
+import toast from "react-hot-toast";
 
 export const Navbar = () => {
   // const { isDark, toggleDarkMode } = useTheme();
@@ -15,24 +16,41 @@ export const Navbar = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const location = useLocation();
 
+  const logoutHandler = () => {
+    logout();
+    toast.success("Logged out Successfully");
+  };
+
   const avatarItems = [
     {
-      label: <Link to={"/"}>Home</Link>,
+      label: (
+        <div className="bg-dark/5 py-2 pr-10 pl-2 rounded-md text-left">
+          <p className="text-lg font-semibold">
+            {currentUser?.name}{" "}
+            <span className="capitalize">({currentUser?.role})</span>
+          </p>
+          <p className="text-xs">{currentUser?.email}</p>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      label: <Link to={"/dashboard"}>Dashboard</Link>,
       key: "1",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={"/"}>Home</Link>,
       key: "2",
     },
     {
-      label: <a href="https://www.aliyun.com">2nd menu item</a>,
+      label: <Link to={"/profile"}>Profile</Link>,
       key: "3",
     },
     {
       type: "divider",
     },
     {
-      label: <div onClick={logout}>Logout</div>,
+      label: <div onClick={logoutHandler}>Logout</div>,
       danger: true,
       key: "4",
     },
@@ -71,11 +89,7 @@ export const Navbar = () => {
 
   const navItems = [
     { route: "/", pathName: "Home" },
-    {
-      route: "/dashboard",
-      pathName: "Dashboard",
-      condition: currentUser?.role === "approved" ? true : false,
-    },
+    { route: "/dashboard", pathName: "Dashboard" },
   ];
 
   return (
@@ -99,7 +113,7 @@ export const Navbar = () => {
                 className={({ isActive }) =>
                   isActive
                     ? "font-semibold text-purple-400"
-                    : "hover:text-primary text-white"
+                    : "hover:text-white transition-300 text-white"
                 }
                 to={item.route}
                 onClick={() => setOpen(false)}

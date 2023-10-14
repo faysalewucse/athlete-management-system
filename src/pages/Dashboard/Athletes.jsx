@@ -7,7 +7,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { Pagination, Space, Table } from "antd";
+import { Button, Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
 
 export const Athletes = () => {
@@ -24,7 +24,9 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/users/byRole?role=athlete&adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -33,7 +35,7 @@ export const Athletes = () => {
   // status update
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Super Admin!");
+      toast.error("you are not eligible to approve!");
       return;
     }
     await axiosSecure
@@ -79,39 +81,26 @@ export const Athletes = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
-      // render: (_, record) => (
-      //   <div>
-      //     {team.map((t) => (
-      //       <p>{t}</p>
-      //     ))}
-      //   </div>
-      // ),
     },
     {
       title: currentUser?.role !== "sadmin" ? "Action" : "",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {currentUser?.role !== "sadmin" && (
+          {currentUser?.role === "coach" && (
             <div>
               {record?.status === "pending" ? (
                 <div>
-                  <button
-                    onClick={() => handleApprove(record?._id)}
+                  <Button
+                    type="btn"
+                    onClick={() => handleApprove(record?.key)}
                     className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Approve
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button
-                    // onClick={() => modalHandler(record)}
-                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                  >
-                    Assign to a team
-                  </button>
-
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>

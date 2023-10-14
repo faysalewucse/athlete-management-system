@@ -23,7 +23,9 @@ export const Admins = () => {
     queryKey: ["admins", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=admin`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/users/byRole?role=admin&adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -75,6 +77,7 @@ export const Admins = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
+          {console.log(record)}
           {record.status === "pending" && (
             <Button onClick={() => handleStatus(record?.key, "approved")}>
               Approve
@@ -83,10 +86,10 @@ export const Admins = () => {
           <Button
             type="primary"
             danger
-            disabled={record.status === "deleted"}
-            onClick={() => handleStatus(record?.key, "deleted")}
+            disabled={record.status === "disabled"}
+            onClick={() => handleStatus(record?.key, "disabled")}
           >
-            {record.status == "deleted" ? "Deleted" : "Delete"}
+            {record.status === "disabled" ? "Disabled" : "Disable"}
           </Button>
         </Space>
       ),

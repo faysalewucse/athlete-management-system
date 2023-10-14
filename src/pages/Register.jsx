@@ -25,7 +25,7 @@ export const Register = () => {
     queryKey: ["admins"],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=admin`
+        `${import.meta.env.VITE_BASE_API_URL}/admins`
       );
       return data;
     },
@@ -64,7 +64,7 @@ export const Register = () => {
         }
       }
 
-      signup(email, password, name, photoURL);
+      await signup(email, password, name, photoURL);
 
       const userData = {
         email,
@@ -78,9 +78,8 @@ export const Register = () => {
         status: "pending",
       };
 
-      if (role === "athlete") userData.teams = [];
       if (role === "admin") userData.institute = institute;
-      if (role === "coach") userData.adminEmail = selectedInstitute;
+      else userData.adminEmail = selectedInstitute;
 
       // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
@@ -231,7 +230,6 @@ export const Register = () => {
           <Form.Item
             name="dateOfBirth"
             label="Date of Birth"
-            className={role !== "admin" && role !== "coach" ? "col-span-2" : ""}
             rules={[
               { required: true, message: "Date of Birth is required" },
               { validator: validateDateOfBirth },
@@ -244,7 +242,7 @@ export const Register = () => {
             />
           </Form.Item>
 
-          {role === "admin" && (
+          {role === "admin" ? (
             <Form.Item
               name="institute"
               label="Institute Name"
@@ -254,21 +252,19 @@ export const Register = () => {
             >
               <Input className="w-full px-4 py-2 rounded-lg" size="large" />
             </Form.Item>
-          )}
-
-          {role === "coach" && (
+          ) : (
             <Form.Item
               name="selectedInstitute"
               label="Select Institute"
               rules={[
                 {
                   required: true,
-                  message: "Institute selection is required for coach!",
+                  message: `Institute selection is required for ${role}!`,
                 },
               ]}
             >
               <Select placeholder="Choose" className="w-full" size="large">
-                {admins.map((admin) => (
+                {admins?.map((admin) => (
                   <Option key={admin?._id} value={admin?.email}>
                     {admin?.institute}{" "}
                     <span className="text-xs text-slate-400">

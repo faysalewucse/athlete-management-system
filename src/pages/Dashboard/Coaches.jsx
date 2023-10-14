@@ -13,6 +13,7 @@ import AssignTeamModal from "../../components/modals/AssignTeamModal";
 import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
+import Swal from "sweetalert2";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -96,6 +97,28 @@ const Coaches = () => {
     return filteredTeams;
   };
 
+  const handleDeleteTeam = async (id) => {
+    Swal.fire({
+      title: "Do you want to delete?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axiosSecure
+          .delete(`${import.meta.env.VITE_BASE_API_URL}/teams/${id}`)
+          .then((res) => {
+            if (res.status === 200) {
+              Swal.fire("Deleted!", "Team deleted.", "success");
+              refetch();
+            }
+          });
+      }
+    });
+  };
+
   const data = currentCoaches?.map((coach) => {
     return {
       key: coach?._id,
@@ -144,7 +167,10 @@ const Coaches = () => {
                           <p onClick={() => handleTeamDetails(team)}>
                             {team.teamName}
                           </p>
-                          <AiTwotoneDelete className="text-danger text-base hover:text-danger2" />
+                          <AiTwotoneDelete
+                            onClick={() => handleDeleteTeam(team?._id)}
+                            className="text-danger text-base hover:text-danger2"
+                          />
                         </div>
                       ),
                     };
@@ -210,7 +236,12 @@ const Coaches = () => {
         <Container>
           <SectionHeader title={"Coaches"} quantity={coaches?.length} />
 
-          <Table dataSource={data} pagination={false} columns={columns} />
+          <Table
+            className="mt-5"
+            dataSource={data}
+            pagination={false}
+            columns={columns}
+          />
 
           <Pagination
             current={currentPage}

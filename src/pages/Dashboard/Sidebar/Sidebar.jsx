@@ -1,12 +1,13 @@
 import { HiSquares2X2 } from "react-icons/hi2";
 import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdEvent } from "react-icons/md";
 import { RiAdminLine, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
 import { CgMiniPlayer } from "react-icons/cg";
+import { BiNotification } from "react-icons/bi";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   const { currentUser } = useAuth();
@@ -72,6 +73,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "teams",
         icon: <PiMicrosoftTeamsLogoFill />,
       },
+      {
+        key: 6,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
+      },
+      {
+        key: 7,
+        label: "Notifications",
+        route: "notifications",
+        icon: <BiNotification />,
+      },
     ],
     coach: [
       {
@@ -79,6 +92,38 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Athletes",
         route: "athletes",
         icon: <FaUsers />,
+      },
+      {
+        key: 4,
+        label: "Parents",
+        route: "parents",
+        icon: <RiParentLine />,
+      },
+      {
+        key: 5,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+      {
+        key: 6,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
+      },
+    ],
+    athlete: [
+      {
+        key: 1,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+      {
+        key: 2,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
       },
     ],
   };
@@ -96,7 +141,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       ref={sideRef}
       className={`md:block ${
         sidebarOpen ? "absolute bg-white z-50" : "hidden"
-      } bg-white shadow-lg shadow-blue-500 border-r-[3px] border-primary/25 border-opacity-50 min-h-screen overscroll-auto px-3 md:px-10   py-10`}
+      } bg-white shadow-lg shadow-blue-500 border-r-[3px] border-primary/25 border-opacity-50 min-h-screen overscroll-auto px-3 lg:px-10 md:px-5   py-10`}
     >
       <Brand />
       <div

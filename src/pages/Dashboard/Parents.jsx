@@ -9,12 +9,15 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
+import ParentDetailsModal from "../../components/modals/ParentDetailsModal";
 
 const Parents = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isParentDetailsModal, setIsParentDetailsModal] = useState(false);
+  const [parentDetails, setParentDetails] = useState([]);
 
   const {
     isLoading,
@@ -32,15 +35,11 @@ const Parents = () => {
 
   // status update
   const handleApprove = async (id) => {
-    if (currentUser?.status === "pending") {
-      toast.error("You are not approved by Super Admin!");
-      return;
-    }
     await axiosSecure
       .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
       .then((res) => {
         if (res.status === 200) {
-          refetch().then(() => toast.success("approved"));
+          refetch().then(() => toast.success("Parents approved"));
         }
       });
   };
@@ -54,6 +53,11 @@ const Parents = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentParents = parents.slice(startIndex, endIndex);
+
+  const handleParentDetailsModal = (parent) => {
+    setIsParentDetailsModal(true);
+    setParentDetails(parent);
+  };
 
   const columns = [
     {
@@ -72,9 +76,18 @@ const Parents = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      render: (parent) => (
+        <button onClick={() => handleParentDetailsModal(parent)}>
+          {parent?.name}
+        </button>
+      ),
+    },
+    {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
       render: (text) => <a>{text}</a>,
     },
-
     {
       title:
         currentUser?.role !== "sadmin" && currentUser?.role !== "admin"
@@ -88,7 +101,7 @@ const Parents = () => {
               {record?.status === "pending" ? (
                 <div>
                   <button
-                    onClick={() => handleApprove(record?._id)}
+                    onClick={() => handleApprove(record?.key)}
                     className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
                   >
                     Approve
@@ -96,13 +109,6 @@ const Parents = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button
-                    // onClick={() => modalHandler(record)}
-                    className="bg-secondary hover:bg-secondary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
-                  >
-                    Assign to a team
-                  </button>
-
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>
@@ -127,6 +133,7 @@ const Parents = () => {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
       name: parent.name,
+      email: parent.email,
       status: parent.status,
     };
   });
@@ -143,6 +150,11 @@ const Parents = () => {
             pageSize={pageSize}
             onChange={handlePageChange}
             style={{ marginTop: "16px", textAlign: "right" }}
+          />
+          <ParentDetailsModal
+            isParentDetailsModal={isParentDetailsModal}
+            setIsParentDetailsModal={setIsParentDetailsModal}
+            parentDetails={parentDetails}
           />
         </Container>
       ) : (

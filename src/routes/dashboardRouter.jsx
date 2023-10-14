@@ -8,6 +8,9 @@ import Parents from "../pages/Dashboard/Parents";
 import Teams from "../pages/Dashboard/Teams";
 import { SuperAdminRoute } from "./SuperAdminRoute";
 import { CoachRoute } from "./CoachRoute";
+import Events from "../pages/Dashboard/Events";
+import { ValidUserRoute } from "./ValidUserRoute";
+import Notifications from "../pages/Dashboard/Notifications";
 
 export const dashboardRouter = [
   {
@@ -38,7 +41,22 @@ export const dashboardRouter = [
       </AdminRoute>
     ),
   },
-
+  {
+    path: "events",
+    element: (
+      <ValidUserRoute>
+        <Events />
+      </ValidUserRoute>
+    ),
+  },
+  {
+    path: "notifications",
+    element: (
+      <ValidUserRoute>
+        <Notifications />
+      </ValidUserRoute>
+    ),
+  },
   {
     path: "parents",
     element: (
@@ -49,6 +67,10 @@ export const dashboardRouter = [
   },
   {
     path: "teams",
-    element: <Teams />,
+    element: (
+      <CoachRoute>
+        <Teams />
+      </CoachRoute>
+    ),
   },
 ];

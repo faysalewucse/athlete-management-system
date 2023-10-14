@@ -4,7 +4,7 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { Button, Dropdown, Pagination, Space, Table } from "antd";
+import { Button, Card, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
 import AddTeamModal from "../../components/modals/AddTeamModal";
 import { BiChevronDown } from "react-icons/bi";
@@ -44,6 +44,23 @@ const Teams = () => {
     },
   });
 
+  // data for logged in as coach
+
+  const { data: coachTeams = [] } = useQuery({
+    queryKey: ["coachTeams", currentUser?.email],
+    queryFn: async () => {
+      if (currentUser?.role === "coach") {
+        const { data } = await axiosSecure.get(
+          `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
+            currentUser?.email
+          }`
+        );
+        return data;
+      }
+      return [];
+    },
+  });
+
   // pagination
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -69,6 +86,10 @@ const Teams = () => {
   const detailsModalHandler = (coach) => {
     setCoachDetails(coach);
     setIsCoachDetailsModal(true);
+  };
+
+  const handleRemoveCoach = async (coach) => {
+    console.log(coach);
   };
 
   const data = currentTeams?.map((team) => {
@@ -113,11 +134,14 @@ const Teams = () => {
                     return {
                       key: coach._id,
                       label: (
-                        <div className="flex items-center justify-between gap-5 text-lg">
+                        <div className="flex items-center justify-between gap-5">
                           <p onClick={() => detailsModalHandler(coach)}>
                             {coach.name}
                           </p>
-                          <AiTwotoneDelete className="text-danger hover:text-danger2" />
+                          <AiTwotoneDelete
+                            onClick={() => handleRemoveCoach(record)}
+                            className="text-danger hover:text-danger2"
+                          />
                         </div>
                       ),
                     };
@@ -159,13 +183,15 @@ const Teams = () => {
         <Container>
           <div className="flex justify-between">
             <SectionHeader title={"Teams"} quantity={teams.length} />
-            <Button
-              type="btn"
-              onClick={() => setIsModalOpen(true)}
-              className="bg-gradient text-white"
-            >
-              Add Team +
-            </Button>
+            {currentUser?.role === "admin" && (
+              <Button
+                type="btn"
+                onClick={() => setIsModalOpen(true)}
+                className="bg-gradient text-white"
+              >
+                Add Team +
+              </Button>
+            )}
             <AddTeamModal
               refetch={refetch}
               isModalOpen={isModalOpen}
@@ -185,7 +211,25 @@ const Teams = () => {
               setIsCoachDetailsModal={setIsCoachDetailsModal}
             />
           </div>
-          <Table dataSource={data} columns={columns} pagination={false} />
+          {currentUser?.role === "admin" ? (
+            <Table dataSource={data} columns={columns} pagination={false} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {coachTeams.map((team) => (
+                <Card key={team?._id} bordered={false} title={team?.teamName}>
+                  <p className="text-base font-medium text-gray-500">
+                    Sport: {team?.sports}
+                  </p>
+                  <p className="text-base font-medium text-gray-500">
+                    Admin: {team?.adminEmail}
+                  </p>
+                  <p className="text-base font-medium text-gray-500">
+                    Coaches: {team?.coaches}
+                  </p>
+                </Card>
+              ))}
+            </div>
+          )}
 
           <Pagination
             current={currentPage}

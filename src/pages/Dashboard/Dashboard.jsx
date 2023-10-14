@@ -21,9 +21,12 @@ export const Dashboard = () => {
     queryKey: ["all-users"],
     queryFn: async () => {
       let URL = "/users";
-      if (currentUser?.role === "admin") URL = "/users/coach-athlete-parents";
-      else if (currentUser?.role === "coach") URL = "/users/athlete-parents";
-      else if (currentUser?.role === "parents") URL = "/users/athlete";
+      if (currentUser?.role === "admin")
+        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
+      else if (currentUser?.role === "coach")
+        URL = `/users/athlete-parents/${currentUser?.email}`;
+      else if (currentUser?.role === "parents")
+        URL = `/users/athlete/${currentUser?.email}`;
 
       if (currentUser?.role === "sadmin" || currentUser?.role === "admin") {
         const { data } = await axiosSecure.get(
@@ -169,6 +172,17 @@ export const Dashboard = () => {
                       title={"Total Users"}
                     />
                   </div>
+                </div>
+              )}
+            </div>
+          )}
+          {currentUser?.role === "athlete" && (
+            <div>
+              {currentUser?.status === "pending" ? (
+                <Pending role={currentUser?.role} />
+              ) : (
+                <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                  <DashboardCard number={teams.length} title={"Total Teams"} />
                 </div>
               )}
             </div>

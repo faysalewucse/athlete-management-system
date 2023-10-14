@@ -8,11 +8,11 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile,
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import toast from "react-hot-toast";
 
 const AuthContext = React.createContext();
 
@@ -38,23 +38,6 @@ export function AuthProvider({ children }) {
           .then(({ data: userData }) => {
             if (userData) {
               setCurrentUser(userData);
-            } else {
-              const newUser = {
-                name: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                address: "",
-                gender: "",
-                phoneNumber: "",
-                role: "admin",
-              };
-              axios
-                .post(`${import.meta.env.VITE_BASE_API_URL}/user`, newUser)
-                .then((response) => {
-                  if (response.status === 200) {
-                    setCurrentUser(newUser);
-                  }
-                });
             }
           });
       } else {
@@ -81,20 +64,7 @@ export function AuthProvider({ children }) {
   //signup function
   async function signup(email, password, username, photoURL) {
     await createUserWithEmailAndPassword(auth, email, password);
-
-    // updateProfile
-    await updateUserProfile(username, photoURL);
-
-    const user = auth.currentUser;
-
-    setCurrentUser({ ...user });
-  }
-
-  async function updateUserProfile(username, photoURL) {
-    await updateProfile(auth.currentUser, {
-      displayName: username,
-      photoURL: photoURL,
-    });
+    setCurrentUser({ email, name: username, photoURL });
   }
 
   //login function
@@ -110,7 +80,8 @@ export function AuthProvider({ children }) {
 
   //logout function
   function logout() {
-    return signOut(auth);
+    signOut(auth);
+    return toast.success("Logged out successfully");
   }
 
   function resetPassword(email) {
@@ -125,7 +96,6 @@ export function AuthProvider({ children }) {
     login,
     logout,
     googleSignIn,
-    updateUserProfile,
     resetPassword,
   };
 

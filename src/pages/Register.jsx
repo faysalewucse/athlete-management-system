@@ -64,7 +64,7 @@ export const Register = () => {
         }
       }
 
-      signup(email, password, name, photoURL);
+      await signup(email, password, name, photoURL);
 
       const userData = {
         email,

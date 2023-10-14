@@ -34,7 +34,7 @@ const Chatting = () => {
   } = useQuery({
     queryKey: ["chatting", currentUser?.email + selectedRole],
     queryFn: async () => {
-      if (selectedChat.email) {
+      if (selectedChat?.email) {
         const { data } = await axiosSecure.get(
           `${import.meta.env.VITE_BASE_API_URL}/message?to=${
             selectedChat?.email
@@ -44,8 +44,6 @@ const Chatting = () => {
       } else return [];
     },
   });
-
-  console.log(chatHistory);
 
   const onFinish = async (values) => {
     try {

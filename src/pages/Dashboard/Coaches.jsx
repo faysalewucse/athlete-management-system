@@ -132,7 +132,7 @@ const Coaches = () => {
       key: "teams",
       render: (teams, record) => (
         <div>
-          {teams.length > 0 ? (
+          {teams?.length > 0 ? (
             <div className="flex gap-2">
               <Dropdown
                 menu={{

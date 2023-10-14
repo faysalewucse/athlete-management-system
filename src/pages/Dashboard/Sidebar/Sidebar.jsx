@@ -7,7 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
 import { CgMiniPlayer } from "react-icons/cg";
-import { BiNotification } from "react-icons/bi";
+import { BiChat } from "react-icons/bi";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   const { currentUser } = useAuth();
@@ -81,9 +81,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       },
       {
         key: 7,
-        label: "Notifications",
-        route: "notifications",
-        icon: <BiNotification />,
+        label: "Chatting",
+        route: "chatting",
+        icon: <BiChat />,
       },
     ],
     coach: [

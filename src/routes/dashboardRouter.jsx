@@ -10,7 +10,7 @@ import { SuperAdminRoute } from "./SuperAdminRoute";
 import { CoachRoute } from "./CoachRoute";
 import Events from "../pages/Dashboard/Events";
 import { ValidUserRoute } from "./ValidUserRoute";
-import Notifications from "../pages/Dashboard/Notifications";
+import Chatting from "../pages/Dashboard/Chatting";
 
 export const dashboardRouter = [
   {
@@ -50,10 +50,10 @@ export const dashboardRouter = [
     ),
   },
   {
-    path: "notifications",
+    path: "chatting",
     element: (
       <ValidUserRoute>
-        <Notifications />
+        <Chatting />
       </ValidUserRoute>
     ),
   },

@@ -27,7 +27,9 @@ const Parents = () => {
     queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/users/byRole?role=parents&adminEmail=${currentUser.email}`
       );
       return data;
     },
@@ -76,10 +78,8 @@ const Parents = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (parent) => (
-        <button onClick={() => handleParentDetailsModal(parent)}>
-          {parent?.name}
-        </button>
+      render: (text, record) => (
+        <button onClick={() => handleParentDetailsModal(record)}>{text}</button>
       ),
     },
     {

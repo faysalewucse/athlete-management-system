@@ -65,7 +65,7 @@ export const Navbar = ({ setSidebarOpen }) => {
 
   return (
     <div className="z-10 sticky top-0">
-      <div className="flex bg-transparent items-center md:justify-end justify-between p-5">
+      <div className="flex items-center md:justify-end justify-between p-5 bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100%">
         <MdDashboard
           onClick={() => setSidebarOpen(true)}
           className="md:hidden text-4xl text-primary"
@@ -77,10 +77,10 @@ export const Navbar = ({ setSidebarOpen }) => {
           <HiMiniMagnifyingGlass
             onClick={showModal}
             size={20}
-            className="text-primary cursor-pointer"
+            className="text-white cursor-pointer"
           />
 
-          <BiSolidBell className="text-3xl text-primary" />
+          <BiSolidBell className="text-3xl text-white" />
 
           <AvatarDropdown currentUser={currentUser} items={avatarItems} />
         </div>

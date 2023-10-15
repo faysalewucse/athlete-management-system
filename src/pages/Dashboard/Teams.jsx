@@ -11,6 +11,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import AssignCoachModal from "../../components/modals/AssignCoachModal";
 import CoachDetailsModal from "../../components/modals/CoachDetailsModal";
+import toast from "react-hot-toast";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -88,8 +89,19 @@ const Teams = () => {
     setIsCoachDetailsModal(true);
   };
 
-  const handleRemoveCoach = async (coach) => {
-    console.log(coach);
+  const handleRemoveCoach = async (coach, record) => {
+    await axiosSecure
+      .patch(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/coach/${
+          coach?.email
+        }?team=${record.key}`
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Coach removed from the team");
+        }
+      });
   };
 
   const data = currentTeams?.map((team) => {
@@ -139,7 +151,7 @@ const Teams = () => {
                             {coach.name}
                           </p>
                           <AiTwotoneDelete
-                            onClick={() => handleRemoveCoach(record)}
+                            onClick={() => handleRemoveCoach(coach, record)}
                             className="text-danger hover:text-danger2"
                           />
                         </div>

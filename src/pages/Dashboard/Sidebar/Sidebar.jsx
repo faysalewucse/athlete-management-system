@@ -111,6 +111,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "events",
         icon: <MdEvent />,
       },
+      {
+        key: 7,
+        label: "Chatting",
+        route: "chatting",
+        icon: <BiChat />,
+      },
     ],
     athlete: [
       {

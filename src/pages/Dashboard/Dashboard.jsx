@@ -86,7 +86,7 @@ export const Dashboard = () => {
                 />
                 <DashboardCard
                   number={quantity.athlete}
-                  title={"Total Atheletes"}
+                  title={"Total Athletes"}
                 />
                 <DashboardCard
                   number={quantity.parents}
@@ -118,7 +118,7 @@ export const Dashboard = () => {
                     />
                     <DashboardCard
                       number={quantity.athlete}
-                      title={"Total Atheletes"}
+                      title={"Total Athletes"}
                     />
                     <DashboardCard
                       number={quantity.parents}
@@ -150,7 +150,7 @@ export const Dashboard = () => {
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard
                       number={quantity.athlete}
-                      title={"Total Atheletes"}
+                      title={"Total Athletes"}
                     />
                     <DashboardCard
                       number={quantity.parents}

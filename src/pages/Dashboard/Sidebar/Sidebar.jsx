@@ -141,16 +141,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       ref={sideRef}
       className={`md:block ${
         sidebarOpen ? "absolute bg-white z-50" : "hidden"
-      } bg-white shadow-[0_3px_20px_0px_rgba(0,0,0,0.12)]  border-primary/25 border-opacity-50 min-h-screen overscroll-auto px-3 lg:px-10 md:px-5   py-10`}
+      } bg-white shadow-[0_3px_20px_0px_rgba(0,0,0,0.12)]  border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >
-      <Brand />
+      <div className="border-b px-3 lg:px-10 md:px-5 py-5 bg-[rgba(31,32,84,1)]">
+        <Brand white />
+      </div>
       <div
         onClick={() => setSidebarOpen(false)}
         className="absolute bg-dark text-white p-2 rounded-r text-2xl -right-10 top-0 md:hidden"
       >
         <MdClose />
       </div>
-      <div className="mt-10 flex flex-col gap-5">
+      <div className="mt-10 flex flex-col gap-5 px-3 lg:px-10 md:px-5 pb-10">
         {items?.map((item) => (
           <div key={item.key}>
             <Link

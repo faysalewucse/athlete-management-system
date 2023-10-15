@@ -68,7 +68,7 @@ export const Navbar = ({ setSidebarOpen }) => {
       <div className="flex items-center md:justify-end justify-between p-5 bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100%">
         <MdDashboard
           onClick={() => setSidebarOpen(true)}
-          className="md:hidden text-4xl text-primary"
+          className="md:hidden text-4xl text-white"
         />
 
         <div></div>

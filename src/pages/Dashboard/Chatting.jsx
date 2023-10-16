@@ -167,7 +167,7 @@ const Chatting = () => {
                 </div>
               )}
               {selectedChat?.email && (
-                <div className="w-full fixed bottom-0 px-2 gap-2">
+                <div className="w-full sticky bottom-0 right-0 bg-white pt-2 px-2 gap-2">
                   <Form
                     form={form}
                     className="flex gap-2"

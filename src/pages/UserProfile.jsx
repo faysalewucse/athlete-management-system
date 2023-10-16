@@ -89,7 +89,7 @@ const UserProfile = () => {
 
   return (
     <div>
-      {currentUser?.role !== "athlete" ? (
+      {currentUser?.role == "athlete" ? (
         <div className="flex items-center justify-center text-center md:p-20 p-5 min-h-[90vh]">
           <Container>
             <div>
@@ -169,7 +169,7 @@ const UserProfile = () => {
                 </button> */}
               </div>
             </div>
-            <div className="h-screen overflow-y-scroll">
+            <div className="h-screen overflow-y-auto no-scrollbar">
               <div className="flex flex-col  mt-2">
                 <h1 className="text-lg font-semibold text-gradient">
                   Basic Info

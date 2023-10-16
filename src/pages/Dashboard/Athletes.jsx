@@ -135,7 +135,12 @@ export const Athletes = () => {
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Athletes"} quantity={athletes?.length} />
-          <Table dataSource={data} columns={columns} pagination={false} />
+          <Table
+            className="mt-5"
+            dataSource={data}
+            columns={columns}
+            pagination={false}
+          />
           <Pagination
             current={currentPage}
             total={athletes.length}

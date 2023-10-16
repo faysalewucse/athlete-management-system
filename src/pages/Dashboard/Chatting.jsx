@@ -8,20 +8,33 @@ import { useEffect, useState } from "react";
 import { GiClick } from "react-icons/gi";
 import { Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
+import { useForm } from "antd/es/form/Form";
 
 const Chatting = () => {
+  const [form] = useForm();
+
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
-  const [selectedRole, setSelectedRole] = useState("coach");
-  const [selectedChat, setSelectedChat] = useState();
+  const [selectedRole, setSelectedRole] = useState(
+    currentUser?.role === "admin" ? "coach" : "admin"
+  );
+  const [selectedChat, setSelectedChat] = useState(
+    currentUser?.role === "coach" && { email: currentUser?.adminEmail }
+  );
 
-  const { isLoading, data: users = [] } = useQuery({
-    queryKey: ["coaches", currentUser?.email],
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: ["all-users"],
     queryFn: async () => {
+      let URL = "/users";
+      if (currentUser?.role === "admin")
+        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
+      else if (currentUser?.role === "coach")
+        URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
+      else if (currentUser?.role === "parents")
+        URL = `/users/athlete/${currentUser?.email}`;
+
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/coach-athlete-parents/${
-          currentUser?.email
-        }`
+        `${import.meta.env.VITE_BASE_API_URL}${URL}`
       );
       return data;
     },
@@ -55,6 +68,7 @@ const Chatting = () => {
       });
 
       refetchChats();
+      form.resetFields(["message"]);
     } catch (error) {
       toast.error("Message sent failed");
     }
@@ -69,13 +83,23 @@ const Chatting = () => {
       {!isLoading ? (
         <Container>
           <div className="flex gap-3 mb-5">
-            <UserType
-              selectedRole={selectedRole}
-              setSelectedRole={setSelectedRole}
-              role={"Coach"}
-              setSelectedChat={setSelectedChat}
-              refetchChats={refetchChats}
-            />
+            {currentUser?.role === "coach" ? (
+              <UserType
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+                role={"Admin"}
+                setSelectedChat={setSelectedChat}
+                refetchChats={refetchChats}
+              />
+            ) : (
+              <UserType
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+                role={"Coach"}
+                setSelectedChat={setSelectedChat}
+                refetchChats={refetchChats}
+              />
+            )}
             <UserType
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
@@ -91,7 +115,7 @@ const Chatting = () => {
               refetchChats={refetchChats}
             />
           </div>
-          <div className="flex min-h-[70vh] bg-white rounded-lg p-2">
+          <div className="flex max-h-[70vh] bg-white rounded-lg p-2">
             <div className="border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2">
               {users
                 .filter(
@@ -119,14 +143,16 @@ const Chatting = () => {
                   </div>
                 ))}
             </div>
-            <div className="relative flex-1 bg-white">
+            <div className="relative flex-1 bg-white overflow-y-scroll">
               {selectedChat ? (
                 <div>
                   {chatHistory.map((chat) => (
                     <p
                       key={chat._id}
-                      className={`mb-2 w-fit py-1 px-2 rounded-lg bg-dark text-white ${
-                        chat.from === currentUser?.email ? "ml-auto" : "mr-auto"
+                      className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
+                        chat.from === currentUser?.email
+                          ? "ml-auto"
+                          : "mr-auto ml-2"
                       }`}
                     >
                       {chat.message}
@@ -141,8 +167,9 @@ const Chatting = () => {
                 </div>
               )}
               {selectedChat?.email && (
-                <div className="w-full absolute bottom-0 px-2 gap-2">
+                <div className="w-full sticky bottom-0 right-0 bg-white pt-2 px-2 gap-2">
                   <Form
+                    form={form}
                     className="flex gap-2"
                     name="myForm"
                     onFinish={onFinish}

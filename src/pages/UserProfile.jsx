@@ -89,7 +89,7 @@ const UserProfile = () => {
 
   return (
     <div>
-      {currentUser?.role !== "athlete" ? (
+      {currentUser?.role == "athlete" ? (
         <div className="flex items-center justify-center text-center md:p-20 p-5 min-h-[90vh]">
           <Container>
             <div>
@@ -147,10 +147,10 @@ const UserProfile = () => {
         <Form
           onFinish={onFinish}
           initialValues={{ name: currentUser?.name }}
-          className=" my-28"
+          className="relative mx-10 md:mx-20 my-28"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 items-center">
-            <div className="flex flex-col justify-start items-center">
+          <div className=" grid grid-cols-1 md:grid-cols-2 ">
+            <div className="sticky left-0 w-full bg-white md:bg-transparent z-[1] flex flex-col justify-start items-start">
               <img
                 src={currentUser?.photoURL || avatar}
                 alt=""
@@ -169,228 +169,244 @@ const UserProfile = () => {
                 </button> */}
               </div>
             </div>
-            <div className="flex flex-col  mt-2">
-              <h1 className="text-lg font-semibold text-gradient">
-                Basic Info
-              </h1>
-              <div>
-                <Form.Item name="name" label="Name" className="w-1/2 mt-2">
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="dateOfBirth"
-                  label="Date of Birth"
-                  rules={[{ validator: validateDateOfBirth }]}
-                  className="w-1/2"
-                  initialValue={moment(currentUser?.dateOfBirth)}
-                >
-                  <DatePicker format="YYYY-MM-DD" />
-                </Form.Item>
-                <Form.Item
-                  name="gender"
-                  label="Gender"
-                  className="w-1/2"
-                  initialValue={currentUser?.gender}
-                >
-                  <Select className="rounded-lg">
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
-                    <Option value="others">Others</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item
-                  name="phoneNumber"
-                  label="Phone Number"
-                  className="w-1/2"
-                  initialValue={currentUser?.phoneNumber}
-                  rules={[
-                    {
-                      min: 10,
-                      message: "Phone Number must be at least 10 digits",
-                    },
-                  ]}
-                >
-                  <Input type="number" className="rounded-lg" />
-                </Form.Item>
-                <Form.Item
-                  initialValue={currentUser?.address}
-                  name="address"
-                  label="Address"
-                  className="w-1/2"
-                >
-                  <Input.TextArea className="rounded-lg" />
-                </Form.Item>
-              </div>
-            </div>
-          </div>
-
-          <hr className="border-t my-5 border-gray-300" />
-
-          <div className=" grid grid-cols-1 md:grid-cols-2 items-start md:ml-36">
-            <div className="flex flex-col justify-center">
-              <h1 className="text-lg font-semibold text-gradient">
-                Additional Info
-              </h1>
-              <div>
-                <Form.Item name="sports" label="Sports" className="w-1/2 mt-2">
-                  <Input placeholder="The sports you are involved" />
-                </Form.Item>
-                <Form.Item name="position" label="Position" className="w-1/2">
-                  <Input placeholder="The position you play" />
-                </Form.Item>
-              </div>
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-gradient">
-                Performance
-              </h1>
-              <Form.Item name="speed" label="Speed" className="w-1/2 mt-2">
-                <Input type="number" placeholder="Your average speed" />
-              </Form.Item>
-              <Form.Item name="strength" label="Strength" className="w-1/2">
-                <Input
-                  type="number"
-                  placeholder="Your Strength Measurement based on weight lifting"
-                />
-              </Form.Item>
-              <Form.Item name="accuracy" label="Accuracy" className="w-1/2">
-                <Input
-                  type="number"
-                  placeholder="accuracy in shooting or passing"
-                />
-              </Form.Item>
-              <Form.Item name="endurance" label="Endurance" className="w-1/2">
-                <Input
-                  type="number"
-                  placeholder="Measures of endurance, like distance covered or duration"
-                />
-              </Form.Item>
-              <Form.Item
-                name="goalsScored"
-                label="Goals Scored"
-                className="w-1/2"
-              >
-                <Input
-                  type="number"
-                  placeholder="The number of goals scored in a sport like soccer"
-                />
-              </Form.Item>
-              <Form.Item name="assists" label="Assists" className="w-1/2">
-                <Input
-                  type="number"
-                  placeholder="The number of assists provided to teammates"
-                />
-              </Form.Item>
-              <Form.Item name="rebounds" label="Rebounds" className="w-1/2">
-                <Input
-                  type="number"
-                  placeholder="The number of rebounds in a sport like basketball"
-                />
-              </Form.Item>
-              <Form.Item
-                name="goalsSaved"
-                label="Goals Saved"
-                className="w-1/2"
-              >
-                <Input
-                  type="number"
-                  placeholder="For sports like hockey or soccer"
-                />
-              </Form.Item>
-              <Form.Item
-                name="pointsScored"
-                label="Points Scored"
-                className="w-1/2"
-              >
-                <Input
-                  type="number"
-                  placeholder="Total points scored in a game or season"
-                />
-              </Form.Item>
-            </div>
-          </div>
-          <hr className="border-t my-5 border-gray-300" />
-          <div className="md:ml-36">
-            <h1 className="text-lg font-semibold text-gradient">
-              Medical info
-            </h1>
-            <Form.Item
-              name="allergies"
-              label="Allergies"
-              className="w-1/2 mt-2"
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.List name="pastInjuries">
-              {(fields, { add, remove }) => (
+            <div className="h-screen overflow-y-auto no-scrollbar">
+              <div className="flex flex-col  mt-2">
+                <h1 className="text-lg font-semibold text-gradient">
+                  Basic Info
+                </h1>
                 <div>
-                  {fields.map(({ key, name }) => (
-                    <div key={key}>
-                      <Form.Item
-                        name={[name, "type"]}
-                        label="Type"
-                        className="w-1/2"
-                      >
-                        <Input placeholder="The injury type" />
-                      </Form.Item>
-                      <Form.Item
-                        name={[name, "date"]}
-                        label="Date"
-                        className="w-1/2"
-                      >
-                        <DatePicker format="YYYY-MM-DD" />
-                      </Form.Item>
-                      <Form.Item
-                        name={[name, "treatment"]}
-                        label="Treatment"
-                        className="w-1/2"
-                      >
-                        <Input placeholder="How the injury was treated" />
-                      </Form.Item>
-                      <Form.Item
-                        name={[name, "recoveryStatus"]}
-                        label="Recovery Status"
-                        className="w-1/2"
-                      >
-                        <Select>
-                          <Option value="fully recovered">
-                            Fully Recovered
-                          </Option>
-                          <Option value="ongoing recovery">
-                            Ongoing Recovery
-                          </Option>
-                          <Option value="not recovered">Not Recovered</Option>
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        name={[name, "rehabilitation"]}
-                        label="Rehabilitation Notes"
-                        className="w-1/2"
-                      >
-                        <Input.TextArea />
-                      </Form.Item>
-                      <Button
-                        className="bg-red-500 bg-opacity-50 mb-1"
-                        type="dashed"
-                        onClick={() => remove(name)}
-                      >
-                        Remove Past Injury
-                      </Button>
-                    </div>
-                  ))}
-                  <Form.Item>
-                    <Button
-                      className="bg-green-500 bg-opacity-50"
-                      type="dashed"
-                      onClick={() => add()}
-                    >
-                      Add Past Injury
-                    </Button>
+                  <Form.Item name="name" label="Name" className="w-1/2 mt-2">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="dateOfBirth"
+                    label="Date of Birth"
+                    rules={[{ validator: validateDateOfBirth }]}
+                    className="w-1/2"
+                    initialValue={moment(currentUser?.dateOfBirth)}
+                  >
+                    <DatePicker format="YYYY-MM-DD" />
+                  </Form.Item>
+                  <Form.Item
+                    name="gender"
+                    label="Gender"
+                    className="w-1/2"
+                    initialValue={currentUser?.gender}
+                  >
+                    <Select className="rounded-lg">
+                      <Option value="male">Male</Option>
+                      <Option value="female">Female</Option>
+                      <Option value="others">Others</Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="phoneNumber"
+                    label="Phone Number"
+                    className="w-1/2"
+                    initialValue={currentUser?.phoneNumber}
+                    rules={[
+                      {
+                        min: 10,
+                        message: "Phone Number must be at least 10 digits",
+                      },
+                    ]}
+                  >
+                    <Input type="number" className="rounded-lg" />
+                  </Form.Item>
+                  <Form.Item
+                    initialValue={currentUser?.address}
+                    name="address"
+                    label="Address"
+                    className="w-1/2"
+                  >
+                    <Input.TextArea className="rounded-lg" />
                   </Form.Item>
                 </div>
-              )}
-            </Form.List>
+              </div>
+
+              <hr className="border-t my-5 border-gray-300" />
+
+              <div className=" ">
+                <div className="flex flex-col justify-center">
+                  <h1 className="text-lg font-semibold text-gradient">
+                    Additional Info
+                  </h1>
+                  <div>
+                    <Form.Item
+                      name="sports"
+                      label="Sports"
+                      className="w-1/2 mt-2"
+                    >
+                      <Input placeholder="The sports you are involved" />
+                    </Form.Item>
+                    <Form.Item
+                      name="position"
+                      label="Position"
+                      className="w-1/2"
+                    >
+                      <Input placeholder="The position you play" />
+                    </Form.Item>
+                  </div>
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-gradient">
+                    Performance
+                  </h1>
+                  <Form.Item name="speed" label="Speed" className="w-1/2 mt-2">
+                    <Input type="number" placeholder="Your average speed" />
+                  </Form.Item>
+                  <Form.Item name="strength" label="Strength" className="w-1/2">
+                    <Input
+                      type="number"
+                      placeholder="Your Strength Measurement based on weight lifting"
+                    />
+                  </Form.Item>
+                  <Form.Item name="accuracy" label="Accuracy" className="w-1/2">
+                    <Input
+                      type="number"
+                      placeholder="accuracy in shooting or passing"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="endurance"
+                    label="Endurance"
+                    className="w-1/2"
+                  >
+                    <Input
+                      type="number"
+                      placeholder="Measures of endurance, like distance covered or duration"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="goalsScored"
+                    label="Goals Scored"
+                    className="w-1/2"
+                  >
+                    <Input
+                      type="number"
+                      placeholder="The number of goals scored in a sport like soccer"
+                    />
+                  </Form.Item>
+                  <Form.Item name="assists" label="Assists" className="w-1/2">
+                    <Input
+                      type="number"
+                      placeholder="The number of assists provided to teammates"
+                    />
+                  </Form.Item>
+                  <Form.Item name="rebounds" label="Rebounds" className="w-1/2">
+                    <Input
+                      type="number"
+                      placeholder="The number of rebounds in a sport like basketball"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="goalsSaved"
+                    label="Goals Saved"
+                    className="w-1/2"
+                  >
+                    <Input
+                      type="number"
+                      placeholder="For sports like hockey or soccer"
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="pointsScored"
+                    label="Points Scored"
+                    className="w-1/2"
+                  >
+                    <Input
+                      type="number"
+                      placeholder="Total points scored in a game or season"
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <hr className="border-t my-5 border-gray-300" />
+              <div className="">
+                <h1 className="text-lg font-semibold text-gradient">
+                  Medical info
+                </h1>
+                <Form.Item
+                  name="allergies"
+                  label="Allergies"
+                  className="w-1/2 mt-2"
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.List name="pastInjuries">
+                  {(fields, { add, remove }) => (
+                    <div>
+                      {fields.map(({ key, name }) => (
+                        <div key={key}>
+                          <Form.Item
+                            name={[name, "type"]}
+                            label="Type"
+                            className="w-1/2"
+                          >
+                            <Input placeholder="The injury type" />
+                          </Form.Item>
+                          <Form.Item
+                            name={[name, "date"]}
+                            label="Date"
+                            className="w-1/2"
+                          >
+                            <DatePicker format="YYYY-MM-DD" />
+                          </Form.Item>
+                          <Form.Item
+                            name={[name, "treatment"]}
+                            label="Treatment"
+                            className="w-1/2"
+                          >
+                            <Input placeholder="How the injury was treated" />
+                          </Form.Item>
+                          <Form.Item
+                            name={[name, "recoveryStatus"]}
+                            label="Recovery Status"
+                            className="w-1/2"
+                          >
+                            <Select>
+                              <Option value="fully recovered">
+                                Fully Recovered
+                              </Option>
+                              <Option value="ongoing recovery">
+                                Ongoing Recovery
+                              </Option>
+                              <Option value="not recovered">
+                                Not Recovered
+                              </Option>
+                            </Select>
+                          </Form.Item>
+                          <Form.Item
+                            name={[name, "rehabilitation"]}
+                            label="Rehabilitation Notes"
+                            className="w-1/2"
+                          >
+                            <Input.TextArea />
+                          </Form.Item>
+                          <Button
+                            className="bg-red-500 bg-opacity-50 mb-1"
+                            type="dashed"
+                            onClick={() => remove(name)}
+                          >
+                            Remove Past Injury
+                          </Button>
+                        </div>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          className="bg-green-500 bg-opacity-50"
+                          type="dashed"
+                          onClick={() => add()}
+                        >
+                          Add Past Injury
+                        </Button>
+                      </Form.Item>
+                    </div>
+                  )}
+                </Form.List>
+              </div>
+            </div>
           </div>
           <Button
             loading={submitting}

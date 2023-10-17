@@ -1,51 +1,32 @@
 import {
-  Modal,
+  DatePicker,
   Form,
   Input,
-  DatePicker,
-  Button,
-  TimePicker,
+  Modal,
   Select,
+  TimePicker,
+  Button,
 } from "antd";
-import { useAuth } from "../../contexts/AuthContext";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import moment from "moment/moment";
 import { useState } from "react";
-import toast from "react-hot-toast";
-
 const { Option } = Select;
 
-const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
-  const { currentUser } = useAuth();
-  const [axiosSecure] = useAxiosSecure();
+const UpdateEventModal = ({
+  event,
+  openUpdateModal,
+  setOpenUpdateModal,
+  refetch,
+}) => {
   const [submitting, setSubmitting] = useState(false);
 
   const [form] = Form.useForm();
+  console.log(event);
 
   const onCancel = () => {
-    setIsModalOpen(false);
-    setSubmitting(false);
+    form.resetFields();
+    setOpenUpdateModal(false);
   };
-
-  const onCreate = async (values) => {
-    const eventData = {
-      ...values,
-      createdAt: Date.now(),
-      adminEmail: currentUser?.email,
-    };
-
-    setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/events`, eventData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Event created");
-          refetch();
-        }
-      });
-  };
+  const onUpdate = async (values) => {};
 
   const validateDateOfEvent = (rule, value) => {
     if (value && value.isBefore()) {
@@ -54,12 +35,12 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
 
     return Promise.resolve();
   };
-
   return (
     <Modal
-      open={modalOpen}
-      title="Create Event"
+      open={openUpdateModal}
+      title="Update Event"
       onCancel={onCancel}
+      //   afterClose={() => form.resetFields()}
       footer={[
         <Button key="back" onClick={onCancel}>
           Cancel
@@ -74,14 +55,14 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                onCreate(values);
+                onUpdate(values);
               })
               .catch((info) => {
                 console.log("Validate Failed:", info);
               });
           }}
         >
-          {submitting ? "Please Wait..." : "Create"}
+          {submitting ? "Please Wait..." : "Update"}
         </Button>,
       ]}
     >
@@ -89,6 +70,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         <Form.Item
           name="eventName"
           label="Event Name"
+          initialValue={event?.eventName}
           rules={[
             {
               required: true,
@@ -101,6 +83,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         <Form.Item
           name="eventType"
           label="Event Type"
+          initialValue={event?.eventType}
           rules={[
             {
               required: true,
@@ -119,6 +102,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         <Form.Item
           name="date"
           label="Event Date"
+          initialValue={moment(event?.date)}
           rules={[
             { required: true, message: "Event date is required" },
             { validator: validateDateOfEvent },
@@ -133,6 +117,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         <Form.Item
           name="time"
           label="Event Time"
+          initialValue={moment(event?.time)}
           rules={[{ required: true, message: "Time is required" }]}
         >
           <TimePicker
@@ -142,10 +127,14 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             size="large"
           />
         </Form.Item>
-        <Form.Item name="fee" label="Event Fee">
+        <Form.Item name="fee" label="Event Fee" initialValue={event?.fee}>
           <Input placeholder="Put 0 if Free" />
         </Form.Item>
-        <Form.Item name="eventDescription" label="Event Description">
+        <Form.Item
+          name="eventDescription"
+          label="Event Description"
+          initialValue={event?.eventDescription}
+        >
           <Input.TextArea defaultValue="" placeholder="Description..." />
         </Form.Item>
       </Form>
@@ -153,4 +142,4 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   );
 };
 
-export default CreateEventModal;
+export default UpdateEventModal;

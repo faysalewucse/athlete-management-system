@@ -115,8 +115,8 @@ const Chatting = () => {
               refetchChats={refetchChats}
             />
           </div>
-          <div className="flex max-h-[70vh] bg-white rounded-lg p-2">
-            <div className="border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2">
+          <div className="flex relative max-h-[70vh] bg-white rounded-lg p-2">
+            <div className=" border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2">
               {users
                 .filter(
                   (user) =>

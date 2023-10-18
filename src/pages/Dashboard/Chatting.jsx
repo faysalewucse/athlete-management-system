@@ -11,8 +11,19 @@ import { AiOutlineClose } from "react-icons/ai";
 import { Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
 import { useForm } from "antd/es/form/Form";
+import { io } from "socket.io-client";
 
 const Chatting = () => {
+  const socket = io.connect("http://localhost:5000");
+  // Initialize the socket connection
+
+  useEffect(() => {
+    socket.on("chatMessage", (data) => {});
+
+    // Remove event listener on component unmount
+    return () => socket.off("chatMessage");
+  }, [socket]);
+
   const [form] = useForm();
 
   const { currentUser } = useAuth();
@@ -63,14 +74,23 @@ const Chatting = () => {
 
   const onFinish = async (values) => {
     try {
-      await axiosSecure.post(`${import.meta.env.VITE_BASE_API_URL}/message`, {
+      const messageData = {
         to: selectedChat.email,
         from: currentUser?.email,
         message: values.message,
         createdAt: Date.now(),
-      });
+      };
 
-      refetchChats();
+      await axiosSecure.post(
+        `${import.meta.env.VITE_BASE_API_URL}/message`,
+        messageData
+      );
+
+      if (socket) {
+        socket.emit("chatMessage", values.message);
+        refetchChats();
+      }
+
       form.resetFields(["message"]);
     } catch (error) {
       toast.error("Message sent failed");
@@ -156,7 +176,7 @@ const Chatting = () => {
                       key={chat._id}
                       className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
                         chat.from === currentUser?.email
-                          ? "ml-auto"
+                          ? "ml-auto mr-2"
                           : "mr-auto ml-2"
                       }`}
                     >

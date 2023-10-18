@@ -6,8 +6,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useEffect, useState } from "react";
 import { GiClick } from "react-icons/gi";
-import { FaBarsStaggered } from "react-icons/fa6";
-import { AiOutlineClose } from "react-icons/ai";
 import { Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
 import { useForm } from "antd/es/form/Form";
@@ -18,7 +16,9 @@ const Chatting = () => {
   // Initialize the socket connection
 
   useEffect(() => {
-    socket.on("chatMessage", (data) => {});
+    socket.on("chatMessage", (data) => {
+      console.log(data);
+    });
 
     // Remove event listener on component unmount
     return () => socket.off("chatMessage");
@@ -34,7 +34,7 @@ const Chatting = () => {
   const [selectedChat, setSelectedChat] = useState(
     currentUser?.role === "coach" && { email: currentUser?.adminEmail }
   );
-  const [chatOpen, setChatOpen] = useState(false);
+  // const [chatOpen, setChatOpen] = useState(false);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],

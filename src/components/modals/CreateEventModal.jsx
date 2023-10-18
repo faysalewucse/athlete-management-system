@@ -55,6 +55,26 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     return Promise.resolve();
   };
 
+  const onEventTypeChange = (value) => {
+    switch (value) {
+      case "game":
+        form.setFieldsValue();
+        break;
+      case "practice":
+        form.setFieldsValue();
+        break;
+      case "fundraiser":
+        form.setFieldsValue();
+        break;
+      case "film session":
+        form.setFieldsValue();
+        break;
+      case "team meating":
+        form.setFieldsValue();
+        break;
+      default:
+    }
+  };
   return (
     <Modal
       open={modalOpen}
@@ -108,7 +128,11 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             },
           ]}
         >
-          <Select placeholder="Select a event type">
+          <Select
+            onChange={onEventTypeChange}
+            s
+            placeholder="Select a event type"
+          >
             <Option value="game">Game</Option>
             <Option value="practice">Practice</Option>
             <Option value="fundraiser">Fundraiser</Option>
@@ -143,7 +167,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
           />
         </Form.Item>
         <Form.Item name="fee" label="Event Fee">
-          <Input placeholder="Put 0 if Free" />
+          <Input type="number" placeholder="Put 0 if Free" />
         </Form.Item>
         <Form.Item name="eventDescription" label="Event Description">
           <Input.TextArea defaultValue="" placeholder="Description..." />

@@ -6,6 +6,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useEffect, useState } from "react";
 import { GiClick } from "react-icons/gi";
+import { FaBarsStaggered } from "react-icons/fa6";
+import { AiOutlineClose } from "react-icons/ai";
 import { Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
 import { useForm } from "antd/es/form/Form";
@@ -21,6 +23,7 @@ const Chatting = () => {
   const [selectedChat, setSelectedChat] = useState(
     currentUser?.role === "coach" && { email: currentUser?.adminEmail }
   );
+  const [chatOpen, setChatOpen] = useState(false);
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
@@ -82,7 +85,7 @@ const Chatting = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
       {!isLoading ? (
         <Container>
-          <div className="flex gap-3 mb-5">
+          <div className="  flex gap-3 mb-5">
             {currentUser?.role === "coach" ? (
               <UserType
                 selectedRole={selectedRole}
@@ -116,7 +119,9 @@ const Chatting = () => {
             />
           </div>
           <div className="flex relative max-h-[70vh] bg-white rounded-lg p-2">
-            <div className=" border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2">
+            <div
+              className={` border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2`}
+            >
               {users
                 .filter(
                   (user) =>
@@ -143,7 +148,7 @@ const Chatting = () => {
                   </div>
                 ))}
             </div>
-            <div className="relative flex-1 bg-white overflow-y-scroll">
+            <div className=" flex-1 bg-white overflow-y-scroll">
               {selectedChat ? (
                 <div>
                   {chatHistory.map((chat) => (
@@ -158,6 +163,12 @@ const Chatting = () => {
                       {chat.message}
                     </p>
                   ))}
+                  {/* <div
+                className="absolute top-0"
+                onClick={() => setChatOpen(!chatOpen)}
+              >
+                {chatOpen ? <AiOutlineClose /> : <FaBarsStaggered />}
+              </div> */}
                 </div>
               ) : (
                 <div className="flex items-center justify-center min-h-full">

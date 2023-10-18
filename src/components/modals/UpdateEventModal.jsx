@@ -9,6 +9,8 @@ import {
 } from "antd";
 import moment from "moment/moment";
 import { useState } from "react";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 const { Option } = Select;
 
 const UpdateEventModal = ({
@@ -17,16 +19,32 @@ const UpdateEventModal = ({
   setOpenUpdateModal,
   refetch,
 }) => {
+  const [axiosSecure] = useAxiosSecure();
   const [submitting, setSubmitting] = useState(false);
-
   const [form] = Form.useForm();
-  console.log(event);
 
   const onCancel = () => {
     form.resetFields();
     setOpenUpdateModal(false);
   };
-  const onUpdate = async (values) => {};
+  const onUpdate = async (values) => {
+    setSubmitting(true);
+
+    /* TODO: uncomment this after solving the form initial value problem  */
+
+    // await axiosSecure
+    //   .patch(
+    //     `${import.meta.env.VITE_BASE_API_URL}/events/${event?._id}`,
+    //     values
+    //   )
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       refetch();
+    //       toast.success("event updates successfully");
+    //       setSubmitting(false);
+    //     }
+    //   });
+  };
 
   const validateDateOfEvent = (rule, value) => {
     if (value && value.isBefore()) {
@@ -40,7 +58,6 @@ const UpdateEventModal = ({
       open={openUpdateModal}
       title="Update Event"
       onCancel={onCancel}
-      //   afterClose={() => form.resetFields()}
       footer={[
         <Button key="back" onClick={onCancel}>
           Cancel
@@ -66,7 +83,13 @@ const UpdateEventModal = ({
         </Button>,
       ]}
     >
-      <Form size="large" form={form} layout="vertical" name="createEventForm">
+      <Form
+        size="large"
+        key={event?._id}
+        form={form}
+        layout="vertical"
+        name="createEventForm"
+      >
         <Form.Item
           name="eventName"
           label="Event Name"

@@ -48,7 +48,7 @@ const Events = () => {
     setOpenUpdateModal(true);
     setEvent(event);
   };
-
+ 
   const handleDeleteEvents = async (id) => {
     await axiosSecure
       .delete(`${import.meta.env.VITE_BASE_API_URL}/events/${id}`)

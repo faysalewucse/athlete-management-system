@@ -13,6 +13,8 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Pagination } from "antd";
 import { SectionHeader } from "../../components/shared/SectionHeader";
+import UpdateEventModal from "../../components/modals/UpdateEventModal";
+import toast from "react-hot-toast";
 
 const Events = () => {
   const { currentUser } = useAuth();
@@ -20,6 +22,8 @@ const Events = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [event, setEvent] = useState({});
 
   const {
     isLoading,
@@ -39,6 +43,22 @@ const Events = () => {
       return data;
     },
   });
+
+  const handleUpdateEvent = (event) => {
+    setOpenUpdateModal(true);
+    setEvent(event);
+  };
+ 
+  const handleDeleteEvents = async (id) => {
+    await axiosSecure
+      .delete(`${import.meta.env.VITE_BASE_API_URL}/events/${id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("event deleted successfully");
+        }
+      });
+  };
 
   const startIdx = (currentPage - 1) * itemsPerPage;
   const endIdx = currentPage * itemsPerPage;
@@ -73,11 +93,20 @@ const Events = () => {
                       </h3>
                       {currentUser?.role === "admin" && (
                         <div className="text-lg flex gap-1">
-                          <BiEdit className="cursor-pointer" />
-                          <AiFillDelete className="cursor-pointer text-danger/90 hover:text-danger2/90" />
+                          <BiEdit
+                            onClick={() => handleUpdateEvent(event)}
+                            className="cursor-pointer"
+                          />
+                          <AiFillDelete
+                            onClick={() => handleDeleteEvents(event?._id)}
+                            className="cursor-pointer text-danger/90 hover:text-danger2/90"
+                          />
                         </div>
                       )}
                     </div>
+                    <p className="my-1 text-sm text-gradient">
+                      {event.eventType}
+                    </p>
                     <p className="text-sm">
                       {event.description ? event.description : "No Description"}
                     </p>
@@ -92,10 +121,12 @@ const Events = () => {
                       </div>
                       <p
                         className={`font-semibold ${
-                          event.fee === "0" ? "bg-dark" : "bg-gradient"
+                          event.fee === "0" || !event.fee
+                            ? "bg-dark"
+                            : "bg-gradient"
                         } text-white py-1 px-4 rounded-md`}
                       >
-                        {event.fee === "0" ? "Free" : event.fee}
+                        {event.fee === "0" || !event.fee ? "Free" : event.fee}
                       </p>
                     </div>
                   </div>
@@ -117,6 +148,12 @@ const Events = () => {
           <CreateEventModal
             modalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            refetch={refetch}
+          />
+          <UpdateEventModal
+            event={event}
+            openUpdateModal={openUpdateModal}
+            setOpenUpdateModal={setOpenUpdateModal}
             refetch={refetch}
           />
         </Container>

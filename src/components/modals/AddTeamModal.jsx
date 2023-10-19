@@ -71,6 +71,21 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
             {/* Add more sports options as needed */}
           </Select>
         </Form.Item>
+
+        <Form.Item
+          name="level"
+          label="Level"
+          rules={[{ required: true, message: "Please select a level!" }]}
+        >
+          <Select placeholder="Select Level">
+            <Option value="varsity">Varsity</Option>
+            <Option value="sophomore">Sophomore</Option>
+            <Option value="college">College</Option>
+            <Option value="pro">Pro</Option>
+            <Option value="intramural">Intramural</Option>
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name="adminEmail"
           label="Admin Email"

@@ -78,19 +78,27 @@ export const Dashboard = () => {
                 <DashboardCard
                   number={users?.length != 0 ? users.length - 1 : 0}
                   title={"Total Users"}
+                  route="/dashboard"
                 />
-                <DashboardCard number={quantity.admin} title={"Total Admins"} />
+                <DashboardCard
+                  number={quantity.admin}
+                  title={"Total Admins"}
+                  route="/dashboard/admins"
+                />
                 <DashboardCard
                   number={quantity.coach}
                   title={"Total Coaches"}
+                  route="/dashboard/coaches"
                 />
                 <DashboardCard
                   number={quantity.athlete}
                   title={"Total Athletes"}
+                  route="/dashboard/athletes"
                 />
                 <DashboardCard
                   number={quantity.parents}
                   title={"Total Parents"}
+                  route="/dashboard/parents"
                 />
               </div>
             </div>
@@ -116,18 +124,22 @@ export const Dashboard = () => {
                     <DashboardCard
                       number={quantity.coach}
                       title={"Total Coaches"}
+                      route="/dashboard/coaches"
                     />
                     <DashboardCard
                       number={quantity.athlete}
                       title={"Total Athletes"}
+                      route="/dashboard/athletes"
                     />
                     <DashboardCard
                       number={quantity.parents}
                       title={"Total Parents"}
+                      route="/dashboard/parents"
                     />
                     <DashboardCard
                       number={teams.length}
                       title={"Total Teams"}
+                      route="/dashboard/teams"
                     />
                   </div>
                 </div>
@@ -152,14 +164,17 @@ export const Dashboard = () => {
                     <DashboardCard
                       number={quantity.athlete}
                       title={"Total Athletes"}
+                      route="/dashboard/athletes"
                     />
                     <DashboardCard
                       number={quantity.parents}
                       title={"Total Parents"}
+                      route="/dashboard/parents"
                     />
                     <DashboardCard
                       number={teams.length}
                       title={"Total Teams"}
+                      route="/dashboard/teams"
                     />
                   </div>
                 </div>
@@ -167,12 +182,7 @@ export const Dashboard = () => {
               {currentUser?.role === "parents" && (
                 <div>
                   <Button text={"Add Athlete +"} />
-                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                    <DashboardCard
-                      number={users?.length}
-                      title={"Total Users"}
-                    />
-                  </div>
+                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5"></div>
                 </div>
               )}
             </div>

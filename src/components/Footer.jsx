@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import shape from "../assets/footer-top-shape.png";
 
 export default function Footer() {
-  const { currentUser, logout } = useAuth();
-  // const { isDark } = useTheme();
   return (
     <footer className="relative bg-gradient-2 md:text-left text-center text-white">
       <div className=" flex flex-col md:flex-row justify-between max-w-7xl mx-auto pt-16 md:pt-24 z-10">
@@ -34,7 +31,7 @@ export default function Footer() {
         {/* others */}
         <div className="grid grid-cols-2 md:grid-cols-2 justify-items-start gap-x-10 gap-y-3">
           <div className="mt-5 md:mt-0">
-            <ul className="flex flex-col font-light underline text-gray-300">
+            <ul className="flex flex-col font-light text-white">
               <Link className="hover:text-secondary" to="/">
                 Home
               </Link>
@@ -50,7 +47,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="mt-5 md:mt-0">
-            <ul className="flex flex-col font-light underline text-gray-300">
+            <ul className="flex flex-col font-light text-white">
               <Link className="hover:text-secondary" to="/">
                 Facebook
               </Link>

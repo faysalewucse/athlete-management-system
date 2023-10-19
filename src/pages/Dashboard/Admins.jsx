@@ -73,6 +73,12 @@ export const Admins = () => {
       render: (text) => <a>{text}</a>,
     },
     {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a>{text}</a>,
+    },
+    {
       title: "Action",
       key: "action",
       render: (_, record) => (
@@ -101,6 +107,7 @@ export const Admins = () => {
       key: admin._id,
       image: admin.photoURL ? admin.photoURL : avatar,
       name: admin.name,
+      email: admin.email,
       status: admin.status,
     };
   });

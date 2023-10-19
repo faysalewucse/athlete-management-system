@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import Brand from "../components/Brand";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -35,14 +34,11 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-[90vh] bg-white mt-20">
+    <div className="flex items-center justify-center min-h-[60vh] bg-white mt-20">
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="max-w-xl lg:w-1/2 md:w-2/3 p-5">
-        <div className="relative flex flex-col min-w-0 break-words w-full my-6 shadow-lg rounded-lg bg-primary/5 border-0 text-slate-700 p-5">
-          <div className="flex justify-center">
-            <Brand />
-          </div>
+        <div className="relative flex flex-col min-w-0 w-full my-6 border-2 rounded-lg border-primary/25 p-5">
           <h2 className="text-3xl font-bold mb-8 text-center text-dark">
             Login
           </h2>

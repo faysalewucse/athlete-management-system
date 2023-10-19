@@ -163,6 +163,16 @@ export const Register = () => {
             </Upload>
           </Form.Item>
 
+          {role === "parents" && (
+            <Form.Item
+              name="parentCode"
+              label="Code"
+              rules={[{ required: true, message: "Parent code is required" }]}
+            >
+              <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+            </Form.Item>
+          )}
+
           <Form.Item
             name="name"
             label="Name"
@@ -244,22 +254,25 @@ export const Register = () => {
 
           {role === "admin" ? (
             <Form.Item
-              name="institute"
-              label="Institute Name"
+              name="organization"
+              label="Organization Name"
               rules={[
-                { required: true, message: "Institute is required for admin!" },
+                {
+                  required: true,
+                  message: "Organization is required for admin!",
+                },
               ]}
             >
               <Input className="w-full px-4 py-2 rounded-lg" size="large" />
             </Form.Item>
           ) : (
             <Form.Item
-              name="selectedInstitute"
-              label="Select Institute"
+              name="selectedOrganization"
+              label="Select Organization"
               rules={[
                 {
                   required: true,
-                  message: `Institute selection is required for ${role}!`,
+                  message: `Organization selection is required for ${role}!`,
                 },
               ]}
             >
@@ -291,7 +304,7 @@ export const Register = () => {
           <Form.Item
             name="phoneNumber"
             label="Phone Number"
-            className="w-full"
+            className={`w-full ${role === "parents" ? "col-span-2" : ""}`}
             rules={[
               { required: true, message: "Phone Number is required" },
               {

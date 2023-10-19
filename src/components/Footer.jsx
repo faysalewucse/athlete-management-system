@@ -1,7 +1,5 @@
-import { ImFacebook2, ImWhatsapp, ImTwitter } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import Brand from "./Brand";
 import shape from "../assets/footer-top-shape.png";
 
 export default function Footer() {
@@ -34,18 +32,17 @@ export default function Footer() {
           </form>
         </div>
         {/* others */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-x-10 gap-y-3">
+        <div className="grid grid-cols-2 md:grid-cols-2 justify-items-start gap-x-10 gap-y-3">
           <div className="mt-5 md:mt-0">
-            <h1 className="font-semibold text-xl mb-2 md:mb-3">Useful Links</h1>
             <ul className="flex flex-col font-light underline text-gray-300">
               <Link className="hover:text-secondary" to="/">
                 Home
               </Link>
               <Link className="hover:text-secondary" to="/">
-                Contact
+                Dashboard
               </Link>
               <Link className="hover:text-secondary" to="/">
-                About
+                Profile
               </Link>
               <Link className="hover:text-secondary" to="/">
                 Blog
@@ -53,7 +50,6 @@ export default function Footer() {
             </ul>
           </div>
           <div className="mt-5 md:mt-0">
-            <h1 className="font-semibold text-xl mb-2 md:mb-3">Follow Us</h1>
             <ul className="flex flex-col font-light underline text-gray-300">
               <Link className="hover:text-secondary" to="/">
                 Facebook
@@ -69,17 +65,13 @@ export default function Footer() {
               </Link>
             </ul>
           </div>
-          <div className="mt-5 md:mt-0 ">
-            <h1 className="font-semibold text-xl mb-2 md:mb-3">Address</h1>
-            <p className="text-gray-300 font-light">
-              10 Shantinagar, Gulshan <br /> Dhaka 1212, Bangladesh
-            </p>
-          </div>
-          <div className="mt-5 md:mt-0">
-            <h1 className="font-semibold text-xl mb-2 md:mb-3">Contact</h1>
 
-            <p className="text-gray-300 font-light">P: +880 000-000000</p>
-            <p className="text-gray-300 font-light">E: example@mail.com</p>
+          <div className="mt-5 md:mt-0">
+            <h1 className="md:mb-1">Contact</h1>
+
+            <p className="text-gray-300 font-light">
+              joseph@bartholomewdevelopment.com
+            </p>
           </div>
         </div>
       </div>

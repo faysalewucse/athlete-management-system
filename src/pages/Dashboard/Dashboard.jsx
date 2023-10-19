@@ -110,6 +110,7 @@ export const Dashboard = () => {
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
                     refetch={refetch}
+                    coaches={users.filter((user) => user.role === "coach")}
                   />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard

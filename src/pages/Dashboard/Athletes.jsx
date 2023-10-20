@@ -78,6 +78,12 @@ export const Athletes = () => {
       render: (text) => <a>{text}</a>,
     },
     {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a>{text}</a>,
+    },
+    {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
@@ -125,6 +131,7 @@ export const Athletes = () => {
       key: athlete._id,
       image: athlete.photoURL ? athlete.photoURL : avatar,
       name: athlete.name,
+      email: athlete.email,
       // teams:"",
       status: athlete.status,
     };

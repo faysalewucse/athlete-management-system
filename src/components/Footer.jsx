@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
 import shape from "../assets/footer-top-shape.png";
 
 export default function Footer() {
-  const { currentUser, logout } = useAuth();
-  // const { isDark } = useTheme();
   return (
     <footer className="relative bg-gradient-2 md:text-left text-center text-white">
-      <div className=" flex flex-col md:flex-row justify-between max-w-7xl mx-auto pt-16 md:pt-24 z-10">
+      <div className=" flex flex-col md:flex-row justify-between  max-w-7xl mx-auto pt-16 md:pt-24 z-10">
         {/* news letter */}
         <div className="md:pr-16 px-10 md:px-0 mb-5 md:mb-0">
           <h1 className="font-semibold text-2xl font-display mb-3">
@@ -32,9 +29,9 @@ export default function Footer() {
           </form>
         </div>
         {/* others */}
-        <div className="grid grid-cols-2 md:grid-cols-2 justify-items-start gap-x-10 gap-y-3">
+        <div className="grid grid-cols-2 md:grid-cols-2 md:justify-items-start gap-x-10 gap-y-3">
           <div className="mt-5 md:mt-0">
-            <ul className="flex flex-col font-light underline text-gray-300">
+            <ul className="flex flex-col font-light text-white">
               <Link className="hover:text-secondary" to="/">
                 Home
               </Link>
@@ -50,7 +47,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="mt-5 md:mt-0">
-            <ul className="flex flex-col font-light underline text-gray-300">
+            <ul className="flex flex-col font-light text-white">
               <Link className="hover:text-secondary" to="/">
                 Facebook
               </Link>
@@ -66,7 +63,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="mt-5 md:mt-0">
+          <div className="mt-5 md:mt-0 col-span-2 md:col-span-1">
             <h1 className="md:mb-1">Contact</h1>
 
             <p className="text-gray-300 font-light">

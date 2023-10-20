@@ -150,6 +150,12 @@ const Coaches = () => {
       render: (text) => <a>{text}</a>,
     },
     {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => <a>{text}</a>,
+    },
+    {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",

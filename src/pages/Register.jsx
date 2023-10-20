@@ -43,7 +43,7 @@ export const Register = () => {
         role,
         dateOfBirth,
         institute,
-        selectedInstitute,
+        origanization,
       } = data;
 
       const photo = data.photoUrl && data.photoUrl[0];
@@ -78,9 +78,8 @@ export const Register = () => {
       };
 
       if (role === "admin") userData.institute = institute;
-      else userData.adminEmail = selectedInstitute;
+      else userData.adminEmail = origanization;
 
-      // console.log(userData);
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
@@ -263,7 +262,7 @@ export const Register = () => {
             </Form.Item>
           ) : (
             <Form.Item
-              name="selectedOrganization"
+              name="origanization"
               label="Select Organization"
               rules={[
                 {

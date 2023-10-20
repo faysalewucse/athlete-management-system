@@ -135,7 +135,10 @@ export const Navbar = () => {
             {open ? (
               <AiOutlineClose className="text-light absolute right-6 top-5 text-3xl z-20" />
             ) : (
-              <AiOutlineMenu strokeWidth={0} className={`text-4xl`} />
+              <AiOutlineMenu
+                strokeWidth={0}
+                className={`text-light text-4xl`}
+              />
             )}
           </div>
         </div>

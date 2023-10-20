@@ -65,13 +65,18 @@ export const Navbar = ({ setSidebarOpen }) => {
 
   return (
     <div className="z-10 sticky top-0">
-      <div className="flex items-center md:justify-end justify-between p-5 ">
-        <MdDashboard
-          onClick={() => setSidebarOpen(true)}
-          className="md:hidden text-4xl text-primary"
-        />
-
-        <div></div>
+      <div className="flex items-center justify-between p-2 md:p-5 ">
+        <div className="flex items-center gap-3">
+          <MdDashboard
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden text-4xl text-primary"
+          />
+          <div>
+            {currentUser?.role === "admin" && (
+              <p className="font-bold text-xl">{currentUser?.institute}</p>
+            )}
+          </div>
+        </div>
         {/* user info */}
         <div className="flex items-center gap-5">
           <HiMiniMagnifyingGlass

@@ -48,7 +48,7 @@ const Events = () => {
     setOpenUpdateModal(true);
     setEvent(event);
   };
- 
+
   const handleDeleteEvents = async (id) => {
     await axiosSecure
       .delete(`${import.meta.env.VITE_BASE_API_URL}/events/${id}`)
@@ -84,50 +84,56 @@ const Events = () => {
               <div className="grid lg:grid-cols-3  md:grid-cols-2 sm:grid-cols-2 gap-5">
                 {visibleEvents?.map((event) => (
                   <div
-                    className="bg-white shadow-lg p-4 rounded-lg"
+                    className="flex flex-col justify-between bg-white shadow-lg p-4 rounded-lg"
                     key={event._id}
                   >
-                    <div className="flex items-start justify-between">
-                      <h3 className="text-xl font-semibold">
-                        {event.eventName}
-                      </h3>
-                      {currentUser?.role === "admin" && (
-                        <div className="text-lg flex gap-1">
-                          <BiEdit
-                            onClick={() => handleUpdateEvent(event)}
-                            className="cursor-pointer"
-                          />
-                          <AiFillDelete
-                            onClick={() => handleDeleteEvents(event?._id)}
-                            className="cursor-pointer text-danger/90 hover:text-danger2/90"
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <p className="my-1 text-sm text-gradient">
-                      {event.eventType}
-                    </p>
-                    <p className="text-sm">
-                      {event.description ? event.description : "No Description"}
-                    </p>
-                    <div className="mt-10 flex items-center gap-2">
-                      <RxClock />
-                      <p>{format(parseISO(event.time), "hh:mm a")}</p>
-                    </div>
-                    <div className="flex items-center gap-2 justify-between">
-                      <div className="flex items-center gap-2">
-                        <MdEventAvailable />
-                        <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
+                    <div>
+                      <div className="flex items-start justify-between">
+                        <h3 className="text-xl font-semibold">
+                          {event.eventName}
+                        </h3>
+                        {currentUser?.role === "admin" && (
+                          <div className="text-lg flex gap-1">
+                            <BiEdit
+                              onClick={() => handleUpdateEvent(event)}
+                              className="cursor-pointer"
+                            />
+                            <AiFillDelete
+                              onClick={() => handleDeleteEvents(event?._id)}
+                              className="cursor-pointer text-danger/90 hover:text-danger2/90"
+                            />
+                          </div>
+                        )}
                       </div>
-                      <p
-                        className={`font-semibold ${
-                          event.fee === "0" || !event.fee
-                            ? "bg-dark"
-                            : "bg-gradient"
-                        } text-white py-1 px-4 rounded-md`}
-                      >
-                        {event.fee === "0" || !event.fee ? "Free" : event.fee}
+                      <p className="my-1 text-sm text-gradient capitalize">
+                        {event.eventType}
                       </p>
+                      <p className="text-sm">
+                        {event.description
+                          ? event.description
+                          : "No Description"}
+                      </p>
+                    </div>
+                    <div>
+                      <div className="mt-10 flex items-center gap-2">
+                        <RxClock />
+                        <p>{format(parseISO(event.time), "hh:mm a")}</p>
+                      </div>
+                      <div className="flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                          <MdEventAvailable />
+                          <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
+                        </div>
+                        <p
+                          className={`font-semibold ${
+                            event.fee === "0" || !event.fee
+                              ? "bg-dark"
+                              : "bg-gradient"
+                          } text-white py-1 px-4 rounded-md`}
+                        >
+                          {event.fee === "0" || !event.fee ? "Free" : event.fee}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}

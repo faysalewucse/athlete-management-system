@@ -115,7 +115,7 @@ const Parents = () => {
                   <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Edit
                   </button>
-                  <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button className="md:block hidden bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
                   <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
@@ -139,7 +139,7 @@ const Parents = () => {
   });
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent md:p-10 p-2 text-slate-800">
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Parents"} quantity={parents.length} />

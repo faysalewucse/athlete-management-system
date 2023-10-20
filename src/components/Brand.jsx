@@ -15,9 +15,7 @@ const Brand = ({ white = false }) => {
         strokeWidth={0.5}
         className={`text-[40px] ${white ? "text-white" : "text-secondary"}`}
       />
-      <span style={{ fontFamily: "Luckiest Guy" }} className="tracking-widest">
-        VERTIME
-      </span>
+      <span className="tracking-widest font-semibold mt-2">VERTIME</span>
     </Link>
   );
 };

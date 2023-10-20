@@ -89,7 +89,7 @@ const UserProfile = () => {
 
   return (
     <div>
-      {currentUser?.role == "athlete" ? (
+      {currentUser?.role !== "athlete" ? (
         <div className="flex items-center justify-center text-center md:p-20 p-5 min-h-[90vh]">
           <Container>
             <div>
@@ -113,7 +113,7 @@ const UserProfile = () => {
 
           <Modal
             title="Edit Profile"
-            visible={isModalVisible}
+            open={isModalVisible}
             onOk={handleOk}
             onCancel={handleCancel}
           >

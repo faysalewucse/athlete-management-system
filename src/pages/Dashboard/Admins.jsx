@@ -117,67 +117,6 @@ export const Admins = () => {
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Admins"} quantity={admins?.length} />
-          {/* <div>
-            {admins?.length > 0 ? (
-            <table className="w-full bg-transparent border-collapse my-10 text-center">
-              <thead className="text-center bg-gradient text-white">
-                <tr className="border-b dark:border-gray-700">
-                  <th className="p-2">Image</th>
-                  <th>Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {admins.map((admin) => {
-                  const { name, photoURL } = admin;
-                  return (
-                    <tr
-                      key={admin._id}
-                      className="border-b dark:border-gray-700"
-                    >
-                      <td className="py-2">
-                        <img
-                          src={photoURL ? photoURL : avatar}
-                          alt="Class"
-                          className="bg-dark p-1 w-10 h-10 mx-auto rounded-full"
-                        />
-                      </td>
-                      <td>{name}</td>
-
-                      <td>
-                        <div className="flex text-sm items-center space-x-4 justify-center">
-                          {admin.status === "pending" && (
-                            <button
-                              onClick={() =>
-                                handleStatus(admin?._id, "approved")
-                              }
-                              className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer "
-                            >
-                              Approve
-                            </button>
-                          )}
-                          <button
-                            disabled={admin.status === "deleted"}
-                            onClick={() => handleStatus(admin?._id, "deleted")}
-                            className="md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-700"
-                          >
-                            {admin?.status === "deleted" ? "Deleted" : "Delete"}
-                          </button>
-                          <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          ) : (
-            <h1 className="border p-5 mt-20 border-primary rounded-lg text-xl text-center">
-              No Admins here.
-            </h1>
-          )}
-          </div> */}
           <Table
             className="mt-5"
             columns={columns}

@@ -4,7 +4,7 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { MdDeleteOutline } from "react-icons/md";
+import { CiMenuKebab } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import { useState } from "react";
@@ -217,16 +217,40 @@ const Coaches = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button className="hidden md:block bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>
-                  <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button className="hidden md:block bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Edit
                   </button>
                   <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
-                  <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          key: 0,
+                          label: <p>Change Role</p>,
+                        },
+                        {
+                          key: 1,
+                          label: <p>Edit</p>,
+                        },
+                        {
+                          key: 2,
+                          label: (
+                            <p className="text-danger hover:text-danger2">
+                              Delete
+                            </p>
+                          ),
+                        },
+                      ],
+                    }}
+                    trigger={["click"]}
+                  >
+                    <CiMenuKebab className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  </Dropdown>
                 </div>
               )}
             </div>

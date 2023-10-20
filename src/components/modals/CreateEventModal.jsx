@@ -105,7 +105,13 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         </Button>,
       ]}
     >
-      <Form size="large" form={form} layout="vertical" name="createEventForm">
+      <Form
+        className="grid grid-cols-2 gap-x-5"
+        size="middle"
+        form={form}
+        layout="vertical"
+        name="createEventForm"
+      >
         <Form.Item
           name="eventName"
           label="Event Name"
@@ -130,7 +136,6 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         >
           <Select
             onChange={onEventTypeChange}
-            s
             placeholder="Select a event type"
           >
             <Option value="game">Game</Option>
@@ -149,8 +154,8 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
           ]}
         >
           <DatePicker
+            size="middle"
             className="w-full px-4 py-2 rounded-lg"
-            size="large"
             format="YYYY-MM-DD"
           />
         </Form.Item>
@@ -163,13 +168,17 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             use12Hours
             format="h:mm a"
             className="w-full px-4 py-2 rounded-lg"
-            size="large"
+            size="middle"
           />
         </Form.Item>
-        <Form.Item name="fee" label="Event Fee">
+        <Form.Item className="col-span-2" name="fee" label="Event Fee">
           <Input type="number" placeholder="Put 0 if Free" />
         </Form.Item>
-        <Form.Item name="eventDescription" label="Event Description">
+        <Form.Item
+          name="eventDescription"
+          className="col-span-2"
+          label="Event Description"
+        >
           <Input.TextArea defaultValue="" placeholder="Description..." />
         </Form.Item>
       </Form>

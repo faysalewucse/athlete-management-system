@@ -235,8 +235,12 @@ const Teams = () => {
                   <p className="text-base font-medium text-gray-500">
                     Admin: {team?.adminEmail}
                   </p>
-                  <p className="text-base font-medium text-gray-500">
-                    Coaches: {team?.coaches}
+                  <p className="flex flex-wrap text-base font-medium text-gray-500">
+                    Coaches: {team?.coaches.map((coach, i) => (
+                      <span className="ml-1 font-normal" key={i}>
+                        {coach} ,
+                      </span>
+                    ))}
                   </p>
                 </Card>
               ))}

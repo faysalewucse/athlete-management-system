@@ -12,7 +12,6 @@ import CustomLoader from "../../components/CustomLoader";
 import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
-import Swal from "sweetalert2";
 import AssignTeamModal from "../../components/modals/AssignTeamModal";
 
 export const Athletes = () => {
@@ -104,26 +103,19 @@ export const Athletes = () => {
     return filteredTeams;
   };
 
-  const handleDeleteTeam = async (id) => {
-    Swal.fire({
-      title: "Do you want to delete?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await axiosSecure
-          .delete(`${import.meta.env.VITE_BASE_API_URL}/teams/${id}`)
-          .then((res) => {
-            if (res.status === 200) {
-              Swal.fire("Deleted!", "Team deleted.", "success");
-              refetch();
-            }
-          });
-      }
-    });
+  const handleRemoveAthlete = async (team, athlete) => {
+    await axiosSecure
+      .patch(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete/${
+          athlete?.email
+        }?team=${team?._id}`
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Athlete removed from the team");
+        }
+      });
   };
 
   const columns = [
@@ -170,7 +162,7 @@ export const Athletes = () => {
                             {team.teamName}
                           </p>
                           <AiTwotoneDelete
-                            onClick={() => handleDeleteTeam(team?._id)}
+                            onClick={() => handleRemoveAthlete(team, record)}
                             className="text-danger text-base hover:text-danger2"
                           />
                         </div>
@@ -256,14 +248,14 @@ export const Athletes = () => {
       ),
     },
   ];
-
+  
   const data = currentAthletes?.map((athlete) => {
     return {
       key: athlete._id,
       image: athlete.photoURL ? athlete.photoURL : avatar,
       name: athlete.name,
       email: athlete.email,
-      // teams:"",
+      teams: athlete.teams,
       status: athlete.status,
     };
   });

@@ -194,7 +194,12 @@ const Teams = () => {
       {!isLoading ? (
         <Container>
           <div className="flex justify-between">
-            <SectionHeader title={"Teams"} quantity={teams.length} />
+            <SectionHeader
+              title={"Teams"}
+              quantity={
+                currentUser?.role === "admin" ? teams.length : coachTeams.length
+              }
+            />
             {currentUser?.role === "admin" && (
               <Button
                 type="btn"
@@ -235,8 +240,18 @@ const Teams = () => {
                   <p className="text-base font-medium text-gray-500">
                     Admin: {team?.adminEmail}
                   </p>
-                  <p className="text-base font-medium text-gray-500">
-                    Coaches: {team?.coaches}
+                  <p className="flex flex-wrap text-base font-medium text-gray-500">
+                    Coaches:{" "}
+                    {team?.coaches.map((coach, i) => (
+                      <span
+                        className={`ml-1 font-normal ${
+                          currentUser?.email === coach ? "text-gradient" : ""
+                        }`}
+                        key={i}
+                      >
+                        {coach} ,
+                      </span>
+                    ))}
                   </p>
                 </Card>
               ))}

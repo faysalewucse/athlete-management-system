@@ -132,6 +132,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         icon: <MdEvent />,
       },
     ],
+    parents: [
+      {
+        key: 1,
+        label: "Athletes",
+        route: "athletes",
+        icon: <FaUsers />,
+      },
+      {
+        key: 2,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
+      },
+    ],
   };
 
   let items = [...sidebarItems["general"]];

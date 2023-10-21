@@ -4,10 +4,10 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { MdDeleteOutline } from "react-icons/md";
+import { CiMenuKebab } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { Pagination, Space, Table } from "antd";
+import { Dropdown, Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
 import ParentDetailsModal from "../../components/modals/ParentDetailsModal";
 
@@ -26,10 +26,11 @@ const Parents = () => {
   } = useQuery({
     queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
+      let URL = `adminEmail=${currentUser.email}`;
+      if (currentUser?.role === "coach")
+        URL = `adminEmail=${currentUser.adminEmail}`;
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=parents&adminEmail=${currentUser.email}`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents&${URL}`
       );
       return data;
     },
@@ -115,10 +116,34 @@ const Parents = () => {
                   <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Edit
                   </button>
-                  <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button className="md:block hidden bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
-                  <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          key: 0,
+                          label: <p>Change Role</p>,
+                        },
+                        {
+                          key: 1,
+                          label: <p>Edit</p>,
+                        },
+                        {
+                          key: 2,
+                          label: (
+                            <p className="text-danger hover:text-danger2">
+                              Delete
+                            </p>
+                          ),
+                        },
+                      ],
+                    }}
+                    trigger={["click"]}
+                  >
+                    <CiMenuKebab className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  </Dropdown>
                 </div>
               )}
             </div>
@@ -139,7 +164,7 @@ const Parents = () => {
   });
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent md:p-10 p-2 text-slate-800">
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Parents"} quantity={parents.length} />

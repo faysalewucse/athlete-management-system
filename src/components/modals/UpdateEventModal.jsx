@@ -28,22 +28,25 @@ const UpdateEventModal = ({
     setOpenUpdateModal(false);
   };
   const onUpdate = async (values) => {
-    setSubmitting(true);
-
-    /* TODO: uncomment this after solving the form initial value problem  */
-
-    // await axiosSecure
-    //   .patch(
-    //     `${import.meta.env.VITE_BASE_API_URL}/events/${event?._id}`,
-    //     values
-    //   )
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       refetch();
-    //       toast.success("event updates successfully");
-    //       setSubmitting(false);
-    //     }
-    //   });
+    try {
+      setSubmitting(true);
+      await axiosSecure
+        .patch(
+          `${import.meta.env.VITE_BASE_API_URL}/events/${event?._id}`,
+          values
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            refetch();
+            toast.success("Event updated successfully");
+            setSubmitting(false);
+            setOpenUpdateModal(false);
+          }
+        });
+    } catch (error) {
+      toast.error(error.message);
+      setSubmitting(false);
+    }
   };
 
   const validateDateOfEvent = (rule, value) => {
@@ -53,6 +56,7 @@ const UpdateEventModal = ({
 
     return Promise.resolve();
   };
+
   return (
     <Modal
       open={openUpdateModal}
@@ -114,7 +118,10 @@ const UpdateEventModal = ({
             },
           ]}
         >
-          <Select placeholder="Select a event type">
+          <Select
+            defaultValue={event?.eventType}
+            placeholder="Select a event type"
+          >
             <Option value="game">Game</Option>
             <Option value="practice">Practice</Option>
             <Option value="fundraiser">Fundraiser</Option>

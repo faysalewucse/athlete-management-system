@@ -12,7 +12,6 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import toast from "react-hot-toast";
 
 const AuthContext = React.createContext();
 
@@ -80,8 +79,7 @@ export function AuthProvider({ children }) {
 
   //logout function
   function logout() {
-    signOut(auth);
-    return toast.success("Logged out successfully");
+    return signOut(auth);
   }
 
   function resetPassword(email) {

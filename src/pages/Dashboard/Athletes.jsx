@@ -4,11 +4,15 @@ import { Container } from "../../components/Container";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { MdDeleteOutline } from "react-icons/md";
+import { CiMenuKebab } from "react-icons/ci";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { Button, Pagination, Space, Table } from "antd";
+import { Button, Dropdown, Pagination, Space, Table } from "antd";
 import CustomLoader from "../../components/CustomLoader";
+import { BiChevronDown } from "react-icons/bi";
+import { AiTwotoneDelete } from "react-icons/ai";
+import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
+import AssignTeamModal from "../../components/modals/AssignTeamModal";
 
 export const Athletes = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -23,10 +27,24 @@ export const Athletes = () => {
   } = useQuery({
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
+      let URL = `adminEmail=${currentUser?.email}`;
+      if (currentUser?.role === "coach") {
+        URL = `adminEmail=${currentUser?.adminEmail}`;
+      }
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=athlete&adminEmail=${currentUser?.email}`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
+      );
+      return data;
+    },
+  });
+
+  const { data: teams = [] } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
+          currentUser?.email
+        }`
       );
       return data;
     },
@@ -58,6 +76,48 @@ export const Athletes = () => {
   const endIndex = startIndex + pageSize;
   const currentAthletes = athletes.slice(startIndex, endIndex);
 
+  const [isTeamDetailsModal, setIsTeamDetailsModal] = useState(false);
+  const [teamDetails, setTeamDetails] = useState([]);
+
+  const [selectedAthlete, setSelectedAthlete] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState("");
+
+  const modalHandler = (athlete) => {
+    setSelectedAthlete(athlete);
+    if (athlete.status === "pending") {
+      toast.error("Approve athlete before assigning to team");
+    } else setIsModalOpen(true);
+  };
+
+  const handleTeamDetails = (team) => {
+    setTeamDetails(team);
+    setIsTeamDetailsModal(true);
+  };
+
+  const getFilteredTeam = () => {
+    const selectedTeamsId = selectedAthlete.teams?.map((team) => team._id);
+
+    const filteredTeams = teams?.filter(
+      (team) => !selectedTeamsId?.includes(team?._id)
+    );
+    return filteredTeams;
+  };
+
+  const handleRemoveAthlete = async (team, athlete) => {
+    await axiosSecure
+      .patch(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete/${
+          athlete?.email
+        }?team=${team?._id}`
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Athlete removed from the team");
+        }
+      });
+  };
+
   const columns = [
     {
       title: "Image",
@@ -87,6 +147,45 @@ export const Athletes = () => {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
+      render: (teams, record) => (
+        <div>
+          {teams?.length > 0 ? (
+            <div className="flex gap-2">
+              <Dropdown
+                menu={{
+                  items: teams.map((team) => {
+                    return {
+                      key: team._id,
+                      label: (
+                        <div className="flex items-center justify-between">
+                          <p onClick={() => handleTeamDetails(team)}>
+                            {team.teamName}
+                          </p>
+                          <AiTwotoneDelete
+                            onClick={() => handleRemoveAthlete(team, record)}
+                            className="text-danger text-base hover:text-danger2"
+                          />
+                        </div>
+                      ),
+                    };
+                  }),
+                }}
+                trigger={["click"]}
+              >
+                <Button>
+                  <Space>
+                    View Teams ({teams.length})
+                    <BiChevronDown />
+                  </Space>
+                </Button>
+              </Dropdown>
+              <Button onClick={() => modalHandler(record)}>+</Button>
+            </div>
+          ) : (
+            <Button onClick={() => modalHandler(record)}>Assign To Team</Button>
+          )}
+        </div>
+      ),
     },
     {
       title: currentUser?.role !== "sadmin" ? "Action" : "",
@@ -113,10 +212,34 @@ export const Athletes = () => {
                   <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Edit
                   </button>
-                  <button className="bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
-                  <MdDeleteOutline className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  <Dropdown
+                    menu={{
+                      items: [
+                        {
+                          key: 0,
+                          label: <p>Change Role</p>,
+                        },
+                        {
+                          key: 1,
+                          label: <p>Edit</p>,
+                        },
+                        {
+                          key: 2,
+                          label: (
+                            <p className="text-danger hover:text-danger2">
+                              Delete
+                            </p>
+                          ),
+                        },
+                      ],
+                    }}
+                    trigger={["click"]}
+                  >
+                    <CiMenuKebab className="md:hidden cursor-pointer hover:text-danger transition-300 text-2xl" />
+                  </Dropdown>
                 </div>
               )}
             </div>
@@ -125,14 +248,14 @@ export const Athletes = () => {
       ),
     },
   ];
-
+  
   const data = currentAthletes?.map((athlete) => {
     return {
       key: athlete._id,
       image: athlete.photoURL ? athlete.photoURL : avatar,
       name: athlete.name,
       email: athlete.email,
-      // teams:"",
+      teams: athlete.teams,
       status: athlete.status,
     };
   });
@@ -154,6 +277,21 @@ export const Athletes = () => {
             pageSize={pageSize}
             onChange={handlePageChange}
             style={{ marginTop: "16px", textAlign: "right" }}
+          />
+          {currentUser?.role == "coach" && (
+            <AssignTeamModal
+              refetch={refetch}
+              isModalOpen={isModalOpen}
+              setIsModalOpen={setIsModalOpen}
+              selectedUser={selectedAthlete}
+              teams={selectedAthlete?.length !== 0 ? getFilteredTeam() : []}
+              assignTo={"athlete"}
+            />
+          )}
+          <TeamDetailsModal
+            teamDetails={teamDetails}
+            isTeamDetailsModal={isTeamDetailsModal}
+            setIsTeamDetailsModal={setIsTeamDetailsModal}
           />
         </Container>
       ) : (

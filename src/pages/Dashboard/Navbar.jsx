@@ -8,16 +8,30 @@ import { MdDashboard } from "react-icons/md";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export const Navbar = ({ setSidebarOpen }) => {
-  // const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();
-  // const [isOpen, setIsOpen] = useState(false);
+  const [axiosSecure] = useAxiosSecure();
 
   const logoutHandler = () => {
     logout();
     toast.success("Logged out Successfully");
   };
+
+  const { data: adminData = [] } = useQuery({
+    queryKey: ["adminData", currentUser?.email],
+    queryFn: async () => {
+      if (currentUser?.role !== "admin" && currentUser?.role !== "sadmin") {
+        const { data } = await axiosSecure.get(
+          `${import.meta.env.VITE_BASE_API_URL}/user/${currentUser?.adminEmail}`
+        );
+        return data;
+      }
+      return [];
+    },
+  });
 
   const avatarItems = [
     {
@@ -65,13 +79,20 @@ export const Navbar = ({ setSidebarOpen }) => {
 
   return (
     <div className="z-10 sticky top-0">
-      <div className="flex items-center md:justify-end justify-between p-5 ">
-        <MdDashboard
-          onClick={() => setSidebarOpen(true)}
-          className="md:hidden text-4xl text-primary"
-        />
-
-        <div></div>
+      <div className="flex items-center justify-between p-2 md:p-5 ">
+        <div className="flex items-center gap-3">
+          <MdDashboard
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden text-4xl text-primary"
+          />
+          <div>
+            {currentUser?.role === "admin" ? (
+              <p className="font-bold text-xl">{currentUser?.institute}</p>
+            ) : (
+              <p className="font-bold text-xl">{adminData?.institute}</p>
+            )}
+          </div>
+        </div>
         {/* user info */}
         <div className="flex items-center gap-5">
           <HiMiniMagnifyingGlass

@@ -11,7 +11,7 @@ export const Banner = () => {
   return (
     <div
       style={{ backgroundImage: `url(${background})` }}
-      className="lg:min-h-[80vh] bg-img bg-center bg-no-repeat bg-cover relative w-full z-[1] bg-blend-multiply p-5 flex items-center text-slate-700"
+      className="lg:min-h-[80vh] bg-img bg-center bg-no-repeat bg-cover relative w-full z-[1] bg-blend-multiply px-5 py-10 flex items-center text-slate-700"
     >
       <Container
         extraStyle={
@@ -41,7 +41,7 @@ export const Banner = () => {
             Our athlete management system empowers coaches and organizations to
             maximize athlete performance.
           </motion.p>
-          <div className="flex md:justify-start justify-center items-center gap-5">
+          <div className="flex flex-col md:flex-row md:justify-start justify-center items-center gap-5">
             <Button
               text={"View Details"}
               style={"text-black dark:text-white"}

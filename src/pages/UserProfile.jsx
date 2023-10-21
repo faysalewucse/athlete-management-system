@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "../components/Container";
-import { Modal, Input, Progress, Form, DatePicker, Select, Button } from "antd"; // Import Modal and Input from Ant Design
+import {
+  Modal,
+  Input,
+  Progress,
+  Form,
+  DatePicker,
+  Select,
+  Button,
+  Upload,
+} from "antd"; // Import Modal and Input from Ant Design
 import avatar from "/avatar.png";
 import moment from "moment";
 import { Option } from "antd/es/mentions";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { MdFileUpload } from "react-icons/md";
 
 const UserProfile = () => {
   const [form] = Form.useForm();
@@ -18,7 +28,7 @@ const UserProfile = () => {
   const [submitting, setSubmitting] = useState(false);
   // const [edit, setEdit] = useState(false);
 
-  const onFinish = async (values) => {
+  const updateAthlete = async (values) => {
     const {
       speed,
       strength,
@@ -89,7 +99,7 @@ const UserProfile = () => {
 
   return (
     <div>
-      {currentUser?.role == "athlete" ? (
+      {currentUser?.role !== "athlete" ? (
         <div className="flex items-center justify-center text-center md:p-20 p-5 min-h-[90vh]">
           <Container>
             <div>
@@ -113,7 +123,7 @@ const UserProfile = () => {
 
           <Modal
             title="Edit Profile"
-            visible={isModalVisible}
+            open={isModalVisible}
             onOk={handleOk}
             onCancel={handleCancel}
           >
@@ -130,22 +140,40 @@ const UserProfile = () => {
                 onChange={(e) => setNewDisplayName(e.target.value)}
               />
               <br />
-              <label className="font-bold text-secondary2" htmlFor="photoURL">
-                Photo URL
-              </label>
-              <br />
-              <Input
-                id="photoURL"
-                type="text"
-                defaultValue={currentUser?.photoURL}
-                onChange={(e) => setNewPhotoURL(e.target.value)}
-              />
+              <Form.Item
+                name="photoUrl"
+                label="Photo"
+                className="col-span-2"
+                rules={[{ required: false }]}
+                valuePropName="fileList"
+                getValueFromEvent={(e) => {
+                  if (Array.isArray(e)) {
+                    return e;
+                  }
+                  return e && e.fileList;
+                }}
+              >
+                <Upload
+                  accept=".jpg, .png, .jpeg"
+                  maxCount={1}
+                  listType="picture"
+                  beforeUpload={() => false}
+                >
+                  <Button
+                    size="large"
+                    icon={<MdFileUpload className="text-secondary" />}
+                    className="text-gradient"
+                  >
+                    Update Photo
+                  </Button>
+                </Upload>
+              </Form.Item>
             </form>
           </Modal>
         </div>
       ) : (
         <Form
-          onFinish={onFinish}
+          onFinish={updateAthlete}
           initialValues={{ name: currentUser?.name }}
           className="relative mx-10 md:mx-20 my-28"
         >

@@ -6,9 +6,10 @@ import toast from "react-hot-toast";
 const AssignTeamModal = ({
   isModalOpen,
   setIsModalOpen,
-  selectedCoach,
+  selectedUser,
   refetch,
   teams,
+  assignTo,
 }) => {
   const [axiosSecure] = useAxiosSecure();
   const [searchValue, setSearchValue] = useState("");
@@ -16,13 +17,13 @@ const AssignTeamModal = ({
   const [selectedTeam, setSelectedTeam] = useState([]);
 
   const handleOk = async () => {
-    if (selectedTeam.length === 0) {
+    if (selectedTeam?.length === 0) {
       toast.error("Please select a team");
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/coach/assignTeam/${
-            selectedCoach.email
+          `${import.meta.env.VITE_BASE_API_URL}/${assignTo}/assignTeam/${
+            selectedUser.email
           }`,
           selectedTeam
         );
@@ -81,7 +82,7 @@ const AssignTeamModal = ({
         <div className="">
           <p className="text-gradient">
             Add Teams for coach
-            <span className="font-bold"> {selectedCoach.name}</span>
+            <span className="font-bold"> {selectedUser?.name}</span>
           </p>
           <h1>Teams</h1>
         </div>

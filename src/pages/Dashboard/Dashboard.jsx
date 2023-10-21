@@ -9,6 +9,7 @@ import AddTeamModal from "../../components/modals/AddTeamModal";
 import CustomLoader from "../../components/CustomLoader";
 import Pending from "./Pending";
 import { Container } from "../../components/Container";
+import AddAthleteModal from "../../components/modals/AddAthleteModal";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -198,7 +199,21 @@ export const Dashboard = () => {
                 <Pending role={currentUser?.role} />
               ) : (
                 <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                  <DashboardCard number={teams.length} title={"Total Teams"} />
+                  <DashboardCard
+                    number={quantity.athlete}
+                    title={"Total Athlete"}
+                  />
+                  <Button
+                    style={"rounded-lg"}
+                    onClickHandler={() => setIsModalOpen(true)}
+                    text={"Add Athlete +"}
+                  />
+                  <AddAthleteModal
+                    isModalOpen={isModalOpen}
+                    setIsModalOpen={setIsModalOpen}
+                    refetch={refetch}
+                    coaches={users.filter((user) => user.role === "coach")}
+                  />
                 </div>
               )}
             </div>

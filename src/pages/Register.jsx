@@ -4,7 +4,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdFileUpload } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
@@ -91,6 +91,7 @@ export const Register = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      console.log(error);
       toast.error(error.response.data.error);
     }
   };
@@ -110,7 +111,6 @@ export const Register = () => {
 
   return (
     <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5">
         <h2 className="text-4xl font-bold text-center">Registration</h2>
         <Form

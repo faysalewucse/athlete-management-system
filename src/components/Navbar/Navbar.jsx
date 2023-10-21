@@ -8,7 +8,6 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import AvatarDropdown from "../AvatarDropdown";
 
 export const Navbar = () => {
-  // const { isDark, toggleDarkMode } = useTheme();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { currentUser, logout } = useAuth();

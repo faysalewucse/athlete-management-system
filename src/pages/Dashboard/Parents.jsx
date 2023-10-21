@@ -26,10 +26,11 @@ const Parents = () => {
   } = useQuery({
     queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
+      let URL = `adminEmail=${currentUser.email}`;
+      if (currentUser?.role === "coach")
+        URL = `adminEmail=${currentUser.adminEmail}`;
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=parents&adminEmail=${currentUser.email}`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents&${URL}`
       );
       return data;
     },

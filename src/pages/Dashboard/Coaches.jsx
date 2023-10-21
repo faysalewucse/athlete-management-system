@@ -288,6 +288,7 @@ const Coaches = () => {
               setIsModalOpen={setIsModalOpen}
               selectedCoach={selectedCoach}
               teams={selectedCoach?.length !== 0 ? getFilteredTeam() : []}
+              assignTo={"coach"}
             />
           )}
           <TeamDetailsModal

@@ -14,6 +14,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
 import Swal from "sweetalert2";
+import ChangeRoleModal from "../../components/modals/ChangeRoleModal";
 
 const Coaches = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -24,6 +25,8 @@ const Coaches = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTeamDetailsModal, setIsTeamDetailsModal] = useState(false);
   const [teamDetails, setTeamDetails] = useState([]);
+  const [changeRoleModal, setChangeRoleModal] = useState(false);
+  const [coach, setCoach] = useState("");
 
   const {
     isLoading,
@@ -83,6 +86,11 @@ const Coaches = () => {
     } else setIsModalOpen(true);
   };
 
+  const handleChangeRole = (record) => {
+    setCoach(record);
+    setChangeRoleModal(true);
+  };
+
   const handleTeamDetails = (team) => {
     setTeamDetails(team);
     setIsTeamDetailsModal(true);
@@ -120,13 +128,18 @@ const Coaches = () => {
   };
 
   const data = currentCoaches?.map((coach) => {
+    const fullName =
+      coach?.firstName && coach?.lastName
+        ? `${coach.firstName} ${coach.lastName}`
+        : coach?.firstName || coach?.lastName;
     return {
       key: coach?._id,
       email: coach?.email,
       image: coach?.photoURL ? coach.photoURL : avatar,
-      name: coach?.name,
+      name: fullName,
       teams: coach?.teams,
       status: coach?.status,
+      role: coach?.role,
     };
   });
 
@@ -217,7 +230,10 @@ const Coaches = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button className="hidden md:block bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button
+                    onClick={() => handleChangeRole(record)}
+                    className="hidden md:block bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+                  >
                     Change Role
                   </button>
 
@@ -290,6 +306,13 @@ const Coaches = () => {
             teamDetails={teamDetails}
             isTeamDetailsModal={isTeamDetailsModal}
             setIsTeamDetailsModal={setIsTeamDetailsModal}
+          />
+
+          <ChangeRoleModal
+            changeRoleModal={changeRoleModal}
+            setChangeRoleModal={setChangeRoleModal}
+            user={coach}
+            refetch={refetch}
           />
         </Container>
       ) : (

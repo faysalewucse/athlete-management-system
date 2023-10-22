@@ -27,7 +27,7 @@ const Parents = () => {
     queryKey: ["parents", currentUser?.email],
     queryFn: async () => {
       let URL = `adminEmail=${currentUser.email}`;
-      if (currentUser?.role === "coach")
+      if (currentUser?.role === "parent")
         URL = `adminEmail=${currentUser.adminEmail}`;
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents&${URL}`
@@ -149,10 +149,14 @@ const Parents = () => {
   ];
 
   const data = currentParents?.map((parent) => {
+    const fullName =
+      parent?.firstName && parent?.lastName
+        ? `${parent.firstName} ${parent.lastName}`
+        : parent?.firstName || parent?.lastName;
     return {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
-      name: parent.name,
+      name: fullName,
       email: parent.email,
       status: parent.status,
     };

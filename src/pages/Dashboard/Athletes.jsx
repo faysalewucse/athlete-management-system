@@ -28,7 +28,7 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       let URL = `adminEmail=${currentUser?.email}`;
-      if (currentUser?.role === "coach") {
+      if (currentUser?.role === "athlete") {
         URL = `adminEmail=${currentUser?.adminEmail}`;
       }
       const { data } = await axiosSecure.get(
@@ -42,7 +42,7 @@ export const Athletes = () => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
+        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete-team/${
           currentUser?.email
         }`
       );
@@ -192,7 +192,7 @@ export const Athletes = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {currentUser?.role === "coach" && (
+          {currentUser?.role === "athlete" && (
             <div>
               {record?.status === "pending" ? (
                 <div>
@@ -245,10 +245,14 @@ export const Athletes = () => {
   ];
 
   const data = currentAthletes?.map((athlete) => {
+    const fullName =
+      athlete?.firstName && athlete?.lastName
+        ? `${athlete.firstName} ${athlete.lastName}`
+        : athlete?.firstName || athlete?.lastName;
     return {
       key: athlete._id,
       image: athlete.photoURL ? athlete.photoURL : avatar,
-      name: athlete.name,
+      name: fullName,
       email: athlete.email,
       teams: athlete.teams,
       status: athlete.status,
@@ -273,7 +277,7 @@ export const Athletes = () => {
             onChange={handlePageChange}
             style={{ marginTop: "16px", textAlign: "right" }}
           />
-          {currentUser?.role == "coach" && (
+          {currentUser?.role == "athlete" && (
             <AssignTeamModal
               refetch={refetch}
               isModalOpen={isModalOpen}

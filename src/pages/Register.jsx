@@ -37,37 +37,24 @@ export const Register = () => {
         address,
         email,
         gender,
-        name,
+        firstName,
+        lastName,
         password,
         phoneNumber,
         role,
         dateOfBirth,
         organization,
+        state,
+        city,
+        zip,
       } = data;
-
-      const photo = data.photoUrl && data.photoUrl[0].originFileObj;
-      const formdata = new FormData();
-      let photoURL = "";
-
-      if (photo) {
-        formdata.append("image", photo);
-
-        const response = await axios.post(
-          `https://api.imgbb.com/1/upload?key=${
-            import.meta.env.VITE_IMAGE_UPLOAD_API
-          }`,
-          formdata
-        );
-        if (response?.data?.status === 200) {
-          photoURL = response.data.data.display_url;
-        }
-      }
 
       const userData = {
         email,
-        name,
-        photoURL: photo ? photoURL : "",
-        address,
+        firstName,
+        lastName,
+        photoURL: "",
+        address: { state, city, zip, address },
         gender,
         dateOfBirth,
         phoneNumber,
@@ -75,9 +62,9 @@ export const Register = () => {
         status: "pending",
       };
 
-      if (role === "admin") userData.institute = organization;
+      if (role === "admin") userData.organization = organization;
       else userData.adminEmail = organization;
-      await signup(email, password, name, photoURL, userData);
+      await signup(email, password, firstName + " " + lastName, userData);
 
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
@@ -110,12 +97,12 @@ export const Register = () => {
 
   return (
     <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
-      <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5">
+      <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5 mt-16 md:mt-0">
         <h2 className="text-4xl font-bold text-center">Registration</h2>
         <Form
           layout="vertical"
           onFinish={onFinish}
-          className="md:grid grid-cols-2 gap-x-6 p-10"
+          className="md:grid grid-cols-2 gap-x-6 py-10"
           initialValues={{ role: "athlete" }}
         >
           <h1 className="font-semibold text-lg">What is your role?</h1>
@@ -126,35 +113,6 @@ export const Register = () => {
               <Radio value="parents">Parents</Radio>
               <Radio value="athlete">Athlete</Radio>
             </Radio.Group>
-          </Form.Item>
-
-          <Form.Item
-            name="photoUrl"
-            label="Photo"
-            className="col-span-2"
-            rules={[{ required: false }]}
-            valuePropName="fileList"
-            getValueFromEvent={(e) => {
-              if (Array.isArray(e)) {
-                return e;
-              }
-              return e && e.fileList;
-            }}
-          >
-            <Upload
-              accept=".jpg, .png, .jpeg"
-              maxCount={1}
-              listType="picture"
-              beforeUpload={() => false}
-            >
-              <Button
-                size="large"
-                icon={<MdFileUpload className="text-secondary" />}
-                className="text-gradient"
-              >
-                Upload Photo
-              </Button>
-            </Upload>
           </Form.Item>
 
           {role === "parents" && (
@@ -168,9 +126,17 @@ export const Register = () => {
           )}
 
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Name is required" }]}
+            name="firstName"
+            label="First Name"
+            rules={[{ required: true, message: "First Name is required" }]}
+          >
+            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+          </Form.Item>
+
+          <Form.Item
+            name="lastName"
+            label="Last Name"
+            rules={[{ required: true, message: "Last Name is required" }]}
           >
             <Input className="w-full px-4 py-2 rounded-lg" size="large" />
           </Form.Item>

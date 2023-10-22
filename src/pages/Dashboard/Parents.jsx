@@ -113,9 +113,7 @@ const Parents = () => {
                   <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Change Role
                   </button>
-                  <button className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                    Edit
-                  </button>
+
                   <button className="md:block hidden bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
@@ -126,10 +124,7 @@ const Parents = () => {
                           key: 0,
                           label: <p>Change Role</p>,
                         },
-                        {
-                          key: 1,
-                          label: <p>Edit</p>,
-                        },
+
                         {
                           key: 2,
                           label: (

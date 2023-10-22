@@ -42,13 +42,13 @@ export const Register = () => {
         phoneNumber,
         role,
         dateOfBirth,
-        institute,
-        origanization,
+        organization,
       } = data;
 
-      const photo = data.photoUrl && data.photoUrl[0];
+      const photo = data.photoUrl && data.photoUrl[0].originFileObj;
       const formdata = new FormData();
       let photoURL = "";
+
       if (photo) {
         formdata.append("image", photo);
 
@@ -63,8 +63,6 @@ export const Register = () => {
         }
       }
 
-      await signup(email, password, name, photoURL);
-
       const userData = {
         email,
         name,
@@ -77,8 +75,9 @@ export const Register = () => {
         status: "pending",
       };
 
-      if (role === "admin") userData.institute = institute;
-      else userData.adminEmail = origanization;
+      if (role === "admin") userData.institute = organization;
+      else userData.adminEmail = organization;
+      await signup(email, password, name, photoURL, userData);
 
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
@@ -262,7 +261,7 @@ export const Register = () => {
             </Form.Item>
           ) : (
             <Form.Item
-              name="origanization"
+              name="organization"
               label="Select Organization"
               rules={[
                 {

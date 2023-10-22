@@ -61,9 +61,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   //signup function
-  async function signup(email, password, username, photoURL) {
+  async function signup(email, password, username, photoURL, userData) {
     await createUserWithEmailAndPassword(auth, email, password);
-    setCurrentUser({ email, name: username, photoURL });
+    console.log(userData);
+    setCurrentUser({ ...userData });
   }
 
   //login function

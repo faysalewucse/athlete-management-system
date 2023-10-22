@@ -127,6 +127,10 @@ const Coaches = () => {
     });
   };
 
+  const handleDeleteUser = async (user) => {
+    console.log(user);
+  };
+
   const data = currentCoaches?.map((coach) => {
     const fullName =
       coach?.firstName && coach?.lastName
@@ -237,7 +241,10 @@ const Coaches = () => {
                     Change Role
                   </button>
 
-                  <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                  <button
+                    onClick={() => handleDeleteUser(record)}
+                    className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+                  >
                     Delete
                   </button>
                   <Dropdown

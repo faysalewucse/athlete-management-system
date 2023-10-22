@@ -28,7 +28,11 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       let URL = `adminEmail=${currentUser?.email}`;
-      if (currentUser?.role === "athlete") {
+      if (
+        currentUser?.role === "athlete" ||
+        currentUser?.role === "coach" ||
+        currentUser?.role === "parents"
+      ) {
         URL = `adminEmail=${currentUser?.adminEmail}`;
       }
       const { data } = await axiosSecure.get(
@@ -245,14 +249,10 @@ export const Athletes = () => {
   ];
 
   const data = currentAthletes?.map((athlete) => {
-    const fullName =
-      athlete?.firstName && athlete?.lastName
-        ? `${athlete.firstName} ${athlete.lastName}`
-        : athlete?.firstName || athlete?.lastName;
     return {
       key: athlete._id,
       image: athlete.photoURL ? athlete.photoURL : avatar,
-      name: fullName,
+      name: athlete.fullName,
       email: athlete.email,
       teams: athlete.teams,
       status: athlete.status,

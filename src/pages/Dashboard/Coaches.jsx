@@ -97,10 +97,10 @@ const Coaches = () => {
   };
 
   const getFilteredTeam = () => {
-    const selectedTeamsId = selectedCoach.teams.map((team) => team._id);
+    const selectedTeamsId = selectedCoach?.teams?.map((team) => team._id);
 
     const filteredTeams = teams.filter(
-      (team) => !selectedTeamsId.includes(team?._id)
+      (team) => !selectedTeamsId?.includes(team?._id)
     );
     return filteredTeams;
   };
@@ -132,15 +132,11 @@ const Coaches = () => {
   };
 
   const data = currentCoaches?.map((coach) => {
-    const fullName =
-      coach?.firstName && coach?.lastName
-        ? `${coach.firstName} ${coach.lastName}`
-        : coach?.firstName || coach?.lastName;
     return {
       key: coach?._id,
       email: coach?.email,
       image: coach?.photoURL ? coach.photoURL : avatar,
-      name: fullName,
+      name: coach?.fullName,
       teams: coach?.teams,
       status: coach?.status,
       role: coach?.role,
@@ -304,7 +300,7 @@ const Coaches = () => {
               refetch={refetch}
               isModalOpen={isModalOpen}
               setIsModalOpen={setIsModalOpen}
-              selectedCoach={selectedCoach}
+              selectedUser={selectedCoach}
               teams={selectedCoach?.length !== 0 ? getFilteredTeam() : []}
               assignTo={"coach"}
             />

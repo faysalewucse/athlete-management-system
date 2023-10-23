@@ -103,14 +103,10 @@ export const Admins = () => {
   ];
 
   const data = currentAdmins?.map((admin) => {
-    const fullName =
-      admin?.firstName && admin?.lastName
-        ? `${admin.firstName} ${admin.lastName}`
-        : admin?.firstName || admin?.lastName;
     return {
       key: admin._id,
       image: admin.photoURL ? admin.photoURL : avatar,
-      name: fullName,
+      name: admin.fullName,
       email: admin.email,
       status: admin.status,
     };

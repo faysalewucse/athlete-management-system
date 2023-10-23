@@ -4,10 +4,15 @@ import Button from "../../components/shared/Button";
 import { motion } from "framer-motion";
 import background from "../../assets/background4-min.jpg";
 import shape from "../../assets/hero-bg-shape-1.svg";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
-export const Banner = () => {
+export const Banner = ({ scrollRef, handleScroll }) => {
   // const { isDark } = useTheme();
   //TODO3: set autoplat delay 2500
+
+  const { currentUser } = useAuth();
+
   return (
     <div
       style={{ backgroundImage: `url(${background})` }}
@@ -43,10 +48,16 @@ export const Banner = () => {
           </motion.p>
           <div className="flex flex-col md:flex-row md:justify-start justify-center items-center gap-5">
             <Button
+              onClickHandler={() => handleScroll(scrollRef)}
               text={"View Details"}
               style={"text-black dark:text-white"}
             />
-            <Button text={"Admit Today"} style={"text-black dark:text-white"} />
+            <Link
+              to={!currentUser ? "/register" : "/"}
+              className="rounded cursor-pointer px-6 bg-gradient-to-r to-primary from-secondary py-2 font-semibold text-white hover:shadow-lg  transition-all duration-200"
+            >
+              Register Now
+            </Link>
           </div>
         </div>
       </Container>

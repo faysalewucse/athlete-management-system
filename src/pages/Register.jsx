@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Form, Input, Select, Radio, Button, Upload, DatePicker } from "antd";
+import { Form, Input, Select, Radio, Button, DatePicker } from "antd";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { MdFileUpload } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -49,10 +48,13 @@ export const Register = () => {
         zip,
       } = data;
 
+      const fullName = firstName + " " + lastName;
+
       const userData = {
         email,
         firstName,
         lastName,
+        fullName: fullName,
         photoURL: "",
         address: { state, city, zip, address },
         gender,
@@ -64,7 +66,7 @@ export const Register = () => {
 
       if (role === "admin") userData.organization = organization;
       else userData.adminEmail = organization;
-      await signup(email, password, firstName + " " + lastName, userData);
+      await signup(email, password, fullName, userData);
 
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
 
@@ -239,9 +241,9 @@ export const Register = () => {
               <Select placeholder="Choose" className="w-full" size="large">
                 {admins?.map((admin) => (
                   <Option key={admin?._id} value={admin?.email}>
-                    {admin?.institute}{" "}
+                    {admin?.organization}{" "}
                     <span className="text-xs text-slate-400">
-                      ({admin?.name})
+                      ({admin?.fullName})
                     </span>
                   </Option>
                 ))}

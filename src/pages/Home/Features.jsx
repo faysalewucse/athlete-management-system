@@ -2,13 +2,16 @@ import bgShape from "../../assets/about-bg-shape.svg";
 import featureImage from "../../assets/section-image.svg";
 import { Container } from "../../components/Container";
 
-const Features = () => {
+const Features = ({ scrollRef }) => {
   return (
     <div
+      ref={scrollRef}
       style={{ backgroundImage: `url(${bgShape})` }}
       className="bg-white bg-none bg-cover py-28 mt-10"
     >
-      <Container extraStyle={"grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10"}>
+      <Container
+        extraStyle={"grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-10"}
+      >
         <div className="px-3 md:px-0">
           <h1 className="text-2xl md:text-4xl font-medium tracking-wide mb-10">
             Empowering Athletes with Cutting Edge Tools

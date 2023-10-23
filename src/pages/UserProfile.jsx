@@ -25,7 +25,8 @@ const UserProfile = () => {
   const { currentUser, updateUserProfile } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [submitting, setSubmitting] = useState(false);
-  // const [edit, setEdit] = useState(false);
+  const [newImage, setNewImage] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState(null);
 
   const updateUser = async (values) => {
     const {
@@ -48,7 +49,7 @@ const UserProfile = () => {
       pastInjuries,
     } = values;
 
-    const photo = values.photoUrl && values.photoUrl[0].originFileObj;
+    const photo = photoUrl;
     const formdata = new FormData();
     let photoURL = "";
 
@@ -122,46 +123,24 @@ const UserProfile = () => {
     return Promise.resolve();
   };
 
-  const [newImage, setNewImage] = useState();
-
   const changeProfileHandler = (e) => {
-    setNewImage(e.fileList[0]);
-    console.log(e);
+    const originFileObj = e.fileList[0].originFileObj;
+    const imageUrl = URL.createObjectURL(originFileObj);
+    setNewImage(imageUrl);
+    setPhotoUrl(originFileObj);
   };
-
-  const onTabChange = (key) => {
-    console.log(key);
-  };
-
-  // const items = [
-  //   {
-  //     key: "1",
-  //     label: "Basic Info",
-  //     children: "Content of Tab Pane 1",
-  //   },
-  //   {
-  //     key: "2",
-  //     label: "Performance",
-  //     children: "Content of Tab Pane 2",
-  //   },
-  //   {
-  //     key: "3",
-  //     label: "Medical Info",
-  //     children: "Content of Tab Pane 3",
-  //   },
-  // ];
 
   return (
     <div className="py-40 p-5 ">
       <Container extraStyle={"flex flex-col md:flex-row md:items-start gap-8 "}>
         {/* profile image card */}
-        <div className="bg-primary/5 text-center p-10 rounded-lg">
+        <div className="bg-primary/5 flex flex-col items-center p-10 rounded-lg">
           <h1 className="text-4xl font-bold">{currentUser?.fullName}</h1>
           <h1>{currentUser?.email}</h1>
           <img
             src={newImage ? newImage : currentUser?.photoURL || avatar}
             alt=""
-            className="my-10 rounded-full border border-primary w-80 h-80 object-cover"
+            className="my-10 rounded-full border border-primary w-80 h-64 md:h-80  object-cover"
           />
           <h3 className="text-base font-medium text-gray-500">
             Profile Completed
@@ -172,6 +151,7 @@ const UserProfile = () => {
             accept=".jpg, .png, .jpeg"
             maxCount={1}
             listType="picture"
+            showUploadList={false}
             beforeUpload={() => false}
             onChange={changeProfileHandler}
             className="flex w-full justify-center"
@@ -189,8 +169,8 @@ const UserProfile = () => {
         <div className="bg-primary/5 text-center p-5 md:p-10 rounded-lg">
           <h1 className="text-4xl font-bold text-start">Edit Profile</h1>
 
-          <Form layout="vertical">
-            <Tabs defaultActiveKey="1" onChange={onTabChange}>
+          <Form onFinish={updateUser} layout="vertical">
+            <Tabs defaultActiveKey="1">
               <TabPane
                 className="grid md:grid-cols-2 md:gap-10"
                 tab="Basic Info"
@@ -262,7 +242,7 @@ const UserProfile = () => {
                   <Input.TextArea className="text-gray-500 md:w-[350px] px-3" />
                 </Form.Item>
               </TabPane>
-              {currentUser?.role !== "athlete" && (
+              {currentUser?.role === "athlete" && (
                 <TabPane
                   className="grid md:grid-cols-2 md:gap-x-10"
                   tab="Performance"
@@ -389,7 +369,7 @@ const UserProfile = () => {
                   </Form.Item>
                 </TabPane>
               )}
-              {currentUser?.role !== "athlete" && (
+              {currentUser?.role === "athlete" && (
                 <TabPane
                   className="grid md:grid-cols-2 md:gap-10 "
                   tab="Medical Info"
@@ -490,6 +470,7 @@ const UserProfile = () => {
               )}
             </Tabs>
             <Button
+              htmlType="submit"
               loading={submitting}
               className="bg-gradient text-white h-10 rounded px-6 mr-auto block"
             >

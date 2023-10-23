@@ -46,7 +46,7 @@ export const Athletes = () => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete-team/${
+        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
           currentUser?.email
         }`
       );
@@ -90,7 +90,9 @@ export const Athletes = () => {
     setSelectedAthlete(athlete);
     if (athlete.status === "pending") {
       toast.error("Approve athlete before assigning to team");
-    } else setIsModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const handleTeamDetails = (team) => {
@@ -196,7 +198,7 @@ export const Athletes = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {currentUser?.role === "athlete" && (
+          {currentUser?.role === "coach" && (
             <div>
               {record?.status === "pending" ? (
                 <div>
@@ -277,7 +279,7 @@ export const Athletes = () => {
             onChange={handlePageChange}
             style={{ marginTop: "16px", textAlign: "right" }}
           />
-          {currentUser?.role == "athlete" && (
+          {currentUser?.role == "coach" && (
             <AssignTeamModal
               refetch={refetch}
               isModalOpen={isModalOpen}

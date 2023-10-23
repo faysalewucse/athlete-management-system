@@ -164,7 +164,7 @@ const Chatting = () => {
                       alt="avatar"
                       className="w-5"
                     />
-                    <p className="text-sm">{user.name}</p>
+                    <p className="text-sm">{user.fullName}</p>
                   </div>
                 ))}
             </div>

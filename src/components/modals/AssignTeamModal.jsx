@@ -81,7 +81,7 @@ const AssignTeamModal = ({
       title={
         <div className="">
           <p className="text-gradient">
-            Add Teams for coach
+            Add Teams for
             <span className="font-bold"> {selectedUser?.name}</span>
           </p>
           <h1>Teams</h1>

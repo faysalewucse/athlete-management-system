@@ -12,6 +12,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 const { Option } = Select;
 
 const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +25,6 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         email,
         gender,
         name,
-        password,
         phoneNumber,
         role,
         dateOfBirth,
@@ -32,7 +32,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         origanization,
       } = data;
 
-      const photo = data.photoUrl && data.photoUrl[0];
+      const photo = data.photoUrl && data.photoUrl[0].originFileObj;
       const formdata = new FormData();
       let photoURL = "";
       if (photo) {
@@ -49,8 +49,6 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         }
       }
 
-      await signup(email, password, name, photoURL);
-
       const userData = {
         email,
         name,
@@ -66,13 +64,15 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
       if (role === "admin") userData.institute = institute;
       else userData.adminEmail = origanization;
 
-      await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
-
-      Swal.fire("Welcome!", "You registered Successfully!", "success").then(
-        () => {
-          navigate("/");
-        }
-      );
+      await axios
+        .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
+        .then((res) => {
+          if (res.status === 200) {
+            form.resetFields();
+            setIsModalOpen(false);
+            Swal.fire("Welcome!", "You registered Successfully!", "success");
+          }
+        });
 
       setLoading(false);
     } catch (error) {
@@ -87,9 +87,9 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
       return Promise.reject("Date of Birth cannot be in the future");
     }
 
-    const eighteenYearsAgo = moment().subtract(18, "years");
+    const eighteenYearsAgo = moment().subtract(10, "years");
     if (value && value.isAfter(eighteenYearsAgo)) {
-      return Promise.reject("You must be at least 18 years old");
+      return Promise.reject("Athlete must be at least 10 years old");
     }
 
     return Promise.resolve();
@@ -156,49 +156,6 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
           ]}
         >
           <Input className="w-full px-4 py-2 rounded-lg" size="large" />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          label="Password"
-          rules={[
-            { required: true, message: "Password is required" },
-            {
-              min: 6,
-              message: "Password must be at least 6 characters long",
-            },
-          ]}
-        >
-          <Input.Password
-            className="w-full px-4 py-2 rounded-lg"
-            iconRender={(visible) =>
-              visible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />
-            }
-            size="large"
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="confirmPassword"
-          label="Confirm Password"
-          dependencies={["password"]}
-          hasFeedback
-          rules={[
-            { required: true, message: "Confirm Password is required" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject("Passwords should match!");
-              },
-            }),
-          ]}
-        >
-          <Input.Password
-            className="w-full px-4 py-2 rounded-lg"
-            size="large"
-          />
         </Form.Item>
 
         <Form.Item

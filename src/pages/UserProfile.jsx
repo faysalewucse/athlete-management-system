@@ -16,7 +16,7 @@ import moment from "moment";
 import { Option } from "antd/es/mentions";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import { MdCameraAlt, MdEdit, MdFileUpload } from "react-icons/md";
+import { MdCameraAlt, MdEdit, MdFileUpload, MdSave } from "react-icons/md";
 import axios from "axios";
 
 const UserProfile = () => {
@@ -25,89 +25,91 @@ const UserProfile = () => {
   const { currentUser, updateUserProfile } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [submitting, setSubmitting] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
   const [newImage, setNewImage] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
 
-  const updateUser = async (values) => {
-    const {
-      firstName,
-      lastName,
-      gender,
-      dateOfBirth,
-      phoneNumber,
-      address,
-      speed,
-      strength,
-      accuracy,
-      endurance,
-      goalsScored,
-      assists,
-      rebounds,
-      goalsSaved,
-      pointsScored,
-      allergies,
-      pastInjuries,
-    } = values;
+  const updateUser = () => {};
+  // const updateUser = async (values) => {
+  //   const {
+  //     firstName,
+  //     lastName,
+  //     gender,
+  //     dateOfBirth,
+  //     phoneNumber,
+  //     address,
+  //     speed,
+  //     strength,
+  //     accuracy,
+  //     endurance,
+  //     goalsScored,
+  //     assists,
+  //     rebounds,
+  //     goalsSaved,
+  //     pointsScored,
+  //     allergies,
+  //     pastInjuries,
+  //   } = values;
 
-    const photo = photoUrl;
-    const formdata = new FormData();
-    let photoURL = "";
+  //   const photo = photoUrl;
+  //   const formdata = new FormData();
+  //   let photoURL = "";
 
-    if (photo) {
-      formdata.append("image", photo);
+  //   if (photo) {
+  //     formdata.append("image", photo);
 
-      const response = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${
-          import.meta.env.VITE_IMAGE_UPLOAD_API
-        }`,
-        formdata
-      );
-      if (response?.data?.status === 200) {
-        photoURL = response.data.data.display_url;
-      }
-    }
-    const newData = {
-      photoURL,
-      firstName,
-      lastName,
-      gender,
-      phoneNumber,
-      address: { address },
-      dateOfBirth: dateOfBirth,
-    };
+  //     const response = await axios.post(
+  //       `https://api.imgbb.com/1/upload?key=${
+  //         import.meta.env.VITE_IMAGE_UPLOAD_API
+  //       }`,
+  //       formdata
+  //     );
+  //     if (response?.data?.status === 200) {
+  //       photoURL = response.data.data.display_url;
+  //     }
+  //   }
+  //   const newData = {
+  //     photoURL,
+  //     firstName,
+  //     lastName,
+  //     gender,
+  //     phoneNumber,
+  //     address: { address },
+  //     dateOfBirth: dateOfBirth,
+  //   };
 
-    if (currentUser?.role === "athlete") {
-      newData.performance = {
-        speed,
-        strength,
-        accuracy,
-        endurance,
-        goalsScored,
-        assists,
-        rebounds,
-        goalsSaved,
-        pointsScored,
-      };
-      newData.pastInjuries = pastInjuries;
-      newData.allergies = allergies;
-    }
+  //   if (currentUser?.role === "athlete") {
+  //     newData.performance = {
+  //       speed,
+  //       strength,
+  //       accuracy,
+  //       endurance,
+  //       goalsScored,
+  //       assists,
+  //       rebounds,
+  //       goalsSaved,
+  //       pointsScored,
+  //     };
+  //     newData.pastInjuries = pastInjuries;
+  //     newData.allergies = allergies;
+  //   }
 
-    setSubmitting(true);
-    await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/updateProfile/${
-          currentUser?.email
-        }`,
-        newData
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          form.resetFields();
-          setSubmitting(false);
-          toast.success("Profile Updated Successfully");
-        }
-      });
-  };
+  //   setSubmitting(true);
+  //   await axiosSecure
+  //     .patch(
+  //       `${import.meta.env.VITE_BASE_API_URL}/updateProfile/${
+  //         currentUser?.email
+  //       }`,
+  //       newData
+  //     )
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         form.resetFields();
+  //         setSubmitting(false);
+  //         toast.success("Profile Updated Successfully");
+  //       }
+  //     });
+  // };
 
   // birthday validator
   const validateDateOfBirth = (rule, value) => {
@@ -130,6 +132,42 @@ const UserProfile = () => {
     setPhotoUrl(originFileObj);
   };
 
+  const updateProfilePicture = async () => {
+    try {
+      setImageUploading(true);
+      const formdata = new FormData();
+      if (photoUrl) {
+        formdata.append("image", photoUrl);
+
+        const response = await axios.post(
+          `https://api.imgbb.com/1/upload?key=${
+            import.meta.env.VITE_IMAGE_UPLOAD_API
+          }`,
+          formdata
+        );
+
+        if (response?.data?.status === 200) {
+          const url = response.data.data.display_url;
+          const res = await axios.patch(
+            `${import.meta.env.VITE_BASE_API_URL}/users/change-profile-pic/${
+              currentUser.email
+            }`,
+            { url: url }
+          );
+          if (res.status === 200) {
+            toast.success("Profile picture updated successfully");
+            setPhotoUrl();
+            setImageUploading(false);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error updating profile picture");
+      setImageUploading(false);
+    }
+  };
+
   return (
     <div className="py-40 p-5 ">
       <Container extraStyle={"flex flex-col md:flex-row md:items-start gap-8 "}>
@@ -140,30 +178,43 @@ const UserProfile = () => {
           <img
             src={newImage ? newImage : currentUser?.photoURL || avatar}
             alt=""
-            className="my-10 rounded-full border border-primary w-80 h-64 md:h-80  object-cover"
+            className="my-10 rounded-full border border-primary w-60 h-60  object-cover"
           />
           <h3 className="text-base font-medium text-gray-500">
             Profile Completed
           </h3>
           <Progress percent={10} className="w-80" />
 
-          <Upload
-            accept=".jpg, .png, .jpeg"
-            maxCount={1}
-            listType="picture"
-            showUploadList={false}
-            beforeUpload={() => false}
-            onChange={changeProfileHandler}
-            className="flex w-full justify-center"
-          >
-            <Button
-              size="large"
-              icon={<MdCameraAlt className="text-secondary" />}
-              className="text-gradient w-full"
+          <div className="flex gap-2">
+            <Upload
+              accept=".jpg, .png, .jpeg"
+              maxCount={1}
+              listType="picture"
+              showUploadList={false}
+              beforeUpload={() => false}
+              onChange={changeProfileHandler}
+              className="flex w-full justify-center"
             >
-              Change Profile Picture
-            </Button>
-          </Upload>
+              <Button
+                size="large"
+                icon={<MdCameraAlt className="text-secondary" />}
+                className="text-gradient w-full"
+              >
+                Change Profile Picture
+              </Button>
+            </Upload>
+            {newImage && photoUrl && (
+              <Button
+                size="large"
+                loading={imageUploading}
+                icon={<MdSave className="text-secondary" />}
+                className="text-gradient w-full"
+                onClick={updateProfilePicture}
+              >
+                Save
+              </Button>
+            )}
+          </div>
         </div>
         {/* edit info */}
         <div className="bg-primary/5 text-center p-5 md:p-10 rounded-lg">
@@ -172,7 +223,7 @@ const UserProfile = () => {
           <Form onFinish={updateUser} layout="vertical">
             <Tabs defaultActiveKey="1">
               <TabPane
-                className="grid md:grid-cols-2 md:gap-10"
+                className="grid lg:grid-cols-2 lg:gap-10"
                 tab="Basic Info"
                 key="1"
               >

@@ -25,17 +25,14 @@ export const Dashboard = () => {
       if (currentUser?.role === "admin")
         URL = `/users/coach-athlete-parents/${currentUser?.email}`;
       else if (currentUser?.role === "coach")
-        URL = `/users/athlete-parents/${currentUser?.email}`;
+        URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
       else if (currentUser?.role === "parents")
         URL = `/users/athlete/${currentUser?.email}`;
 
-      if (currentUser?.role === "sadmin" || currentUser?.role === "admin") {
-        const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}${URL}`
-        );
-        return data;
-      }
-      return [];
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}${URL}`
+      );
+      return data;
     },
   });
 
@@ -46,7 +43,7 @@ export const Dashboard = () => {
   } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      if (currentUser?.role === "admin") {
+      if (currentUser?.role === "admin" || currentUser?.role === "coach") {
         const { data } = await axiosSecure.get(
           `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
         );
@@ -160,6 +157,7 @@ export const Dashboard = () => {
                   <AddTeamModal
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
+                    refetch={refetch}
                   />
                   <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
                     <DashboardCard

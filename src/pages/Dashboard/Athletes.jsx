@@ -93,9 +93,18 @@ export const Athletes = () => {
     }
   };
 
-  const handleTeamDetails = (team) => {
+  const [teamPositions, setTeamPositions] = useState();
+
+  const handleTeamDetails = (team, athleteEmail) => {
+    console.log(athleteEmail);
     setTeamDetails(team);
+    setSelectedAthlete(athleteEmail);
+    setTeamPositions(team.positions);
     setIsTeamDetailsModal(true);
+  };
+
+  const addPosition = (position) => {
+    setTeamPositions([...teamPositions, position]);
   };
 
   const getFilteredTeam = () => {
@@ -162,8 +171,12 @@ export const Athletes = () => {
                       key: team._id,
                       label: (
                         <div className="flex items-center justify-between">
-                          <p onClick={() => handleTeamDetails(team)}>
-                            {team.teamName}
+                          <p
+                            onClick={() =>
+                              handleTeamDetails(team, record.email)
+                            }
+                          >
+                            {team.teamName}{" "}
                           </p>
                           {currentUser?.role === "coach" && (
                             <AiTwotoneDelete
@@ -204,7 +217,7 @@ export const Athletes = () => {
       ),
     },
     {
-      hidden: currentUser?.role === "parents",
+      hidden: !currentUser?.role === "coach",
       title: currentUser?.role !== "sadmin" ? "Action" : "",
       key: "action",
       render: (_, record) => (
@@ -223,9 +236,9 @@ export const Athletes = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                    Change Role
-                  </button>
+                  {/* <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
+                    Position +
+                  </button> */}
 
                   <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
@@ -302,8 +315,12 @@ export const Athletes = () => {
           )}
           <TeamDetailsModal
             teamDetails={teamDetails}
+            selectedAthlete={selectedAthlete}
+            teamPositions={teamPositions}
             isTeamDetailsModal={isTeamDetailsModal}
             setIsTeamDetailsModal={setIsTeamDetailsModal}
+            refetch={refetch}
+            addPosition={addPosition}
           />
         </Container>
       ) : (

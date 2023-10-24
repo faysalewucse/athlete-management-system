@@ -10,6 +10,7 @@ import CustomLoader from "../../components/CustomLoader";
 import Pending from "./Pending";
 import { Container } from "../../components/Container";
 import AddAthleteModal from "../../components/modals/AddAthleteModal";
+import EventCalender from "../../components/EventCalender";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -70,151 +71,157 @@ export const Dashboard = () => {
     <div className="min-h-[90vh] p-5">
       {!isLoading ? (
         <Container>
-          {currentUser?.role === "sadmin" && (
-            <div>
-              <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                <DashboardCard
-                  number={users?.length != 0 ? users.length - 1 : 0}
-                  title={"Total Users"}
-                  route="/dashboard"
-                />
-                <DashboardCard
-                  number={quantity.admin}
-                  title={"Total Admins"}
-                  route="/dashboard/admins"
-                />
-                <DashboardCard
-                  number={quantity.coach}
-                  title={"Total Coaches"}
-                  route="/dashboard/coaches"
-                />
-                <DashboardCard
-                  number={quantity.athlete}
-                  title={"Total Athletes"}
-                  route="/dashboard/athletes"
-                />
-                <DashboardCard
-                  number={quantity.parents}
-                  title={"Total Parents"}
-                  route="/dashboard/parents"
-                />
-              </div>
-            </div>
-          )}
-          {currentUser?.role === "admin" && (
-            <div>
-              {currentUser.status === "pending" ? (
-                <Pending role={currentUser?.role} />
-              ) : (
-                <div>
-                  <Button
-                    style={"rounded-lg"}
-                    onClickHandler={() => setIsModalOpen(true)}
-                    text={"Add Team +"}
+          <div className="mb-5">
+            {currentUser?.role === "sadmin" && (
+              <div>
+                <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                  <DashboardCard
+                    number={users?.length != 0 ? users.length - 1 : 0}
+                    title={"Total Users"}
+                    route="/dashboard"
                   />
-                  <AddTeamModal
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                    refetch={refetch}
-                    coaches={users.filter((user) => user.role === "coach")}
+                  <DashboardCard
+                    number={quantity.admin}
+                    title={"Total Admins"}
+                    route="/dashboard/admins"
                   />
-                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                    <DashboardCard
-                      number={quantity.coach}
-                      title={"Total Coaches"}
-                      route="/dashboard/coaches"
-                    />
-                    <DashboardCard
-                      number={quantity.athlete}
-                      title={"Total Athletes"}
-                      route="/dashboard/athletes"
-                    />
-                    <DashboardCard
-                      number={quantity.parents}
-                      title={"Total Parents"}
-                      route="/dashboard/parents"
-                    />
-                    <DashboardCard
-                      number={teams.length}
-                      title={"Total Teams"}
-                      route="/dashboard/teams"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          {currentUser?.role === "coach" && (
-            <div className="min-h-[80vh]">
-              {currentUser.status === "pending" ? (
-                <Pending />
-              ) : (
-                <div>
-                  <Button
-                    onClickHandler={() => setIsModalOpen(true)}
-                    text={"Add Team +"}
+                  <DashboardCard
+                    number={quantity.coach}
+                    title={"Total Coaches"}
+                    route="/dashboard/coaches"
                   />
-                  <AddTeamModal
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                    refetch={refetch}
-                  />
-                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                    <DashboardCard
-                      number={quantity.athlete}
-                      title={"Total Athletes"}
-                      route="/dashboard/athletes"
-                    />
-                    <DashboardCard
-                      number={quantity.parents}
-                      title={"Total Parents"}
-                      route="/dashboard/parents"
-                    />
-                    <DashboardCard
-                      number={teams.length}
-                      title={"Total Teams"}
-                      route="/dashboard/teams"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          {currentUser?.role === "athlete" && (
-            <div>
-              {currentUser?.status === "pending" ? (
-                <Pending role={currentUser?.role} />
-              ) : (
-                <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
-                  <DashboardCard number={teams.length} title={"Total Teams"} />
-                </div>
-              )}
-            </div>
-          )}
-          {currentUser?.role === "parents" && (
-            <div>
-              {currentUser?.status === "pending" ? (
-                <Pending role={currentUser?.role} />
-              ) : (
-                <div className="mt-2 grid lg:grid-cols-4 grid-cols-2 gap-5">
                   <DashboardCard
                     number={quantity.athlete}
-                    title={"Total Athlete"}
+                    title={"Total Athletes"}
+                    route="/dashboard/athletes"
                   />
-                  <Button
-                    style={"rounded-lg"}
-                    onClickHandler={() => setIsModalOpen(true)}
-                    text={"Add Athlete +"}
-                  />
-                  <AddAthleteModal
-                    isModalOpen={isModalOpen}
-                    setIsModalOpen={setIsModalOpen}
-                    refetch={refetch}
+                  <DashboardCard
+                    number={quantity.parents}
+                    title={"Total Parents"}
+                    route="/dashboard/parents"
                   />
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+            {currentUser?.role === "admin" && (
+              <div>
+                {currentUser.status === "pending" ? (
+                  <Pending role={currentUser?.role} />
+                ) : (
+                  <div>
+                    <Button
+                      style={"rounded-lg"}
+                      onClickHandler={() => setIsModalOpen(true)}
+                      text={"Add Team +"}
+                    />
+                    <AddTeamModal
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      refetch={refetch}
+                      coaches={users.filter((user) => user.role === "coach")}
+                    />
+                    <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                      <DashboardCard
+                        number={quantity.coach}
+                        title={"Total Coaches"}
+                        route="/dashboard/coaches"
+                      />
+                      <DashboardCard
+                        number={quantity.athlete}
+                        title={"Total Athletes"}
+                        route="/dashboard/athletes"
+                      />
+                      <DashboardCard
+                        number={quantity.parents}
+                        title={"Total Parents"}
+                        route="/dashboard/parents"
+                      />
+                      <DashboardCard
+                        number={teams.length}
+                        title={"Total Teams"}
+                        route="/dashboard/teams"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {currentUser?.role === "coach" && (
+              <div className="">
+                {currentUser.status === "pending" ? (
+                  <Pending />
+                ) : (
+                  <div>
+                    <Button
+                      onClickHandler={() => setIsModalOpen(true)}
+                      text={"Add Team +"}
+                    />
+                    <AddTeamModal
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      refetch={refetch}
+                    />
+                    <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                      <DashboardCard
+                        number={quantity.athlete}
+                        title={"Total Athletes"}
+                        route="/dashboard/athletes"
+                      />
+                      <DashboardCard
+                        number={quantity.parents}
+                        title={"Total Parents"}
+                        route="/dashboard/parents"
+                      />
+                      <DashboardCard
+                        number={teams.length}
+                        title={"Total Teams"}
+                        route="/dashboard/teams"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {currentUser?.role === "athlete" && (
+              <div>
+                {currentUser?.status === "pending" ? (
+                  <Pending role={currentUser?.role} />
+                ) : (
+                  <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                    <DashboardCard
+                      number={teams.length}
+                      title={"Total Teams"}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {currentUser?.role === "parents" && (
+              <div>
+                {currentUser?.status === "pending" ? (
+                  <Pending role={currentUser?.role} />
+                ) : (
+                  <div className="mt-2 grid lg:grid-cols-4 grid-cols-2 gap-5">
+                    <DashboardCard
+                      number={quantity.athlete}
+                      title={"Total Athlete"}
+                    />
+                    <Button
+                      style={"rounded-lg"}
+                      onClickHandler={() => setIsModalOpen(true)}
+                      text={"Add Athlete +"}
+                    />
+                    <AddAthleteModal
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      refetch={refetch}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <EventCalender />
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

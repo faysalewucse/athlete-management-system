@@ -11,6 +11,7 @@ import { CoachRoute } from "./CoachRoute";
 import Events from "../pages/Dashboard/Events";
 import { ValidUserRoute } from "./ValidUserRoute";
 import Chatting from "../pages/Dashboard/Chatting";
+import { AthleteRoute } from "./AthleteRoute";
 
 export const dashboardRouter = [
   {
@@ -68,9 +69,9 @@ export const dashboardRouter = [
   {
     path: "teams",
     element: (
-      <CoachRoute>
+      <AthleteRoute>
         <Teams />
-      </CoachRoute>
+      </AthleteRoute>
     ),
   },
 ];

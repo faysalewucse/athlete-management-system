@@ -52,12 +52,14 @@ export const Banner = ({ scrollRef, handleScroll }) => {
               text={"View Details"}
               style={"text-black dark:text-white"}
             />
-            <Link
-              to={!currentUser ? "/register" : "/"}
-              className="rounded cursor-pointer px-6 bg-gradient-to-r to-primary from-secondary py-2 font-semibold text-white hover:shadow-lg  transition-all duration-200"
-            >
-              Register Now
-            </Link>
+            {!currentUser && (
+              <Link
+                to={"/register"}
+                className="rounded cursor-pointer px-6 bg-gradient-to-r to-primary from-secondary py-2 font-semibold text-white hover:shadow-lg  transition-all duration-200"
+              >
+                Register Now
+              </Link>
+            )}
           </div>
         </div>
       </Container>

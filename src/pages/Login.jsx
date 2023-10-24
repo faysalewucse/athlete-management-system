@@ -42,20 +42,7 @@ export const Login = () => {
           <h2 className="text-3xl font-bold mb-8 text-center text-dark">
             Login
           </h2>
-          {/* <div className="rounded-t mb-0 px-6 py-6">
-            <h6
-              onClick={googleSignIn}
-              className="flex items-center justify-center gap-3 text-gray-600 dark:bg-slate-700 dark:text-white bg-white p-2 border rounded-lg font-bold hover:scale-105 transition-all duration-200 cursor-pointer"
-            >
-              <FcGoogle /> Sign in with Google
-            </h6>
-
-            <hr className="mt-6 border-b-1 border-gray-400" />
-          </div> */}
-          <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-            {/* <div className="text-center mb-3 font-bold">
-              <small>Sign in with credentials</small>
-            </div> */}
+          <div className="px-4 py-10 pt-0">
             <form onSubmit={handleSubmit(loginHandler)}>
               <div className="relative w-full mb-3">
                 <label
@@ -110,19 +97,16 @@ export const Login = () => {
                   {!showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                 </div>
               </div>
-              <div className="flex flex-wrap mt-6 text-secondary text-xl">
-                <div className="w-1/2">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <small>Forgot password?</small>
-                  </a>
+              <div className="flex md:flex-row text-center justify-between flex-col mt-6 text-secondary text-xl">
+                <div className="">
+                  <small>Forgot password?</small>
                 </div>
-                <div className="w-1/2 text-right">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <small onClick={() => navigate("/register")}>
-                      Create new account
-                    </small>
-                  </a>
-                </div>
+                <small
+                  className="underline"
+                  onClick={() => navigate("/register")}
+                >
+                  Create new account
+                </small>
               </div>
               <div className="text-center mt-6">
                 <input

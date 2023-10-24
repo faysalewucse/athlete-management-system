@@ -278,6 +278,15 @@ export const Register = () => {
             <Input type="number" className="rounded-lg" size="large" />
           </Form.Item>
 
+          <Form.Item
+            name="address"
+            label="Address"
+            className="w-full col-span-2"
+            rules={[{ required: true, message: "Address is required" }]}
+          >
+            <Input.TextArea className="rounded-lg" size="large" />
+          </Form.Item>
+
           <div className="flex justify-between gap-5 col-span-2">
             <Form.Item
               name="city"
@@ -304,15 +313,6 @@ export const Register = () => {
               <Input className="rounded-lg" size="large" />
             </Form.Item>
           </div>
-
-          <Form.Item
-            name="address"
-            label="Address"
-            className="w-full col-span-2"
-            rules={[{ required: true, message: "Address is required" }]}
-          >
-            <Input.TextArea className="rounded-lg" size="large" />
-          </Form.Item>
 
           <Form.Item className="col-span-2">
             <Button

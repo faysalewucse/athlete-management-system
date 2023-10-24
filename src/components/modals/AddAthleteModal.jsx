@@ -1,21 +1,18 @@
-import { Form, Input, Button, Select, Modal, Upload, DatePicker } from "antd";
+import { Form, Input, Button, Select, Modal, DatePicker } from "antd";
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
-import { MdFileUpload } from "react-icons/md";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const { Option } = Select;
 
-const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
+const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const { signup } = useAuth();
-  const navigate = useNavigate();
+
+  const { currentUser } = useAuth();
 
   const onFinish = async (data) => {
     try {
@@ -24,45 +21,32 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         address,
         email,
         gender,
-        name,
+        firstName,
+        lastName,
         phoneNumber,
-        role,
         dateOfBirth,
-        institute,
         origanization,
+        state,
+        city,
+        zip,
       } = data;
-
-      const photo = data.photoUrl && data.photoUrl[0].originFileObj;
-      const formdata = new FormData();
-      let photoURL = "";
-      if (photo) {
-        formdata.append("image", photo);
-
-        const response = await axios.post(
-          `https://api.imgbb.com/1/upload?key=${
-            import.meta.env.VITE_IMAGE_UPLOAD_API
-          }`,
-          formdata
-        );
-        if (response?.data?.status === 200) {
-          photoURL = response.data.data.display_url;
-        }
-      }
 
       const userData = {
         email,
-        name,
-        photoURL: photo ? photoURL : "",
-        address,
+        firstName,
+        lastName,
+        fullName: firstName + " " + lastName,
+        photoURL: "",
+        address: { state, city, zip, address },
         gender,
         dateOfBirth,
         phoneNumber,
-        role,
+        role: "athlete",
         status: "pending",
+        parentsEmail: currentUser?.email,
       };
 
-      if (role === "admin") userData.institute = institute;
-      else userData.adminEmail = origanization;
+      userData.adminEmail = origanization;
 
       await axios
         .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
@@ -70,7 +54,12 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
           if (res.status === 200) {
             form.resetFields();
             setIsModalOpen(false);
-            Swal.fire("Welcome!", "You registered Successfully!", "success");
+            Swal.fire(
+              "Welcome!",
+              "Athlete registration done successfully",
+              "success"
+            );
+            refetch();
           }
         });
 
@@ -109,38 +98,17 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         className="md:grid grid-cols-2 gap-x-6 p-10"
       >
         <Form.Item
-          name="photoUrl"
-          label="Photo"
-          className="col-span-2"
-          rules={[{ required: false }]}
-          valuePropName="fileList"
-          getValueFromEvent={(e) => {
-            if (Array.isArray(e)) {
-              return e;
-            }
-            return e && e.fileList;
-          }}
+          name="firstName"
+          label="First Name"
+          rules={[{ required: true, message: "First Name is required" }]}
         >
-          <Upload
-            accept=".jpg, .png, .jpeg"
-            maxCount={1}
-            listType="picture"
-            beforeUpload={() => false}
-          >
-            <Button
-              size="large"
-              icon={<MdFileUpload className="text-secondary" />}
-              className="text-gradient"
-            >
-              Upload Photo
-            </Button>
-          </Upload>
+          <Input className="w-full px-4 py-2 rounded-lg" size="large" />
         </Form.Item>
 
         <Form.Item
-          name="name"
-          label="Name"
-          rules={[{ required: true, message: "Name is required" }]}
+          name="lastName"
+          label="Last Name"
+          rules={[{ required: true, message: "Last Name is required" }]}
         >
           <Input className="w-full px-4 py-2 rounded-lg" size="large" />
         </Form.Item>
@@ -200,6 +168,14 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
           <Input type="number" className="rounded-lg" size="large" />
         </Form.Item>
 
+        <Form.Item
+          name="address"
+          label="Address"
+          className="w-full col-span-2"
+          rules={[{ required: true, message: "Address is required" }]}
+        >
+          <Input.TextArea className="rounded-lg" size="large" />
+        </Form.Item>
         <div className="flex justify-between gap-5 col-span-2">
           <Form.Item
             name="city"
@@ -226,15 +202,6 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
             <Input className="rounded-lg" size="large" />
           </Form.Item>
         </div>
-
-        <Form.Item
-          name="address"
-          label="Address"
-          className="w-full col-span-2"
-          rules={[{ required: true, message: "Address is required" }]}
-        >
-          <Input.TextArea className="rounded-lg" size="large" />
-        </Form.Item>
 
         <Form.Item className="col-span-2">
           <Button

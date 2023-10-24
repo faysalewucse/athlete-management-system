@@ -198,7 +198,7 @@ export const Dashboard = () => {
               {currentUser?.status === "pending" ? (
                 <Pending role={currentUser?.role} />
               ) : (
-                <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                <div className="mt-2 grid lg:grid-cols-4 grid-cols-2 gap-5">
                   <DashboardCard
                     number={quantity.athlete}
                     title={"Total Athlete"}
@@ -212,7 +212,6 @@ export const Dashboard = () => {
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
                     refetch={refetch}
-                    coaches={users.filter((user) => user.role === "coach")}
                   />
                 </div>
               )}

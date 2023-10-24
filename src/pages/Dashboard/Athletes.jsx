@@ -28,12 +28,10 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       let URL = `adminEmail=${currentUser?.email}`;
-      if (
-        currentUser?.role === "athlete" ||
-        currentUser?.role === "coach" ||
-        currentUser?.role === "parents"
-      ) {
+      if (currentUser?.role === "athlete" || currentUser?.role === "coach") {
         URL = `adminEmail=${currentUser?.adminEmail}`;
+      } else if (currentUser?.role === "parents") {
+        URL = `parentsEmail=${currentUser?.email}`;
       }
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
@@ -167,10 +165,12 @@ export const Athletes = () => {
                           <p onClick={() => handleTeamDetails(team)}>
                             {team.teamName}
                           </p>
-                          <AiTwotoneDelete
-                            onClick={() => handleRemoveAthlete(team, record)}
-                            className="text-danger text-base hover:text-danger2"
-                          />
+                          {currentUser?.role === "coach" && (
+                            <AiTwotoneDelete
+                              onClick={() => handleRemoveAthlete(team, record)}
+                              className="text-danger text-base hover:text-danger2"
+                            />
+                          )}
                         </div>
                       ),
                     };
@@ -185,15 +185,26 @@ export const Athletes = () => {
                   </Space>
                 </Button>
               </Dropdown>
-              <Button onClick={() => modalHandler(record)}>+</Button>
+              {currentUser?.role === "coach" && (
+                <Button onClick={() => modalHandler(record)}>+</Button>
+              )}
             </div>
           ) : (
-            <Button onClick={() => modalHandler(record)}>Assign To Team</Button>
+            <div>
+              {currentUser?.role === "coach" ? (
+                <Button onClick={() => modalHandler(record)}>
+                  Assign To Team
+                </Button>
+              ) : (
+                <p>No Teams Assigned</p>
+              )}
+            </div>
           )}
         </div>
       ),
     },
     {
+      hidden: currentUser?.role === "parents",
       title: currentUser?.role !== "sadmin" ? "Action" : "",
       key: "action",
       render: (_, record) => (
@@ -248,7 +259,7 @@ export const Athletes = () => {
         </Space>
       ),
     },
-  ];
+  ].filter((item) => !item.hidden);
 
   const data = currentAthletes?.map((athlete) => {
     return {

@@ -13,6 +13,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { RxClock } from "react-icons/rx";
 import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
+import UpdatePlannerModal from "../../components/modals/UpdatePlannerModal";
 
 const Planner = () => {
   const { currentUser } = useAuth();
@@ -47,9 +48,14 @@ const Planner = () => {
       .then((res) => {
         if (res.status === 200) {
           refetch();
-          toast.success("event deleted successfully");
+          toast.success("Plan deleted successfully");
         }
       });
+  };
+
+  const handleUpdatePlan = (plan) => {
+    setOpenUpdateModal(true);
+    setPlan(plan);
   };
 
   return (
@@ -82,7 +88,7 @@ const Planner = () => {
                         {currentUser?.role === "coach" && (
                           <div className="text-lg flex gap-1">
                             <BiEdit
-                              //   onClick={() => handleUpdatePlan(plan)}
+                              onClick={() => handleUpdatePlan(plan)}
                               className="cursor-pointer"
                             />
                             <AiFillDelete
@@ -126,6 +132,12 @@ const Planner = () => {
           <CreatePlannerModal
             modalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
+            refetch={refetch}
+          />
+          <UpdatePlannerModal
+            openUpdateModal={openUpdateModal}
+            setOpenUpdateModal={setOpenUpdateModal}
+            plan={plan}
             refetch={refetch}
           />
         </Container>

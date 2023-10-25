@@ -13,10 +13,18 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
   const [axiosSecure] = useAxiosSecure();
 
   const onFinish = async (values) => {
+    const coaches = [];
+    if (currentUser?.role === "admin") {
+      values.coaches && coaches.push(values.coaches);
+    } else {
+      coaches.push(currentUser.email);
+    }
+
     const teamData = {
       ...values,
-      coaches: values.coaches ? [values.coaches] : [],
+      coaches,
       athletes: [],
+      positions: [],
     };
 
     setSubmitting(true);
@@ -44,7 +52,10 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         form={form}
         name="add-team"
         initialValues={{
-          adminEmail: currentUser?.email,
+          adminEmail:
+            currentUser?.role === "admin"
+              ? currentUser?.email
+              : currentUser?.adminEmail,
         }}
         onFinish={onFinish}
         layout="vertical"
@@ -93,21 +104,23 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
         >
           <Input disabled />
         </Form.Item>
-        <Form.Item name="coaches" label="Select Coach">
-          <Select placeholder="Select Coach">
-            {coaches?.map((coach) => (
-              <Option
-                disabled={coach.status === "pending"}
-                key={coach._id}
-                value={coach?.status === "approved" ? coach?.email : null}
-              >
-                {coach?.status === "approved"
-                  ? coach?.name
-                  : `${coach?.name}(Not Approved)`}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+        {currentUser?.role === "admin" && (
+          <Form.Item name="coaches" label="Select Coach">
+            <Select placeholder="Select Coach">
+              {coaches?.map((coach) => (
+                <Option
+                  disabled={coach.status === "pending"}
+                  key={coach._id}
+                  value={coach?.status === "approved" ? coach?.email : null}
+                >
+                  {coach?.status === "approved"
+                    ? coach?.name
+                    : `${coach?.name}(Not Approved)`}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item>
           <Button
             className="bg-primary text-white"

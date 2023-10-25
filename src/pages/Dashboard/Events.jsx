@@ -109,8 +109,8 @@ const Events = () => {
                         {event.eventType}
                       </p>
                       <p className="text-sm">
-                        {event.description
-                          ? event.description
+                        {event.eventDescription
+                          ? event.eventDescription
                           : "No Description"}
                       </p>
                     </div>

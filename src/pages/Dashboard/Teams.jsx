@@ -231,7 +231,7 @@ const Teams = () => {
           {currentUser?.role === "admin" ? (
             <Table dataSource={data} columns={columns} pagination={false} />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {coachTeams.map((team) => (
                 <Card key={team?._id} bordered={false} title={team?.teamName}>
                   <p className="text-base font-medium text-gray-500">

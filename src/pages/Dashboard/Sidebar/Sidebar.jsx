@@ -7,7 +7,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
 import { CgMiniPlayer } from "react-icons/cg";
-import { BiChat } from "react-icons/bi";
+import { BiChat, BiTask } from "react-icons/bi";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   const { currentUser } = useAuth();
@@ -110,6 +110,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Events",
         route: "events",
         icon: <MdEvent />,
+      },
+      {
+        key: 8,
+        label: "Planners",
+        route: "planners",
+        icon: <BiTask />,
       },
       {
         key: 7,

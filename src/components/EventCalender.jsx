@@ -1,32 +1,63 @@
-import { Calendar } from "antd";
+import { Badge, Calendar } from "antd";
+import { useAuth } from "../contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import CustomLoader from "./CustomLoader";
+import { format, parseISO } from "date-fns";
 
 const onPanelChange = (value, mode) => {
   console.log(value.format("YYYY-MM-DD"), mode);
 };
 
-const dateTitleMap = {
-  "2023-10-10": "Special Event",
-  "2023-10-15": "Another Event",
-};
-
-const dateCellRender = (value) => {
-  const date = value.format("YYYY-MM-DD");
-  const title = dateTitleMap[date];
-  return title ? (
-    <div className="bg-gradient text-white  p-2  rounded-md event-title">
-      {title}
-    </div>
-  ) : null;
-};
-
 const EventCalender = () => {
+  const { currentUser } = useAuth();
+  const [axiosSecure] = useAxiosSecure();
+
+  const { isLoading, data: events = [] } = useQuery({
+    queryKey: ["event", currentUser?.email],
+    queryFn: async () => {
+      const adminEmail =
+        currentUser?.role === "admin"
+          ? currentUser.email
+          : currentUser?.adminEmail;
+
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/events/${adminEmail}`
+      );
+      return data;
+    },
+  });
+
+  const dateTitleMap = {};
+
+  events.forEach((event) => {
+    const formattedDate = format(parseISO(event.date), "yyyy-MM-dd");
+    dateTitleMap[formattedDate] = event.eventName;
+  });
+
+  const dateCellRender = (value) => {
+    const date = value.format("YYYY-MM-DD");
+    const title = dateTitleMap[date];
+    return title ? (
+      <div className="flex gap-2 border border-secondary px-3">
+        <Badge color="blue" />
+        {title}
+      </div>
+    ) : null;
+  };
+
   return (
     <div>
-      <Calendar
-        fullscreen={false}
-        onPanelChange={onPanelChange}
-        cellRender={dateCellRender}
-      />
+      {!isLoading ? (
+        <Calendar
+          className="lg:p-0 p-5"
+          fullscreen={false}
+          onPanelChange={onPanelChange}
+          cellRender={dateCellRender}
+        />
+      ) : (
+        <CustomLoader isLoading={isLoading} />
+      )}
     </div>
   );
 };

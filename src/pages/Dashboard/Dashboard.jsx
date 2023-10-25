@@ -221,7 +221,9 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
-          <EventCalender />
+          <div className="flex">
+            <EventCalender />
+          </div>
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

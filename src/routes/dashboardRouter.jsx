@@ -13,6 +13,8 @@ import { ValidUserRoute } from "./ValidUserRoute";
 import Chatting from "../pages/Dashboard/Chatting";
 import { AthleteRoute } from "./AthleteRoute";
 import Planner from "../pages/Dashboard/Planner";
+import TripPlanner from "../pages/Dashboard/TripPlanner";
+import Organizations from "../pages/Dashboard/Organizations";
 
 export const dashboardRouter = [
   {
@@ -32,6 +34,14 @@ export const dashboardRouter = [
     element: (
       <SuperAdminRoute>
         <Admins />
+      </SuperAdminRoute>
+    ),
+  },
+  {
+    path: "organizations",
+    element: (
+      <SuperAdminRoute>
+        <Organizations />
       </SuperAdminRoute>
     ),
   },
@@ -78,9 +88,17 @@ export const dashboardRouter = [
   {
     path: "planners",
     element: (
-      <CoachRoute>
+      <ValidUserRoute>
         <Planner />
-      </CoachRoute>
+      </ValidUserRoute>
+    ),
+  },
+  {
+    path: "trip",
+    element: (
+      <ValidUserRoute>
+        <TripPlanner />
+      </ValidUserRoute>
     ),
   },
 ];

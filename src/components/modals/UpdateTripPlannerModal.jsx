@@ -1,11 +1,11 @@
-import { Form, Button, DatePicker, Input, Modal, TimePicker } from "antd";
+import { Button, DatePicker, Form, Input, Modal, TimePicker } from "antd";
+import moment from "moment";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useState } from "react";
-import moment from "moment";
 
-const UpdatePlannerModal = ({
-  plan,
+const UpdateTripPlannerModal = ({
+  trip,
   openUpdateModal,
   setOpenUpdateModal,
   refetch,
@@ -22,20 +22,20 @@ const UpdatePlannerModal = ({
   const onUpdate = async (values) => {
     setSubmitting(true);
     await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/plans/${plan?._id}`, values)
+      .patch(`${import.meta.env.VITE_BASE_API_URL}/trips/${trip?._id}`, values)
       .then((res) => {
         if (res.status === 200) {
           setSubmitting(false);
           setOpenUpdateModal(false);
           form.resetFields();
-          toast.success("Plan Updated");
+          toast.success("Trip Updated");
           refetch();
         }
       });
   };
-  const validateDateOfPlan = (rule, value) => {
+  const validateDateOfTrip = (rule, value) => {
     if (value && value.isBefore()) {
-      return Promise.reject("Plan cannot be in the past");
+      return Promise.reject("trip cannot be in the past");
     }
 
     return Promise.resolve();
@@ -43,7 +43,7 @@ const UpdatePlannerModal = ({
   return (
     <Modal
       open={openUpdateModal}
-      title="Create Plan"
+      title="Create trip"
       onCancel={onCancel}
       footer={[
         <Button key="back" onClick={onCancel}>
@@ -75,16 +75,16 @@ const UpdatePlannerModal = ({
         size="middle"
         form={form}
         layout="vertical"
-        name="createPlanForm"
+        name="updateTripForm"
       >
         <Form.Item
-          name="planName"
-          label="Plan Name"
-          initialValue={plan?.planName}
+          name="tripName"
+          label="trip Name"
+          initialValue={trip?.tripName}
           rules={[
             {
               required: true,
-              message: "Please enter the plan name",
+              message: "Please enter the trip name",
             },
           ]}
         >
@@ -93,11 +93,11 @@ const UpdatePlannerModal = ({
 
         <Form.Item
           name="date"
-          label="plan Date"
-          initialValue={moment(plan?.date)}
+          label="trip Date"
+          initialValue={moment(trip?.date)}
           rules={[
-            { required: true, message: "plan date is required" },
-            { validator: validateDateOfPlan },
+            { required: true, message: "trip date is required" },
+            { validator: validateDateOfTrip },
           ]}
         >
           <DatePicker
@@ -108,8 +108,8 @@ const UpdatePlannerModal = ({
         </Form.Item>
         <Form.Item
           name="time"
-          label="plan Time"
-          initialValue={moment(plan?.time)}
+          label="trip Time"
+          initialValue={moment(trip?.time)}
           rules={[{ required: true, message: "Time is required" }]}
         >
           <TimePicker
@@ -120,15 +120,24 @@ const UpdatePlannerModal = ({
           />
         </Form.Item>
         <Form.Item
-          initialValue={plan?.duration}
-          name="duration"
-          label="Plan Duration"
+          initialValue={trip?.location}
+          name="location"
+          label="Trip Location"
+          className=" rounded-lg"
         >
-          <Input placeholder="Please mention time (eg. days, hours)" />
+          <Input placeholder="mention the trip location" />
+        </Form.Item>
+        <Form.Item
+          initialValue={trip?.description}
+          className="col-span-2"
+          name="description"
+          label="Trip Description"
+        >
+          <Input.TextArea placeholder="Enter a trip plan description" />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default UpdatePlannerModal;
+export default UpdateTripPlannerModal;

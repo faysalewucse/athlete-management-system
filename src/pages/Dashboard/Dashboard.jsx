@@ -11,6 +11,8 @@ import Pending from "./Pending";
 import { Container } from "../../components/Container";
 import AddAthleteModal from "../../components/modals/AddAthleteModal";
 import EventCalender from "../../components/EventCalender";
+import { TeamPerformanceChart } from "./TeamPerformanceChart";
+import GamedAndPracticeStatsChart from "./GamedAndPracticeStatsChart";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -221,8 +223,16 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
-          <div className="flex">
-            <EventCalender />
+          <div className="lg:flex lg:flex-row flex-col gap-5">
+            <div className="lg:w-1/2">
+              <EventCalender />
+            </div>
+            <div className="lg:flex-1 bg-white rounded-lg w-full lg:mt-0 mt-5">
+              {currentUser?.role === "coach" && <TeamPerformanceChart />}
+              {currentUser?.role === "athlete" && (
+                <GamedAndPracticeStatsChart />
+              )}
+            </div>
           </div>
         </Container>
       ) : (

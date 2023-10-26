@@ -1,7 +1,7 @@
 import { HiSquares2X2 } from "react-icons/hi2";
 import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
 import { MdClose, MdEvent } from "react-icons/md";
-import { RiAdminLine, RiParentLine } from "react-icons/ri";
+import { RiAdminLine, RiOrganizationChart, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
 import { TbMap2 } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
@@ -46,6 +46,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Parents",
         route: "parents",
         icon: <RiParentLine />,
+      },
+      {
+        key: 5,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+      {
+        key: 6,
+        label: "Organizations",
+        route: "organizations",
+        icon: <RiOrganizationChart />,
       },
     ],
 

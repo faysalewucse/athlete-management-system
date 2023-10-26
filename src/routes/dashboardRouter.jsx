@@ -14,6 +14,7 @@ import Chatting from "../pages/Dashboard/Chatting";
 import { AthleteRoute } from "./AthleteRoute";
 import Planner from "../pages/Dashboard/Planner";
 import TripPlanner from "../pages/Dashboard/TripPlanner";
+import Organizations from "../pages/Dashboard/Organizations";
 
 export const dashboardRouter = [
   {
@@ -33,6 +34,14 @@ export const dashboardRouter = [
     element: (
       <SuperAdminRoute>
         <Admins />
+      </SuperAdminRoute>
+    ),
+  },
+  {
+    path: "organizations",
+    element: (
+      <SuperAdminRoute>
+        <Organizations />
       </SuperAdminRoute>
     ),
   },

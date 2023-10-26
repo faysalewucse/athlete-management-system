@@ -10,6 +10,7 @@ import { Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
 import { useForm } from "antd/es/form/Form";
 import { io } from "socket.io-client";
+import { BiChat } from "react-icons/bi";
 
 const Chatting = () => {
   const socket = io.connect("http://localhost:5000");
@@ -18,6 +19,7 @@ const Chatting = () => {
   useEffect(() => {
     socket.on("chatMessage", (data) => {
       console.log(data);
+      refetchChats();
     });
 
     // Remove event listener on component unmount
@@ -53,6 +55,8 @@ const Chatting = () => {
       return data;
     },
   });
+
+  console.log(currentUser.adminEmail);
 
   const {
     isMessageLoading,
@@ -101,8 +105,10 @@ const Chatting = () => {
     refetchChats();
   }, [selectedChat, refetchChats]);
 
+  const [chatOpen, setChatOpen] = useState(false);
+
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-dark">
+    <div className="min-h-[90vh] bg-transparent p-2 md:p-10 mt-10 text-dark">
       {!isLoading ? (
         <Container>
           <div className="  flex gap-3 mb-5">
@@ -138,9 +144,15 @@ const Chatting = () => {
               refetchChats={refetchChats}
             />
           </div>
-          <div className="flex relative max-h-[70vh] bg-white rounded-lg p-2">
+          <div className="flex relative h-[70vh] bg-white rounded-lg p-2">
+            <BiChat
+              onClick={() => setChatOpen(true)}
+              className="md:hidden block absolute left-2 top-2 z-50 bg-gradient text-white p-3 text-5xl rounded-full"
+            />
             <div
-              className={` border-r-2 rounded-lg border-secondary/5 w-1/3 pr-2`}
+              className={`md:block md:relative absolute left-0 top-0 z-50 h-full w-3/4 ${
+                !chatOpen && "hidden"
+              } bg-secondary md:bg-primary/10 p-2 border-r-2 rounded-lg border-secondary/5 md:w-1/3`}
             >
               {users
                 .filter(
@@ -150,6 +162,7 @@ const Chatting = () => {
                 .map((user) => (
                   <div
                     onClick={() => {
+                      setChatOpen(false);
                       setSelectedChat(user);
                     }}
                     key={user?._id}
@@ -168,37 +181,14 @@ const Chatting = () => {
                   </div>
                 ))}
             </div>
-            <div className=" flex-1 bg-white overflow-y-scroll">
-              {selectedChat ? (
-                <div>
-                  {chatHistory.map((chat) => (
-                    <p
-                      key={chat._id}
-                      className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
-                        chat.from === currentUser?.email
-                          ? "ml-auto mr-2"
-                          : "mr-auto ml-2"
-                      }`}
-                    >
-                      {chat.message}
-                    </p>
-                  ))}
-                  {/* <div
-                className="absolute top-0"
-                onClick={() => setChatOpen(!chatOpen)}
-              >
-                {chatOpen ? <AiOutlineClose /> : <FaBarsStaggered />}
-              </div> */}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center min-h-full">
-                  <div className="flex items-center  gap-2  p-2 rounded border border-dark">
-                    <GiClick /> Select a User
-                  </div>
-                </div>
-              )}
+            <div
+              onClick={() => setChatOpen(false)}
+              className={`relative flex-1 bg-white overflow-y-scroll ${
+                chatOpen && "blur"
+              }`}
+            >
               {selectedChat?.email && (
-                <div className="w-full sticky bottom-0 right-0 bg-white pt-2 px-2 gap-2">
+                <div className="w-full absolute bottom-0 right-0 px-2 gap-2">
                   <Form
                     form={form}
                     className="flex gap-2"
@@ -225,6 +215,34 @@ const Chatting = () => {
                       </Button>
                     </Form.Item>
                   </Form>
+                </div>
+              )}
+              {selectedChat ? (
+                <div>
+                  {chatHistory.map((chat) => (
+                    <p
+                      key={chat._id}
+                      className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
+                        chat.from === currentUser?.email
+                          ? "ml-auto mr-2"
+                          : "mr-auto ml-2"
+                      }`}
+                    >
+                      {chat.message}
+                    </p>
+                  ))}
+                  {/* <div
+                className="absolute top-0"
+                onClick={() => setChatOpen(!chatOpen)}
+              >
+                {chatOpen ? <AiOutlineClose /> : <FaBarsStaggered />}
+              </div> */}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center min-h-full">
+                  <div className="flex items-center  gap-2  p-2 rounded border border-dark">
+                    <GiClick /> Select a User
+                  </div>
                 </div>
               )}
             </div>

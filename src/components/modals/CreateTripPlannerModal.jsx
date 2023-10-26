@@ -1,49 +1,51 @@
-import { Form, Button, DatePicker, Input, Modal, TimePicker } from "antd";
-import toast from "react-hot-toast";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { Button, DatePicker, Form, Input, Modal, TimePicker } from "antd";
 import { useState } from "react";
-import moment from "moment";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useAuth } from "../../contexts/AuthContext";
+import toast from "react-hot-toast";
 
-const UpdatePlannerModal = ({
-  plan,
-  openUpdateModal,
-  setOpenUpdateModal,
-  refetch,
-}) => {
+const CreateTripPlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [axiosSecure] = useAxiosSecure();
+  const { currentUser } = useAuth();
   const [submitting, setSubmitting] = useState(false);
 
   const onCancel = () => {
-    form.resetFields();
-    setOpenUpdateModal(false);
+    setIsModalOpen(false);
+    setSubmitting(false);
   };
 
-  const onUpdate = async (values) => {
+  const onCreate = async (values) => {
+    const tripData = {
+      ...values,
+      createdAt: Date.now(),
+      coachEmail: currentUser?.email,
+    };
+
     setSubmitting(true);
     await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/plans/${plan?._id}`, values)
+      .post(`${import.meta.env.VITE_BASE_API_URL}/trips`, tripData)
       .then((res) => {
         if (res.status === 200) {
           setSubmitting(false);
-          setOpenUpdateModal(false);
           form.resetFields();
-          toast.success("Plan Updated");
+          setIsModalOpen(false);
+          toast.success("Trip Plan Created");
           refetch();
         }
       });
   };
-  const validateDateOfPlan = (rule, value) => {
+  const validateDateOfTrip = (rule, value) => {
     if (value && value.isBefore()) {
-      return Promise.reject("Plan cannot be in the past");
+      return Promise.reject("Trip cannot be in the past");
     }
 
     return Promise.resolve();
   };
   return (
     <Modal
-      open={openUpdateModal}
-      title="Create Plan"
+      open={modalOpen}
+      title="Create trip"
       onCancel={onCancel}
       footer={[
         <Button key="back" onClick={onCancel}>
@@ -59,14 +61,14 @@ const UpdatePlannerModal = ({
               .validateFields()
               .then((values) => {
                 form.resetFields();
-                onUpdate(values);
+                onCreate(values);
               })
               .catch((info) => {
                 console.log("Validate Failed:", info);
               });
           }}
         >
-          {submitting ? "Please Wait..." : "Update"}
+          {submitting ? "Please Wait..." : "Create"}
         </Button>,
       ]}
     >
@@ -75,16 +77,15 @@ const UpdatePlannerModal = ({
         size="middle"
         form={form}
         layout="vertical"
-        name="createPlanForm"
+        name="createTripForm"
       >
         <Form.Item
-          name="planName"
-          label="Plan Name"
-          initialValue={plan?.planName}
+          name="tripName"
+          label="Trip Name"
           rules={[
             {
               required: true,
-              message: "Please enter the plan name",
+              message: "Please enter the trip name",
             },
           ]}
         >
@@ -93,11 +94,10 @@ const UpdatePlannerModal = ({
 
         <Form.Item
           name="date"
-          label="plan Date"
-          initialValue={moment(plan?.date)}
+          label="trip Date"
           rules={[
-            { required: true, message: "plan date is required" },
-            { validator: validateDateOfPlan },
+            { required: true, message: "trip date is required" },
+            { validator: validateDateOfTrip },
           ]}
         >
           <DatePicker
@@ -108,27 +108,34 @@ const UpdatePlannerModal = ({
         </Form.Item>
         <Form.Item
           name="time"
-          label="plan Time"
-          initialValue={moment(plan?.time)}
+          label="Trip Time"
           rules={[{ required: true, message: "Time is required" }]}
         >
           <TimePicker
             use12Hours
             format="h:mm a"
-            className="w-full px-4 py-2 rounded-lg"
+            className="w-full px-4 py-2 rounded-lg "
             size="middle"
           />
         </Form.Item>
+
         <Form.Item
-          initialValue={plan?.duration}
-          name="duration"
-          label="Plan Duration"
+          name="location"
+          label="Trip Location"
+          className=" rounded-lg"
         >
-          <Input placeholder="Please mention time (eg. days, hours)" />
+          <Input placeholder="mention the trip location" />
+        </Form.Item>
+        <Form.Item
+          className="col-span-2"
+          name="description"
+          label="Trip Description"
+        >
+          <Input.TextArea placeholder="Enter a trip plan description" />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default UpdatePlannerModal;
+export default CreateTripPlannerModal;

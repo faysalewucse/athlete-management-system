@@ -103,8 +103,8 @@ const Planner = () => {
                         {plan.duration ? plan.duration : "No Duration"}
                       </p>
                     </div>
-                    <div>
-                      <div className="mt-10 flex items-center gap-2">
+                    <div className="mt-10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
                         <RxClock />
                         <p>{format(parseISO(plan.time), "hh:mm a")}</p>
                       </div>

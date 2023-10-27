@@ -228,7 +228,7 @@ const Teams = () => {
                   </p>
                   <p className="flex flex-wrap text-base font-medium text-gray-500">
                     Coaches:{" "}
-                    {team?.coaches.map((coach, i) => (
+                    {team?.coaches?.map((coach, i) => (
                       <span
                         className={`ml-1 font-normal ${
                           currentUser?.email === coach ? "text-gradient" : ""

@@ -6,7 +6,7 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import CustomLoader from "../../components/CustomLoader";
 import { format, parseISO } from "date-fns";
-import { MdEventAvailable } from "react-icons/md";
+import { MdCoPresent, MdEventAvailable } from "react-icons/md";
 import { RxClock } from "react-icons/rx";
 import { Container } from "../../components/Container";
 import { BiEdit } from "react-icons/bi";
@@ -15,6 +15,7 @@ import { Pagination } from "antd";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import UpdateEventModal from "../../components/modals/UpdateEventModal";
 import toast from "react-hot-toast";
+import EventAttendanceModal from "../../components/modals/EventAttendanceModal";
 
 const Events = () => {
   const { currentUser } = useAuth();
@@ -23,6 +24,7 @@ const Events = () => {
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
   const [event, setEvent] = useState({});
 
   const {
@@ -44,9 +46,30 @@ const Events = () => {
     },
   });
 
+  const {
+    isLoadingTeams,
+    data: teams = [],
+    refetch: refetchCoachTeams,
+  } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team-athleteDetails/${
+          currentUser?.email
+        }`
+      );
+      return data;
+    },
+  });
+
   const handleUpdateEvent = (event) => {
-    setOpenUpdateModal(true);
     setEvent(event);
+    setOpenUpdateModal(true);
+  };
+
+  const handleAttendanceModal = (event) => {
+    setEvent(event);
+    setOpenAttendanceModal(true);
   };
 
   const handleDeleteEvents = async (id) => {
@@ -66,7 +89,7 @@ const Events = () => {
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
-      {!isLoading ? (
+      {!isLoading && !isLoadingTeams ? (
         <Container>
           {currentUser?.role === "admin" && (
             <Button
@@ -89,9 +112,15 @@ const Events = () => {
                   >
                     <div>
                       <div className="flex items-start justify-between">
-                        <h3 className="text-xl font-semibold">
-                          {event.eventName}
-                        </h3>
+                        <div className="flex justify-between items-center w-full">
+                          <h3 className="text-xl font-semibold">
+                            {event.eventName}
+                          </h3>
+                          <MdCoPresent
+                            className="text-xl cursor-pointer"
+                            onClick={() => handleAttendanceModal(event)}
+                          />
+                        </div>
                         {currentUser?.role === "admin" && (
                           <div className="text-lg flex gap-1">
                             <BiEdit
@@ -155,6 +184,13 @@ const Events = () => {
             modalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             refetch={refetch}
+          />
+          <EventAttendanceModal
+            isAttendanceModalOpen={openAttendanceModal}
+            setAttendaceModalOpen={setOpenAttendanceModal}
+            event={event}
+            teams={teams}
+            refetchCoachTeams={refetchCoachTeams}
           />
           <UpdateEventModal
             event={event}

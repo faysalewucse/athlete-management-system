@@ -54,19 +54,13 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
 
   const onPlanTypeChange = (value) => {
     switch (value) {
-      case "game":
+      case "Away Trip":
         form.setFieldsValue();
         break;
-      case "practice":
+      case "Practice":
         form.setFieldsValue();
         break;
-      case "fundraiser":
-        form.setFieldsValue();
-        break;
-      case "film session":
-        form.setFieldsValue();
-        break;
-      case "team meating":
+      case "Home Game":
         form.setFieldsValue();
         break;
       default:
@@ -123,16 +117,16 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
           <Input />
         </Form.Item>
         <Form.Item
-          name="eventType"
-          label="Event Type"
+          name="planType"
+          label="Plan Type"
           rules={[
             {
               required: true,
-              message: "Please select a event type",
+              message: "Please select a plan type",
             },
           ]}
         >
-          <Select onChange={onPlanTypeChange} placeholder="Select a event type">
+          <Select onChange={onPlanTypeChange} placeholder="Select a plan type">
             <Option value="Away Trip">Away Trip</Option>
             <Option value="Practice">Practice</Option>
             <Option value="Home Game">Home Game</Option>

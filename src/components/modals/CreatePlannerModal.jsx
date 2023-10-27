@@ -1,8 +1,17 @@
-import { Button, DatePicker, Form, Input, Modal, TimePicker } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  TimePicker,
+} from "antd";
 import { useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
+import { Option } from "antd/es/mentions";
 
 const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
@@ -42,6 +51,28 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
 
     return Promise.resolve();
   };
+
+  const onPlanTypeChange = (value) => {
+    switch (value) {
+      case "game":
+        form.setFieldsValue();
+        break;
+      case "practice":
+        form.setFieldsValue();
+        break;
+      case "fundraiser":
+        form.setFieldsValue();
+        break;
+      case "film session":
+        form.setFieldsValue();
+        break;
+      case "team meating":
+        form.setFieldsValue();
+        break;
+      default:
+    }
+  };
+
   return (
     <Modal
       open={modalOpen}
@@ -91,7 +122,22 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
         >
           <Input />
         </Form.Item>
-
+        <Form.Item
+          name="eventType"
+          label="Event Type"
+          rules={[
+            {
+              required: true,
+              message: "Please select a event type",
+            },
+          ]}
+        >
+          <Select onChange={onPlanTypeChange} placeholder="Select a event type">
+            <Option value="Away Trip">Away Trip</Option>
+            <Option value="Practice">Practice</Option>
+            <Option value="Home Game">Home Game</Option>
+          </Select>
+        </Form.Item>
         <Form.Item
           name="date"
           label="plan Date"
@@ -118,7 +164,7 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             size="middle"
           />
         </Form.Item>
-        <Form.Item className="" name="duration" label="Plan Duration">
+        <Form.Item className="col-span-2" name="duration" label="Plan Duration">
           <Input placeholder="Please mention time (eg. days, hours)" />
         </Form.Item>
       </Form>

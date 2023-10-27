@@ -5,6 +5,7 @@ import { BiSolidBell } from "react-icons/bi";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
 import { MdDashboard } from "react-icons/md";
+import { GrOrganization } from "react-icons/gr";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
 import toast from "react-hot-toast";
@@ -78,14 +79,15 @@ export const Navbar = ({ setSidebarOpen }) => {
   };
 
   return (
-    <div className="z-10 sticky top-0">
+    <div className="bg-white z-10 sticky top-0">
       <div className="flex items-center justify-between p-2 md:p-5 ">
         <div className="flex items-center gap-3">
           <MdDashboard
             onClick={() => setSidebarOpen(true)}
             className="md:hidden text-4xl text-primary"
           />
-          <div>
+          <div className="text-gradient flex items-center gap-2">
+            <GrOrganization className="rotate-180 text-primary" />
             {currentUser?.role === "admin" ? (
               <p className="font-bold text-xl">{currentUser?.organization}</p>
             ) : (

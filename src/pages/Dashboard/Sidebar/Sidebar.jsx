@@ -210,9 +210,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       ref={sideRef}
       className={`md:block ${
         sidebarOpen ? "absolute bg-white z-50" : "hidden"
-      } bg-white shadow-[0_3px_20px_0px_rgba(0,0,0,0.12)]  border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
+      } bg-white shadow border-r border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >
-      <div className=" px-3 lg:px-10 md:px-5 py-5">
+      <div className="px-3 lg:px-10 md:px-5 py-5">
         <Brand />
       </div>
       <div

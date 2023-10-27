@@ -31,7 +31,7 @@ export const Dashboard = () => {
         URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
       else if (currentUser?.role === "parents")
         URL = `/users/athlete/${currentUser?.email}`;
-
+      else if (currentUser?.role === "athlete") return [];
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}${URL}`
       );

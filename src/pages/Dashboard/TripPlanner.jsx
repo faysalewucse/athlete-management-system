@@ -59,7 +59,7 @@ const TripPlanner = () => {
   };
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-dark">
+    <div className="min-h-[90vh] bg-transparent p-5 md:p-10 text-dark">
       {!isLoading ? (
         <Container>
           {currentUser?.role === "coach" && (

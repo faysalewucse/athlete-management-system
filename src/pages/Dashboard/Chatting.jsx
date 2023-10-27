@@ -46,7 +46,10 @@ const Chatting = () => {
         URL = `/users/coach-athlete-parents/${currentUser?.email}`;
       else if (currentUser?.role === "coach")
         URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
-      else if (currentUser?.role === "parents")
+      else if (
+        currentUser?.role === "parents" ||
+        currentUser?.role === "athlete"
+      )
         URL = `/users/athlete/${currentUser?.email}`;
 
       const { data } = await axiosSecure.get(

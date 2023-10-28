@@ -4,13 +4,13 @@ import { Modal } from "antd";
 import { BiSolidBell } from "react-icons/bi";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
-import { MdDashboard } from "react-icons/md";
 import { GrOrganization } from "react-icons/gr";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { CgMenuGridR } from "react-icons/cg";
 
 export const Navbar = ({ setSidebarOpen }) => {
   const { currentUser, logout } = useAuth();
@@ -82,7 +82,7 @@ export const Navbar = ({ setSidebarOpen }) => {
     <div className="bg-white z-10 sticky top-0">
       <div className="flex items-center justify-between p-2 md:p-5 ">
         <div className="flex items-center gap-3">
-          <MdDashboard
+          <CgMenuGridR
             onClick={() => setSidebarOpen(true)}
             className="md:hidden text-4xl text-primary"
           />

@@ -180,6 +180,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "trip",
         icon: <TbMap2 />,
       },
+      {
+        key: 7,
+        label: "Chatting",
+        route: "chatting",
+        icon: <BiChat />,
+      },
     ],
     parents: [
       {
@@ -209,7 +215,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
     <aside
       ref={sideRef}
       className={`md:block ${
-        sidebarOpen ? "absolute bg-white z-50" : "hidden"
+        sidebarOpen ? "fixed bg-white z-50" : "hidden"
       } bg-white shadow border-r border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >
       <div className="px-3 lg:px-10 md:px-5 py-5">

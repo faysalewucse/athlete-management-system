@@ -14,7 +14,9 @@ const { Option } = Select;
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState("admin");
+  const [teams, setTeams] = useState([]);
+
   const { signup } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
@@ -97,6 +99,15 @@ export const Register = () => {
     return Promise.resolve();
   };
 
+  const handleTeams = async (adminEmail) => {
+    const URL = `teams/${adminEmail}`;
+
+    console.log(adminEmail);
+    await axios
+      .get(`${import.meta.env.VITE_BASE_API_URL}/${URL}`)
+      .then((res) => setTeams(res.data));
+  };
+
   return (
     <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
       <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5 mt-16 md:mt-0">
@@ -105,7 +116,7 @@ export const Register = () => {
           layout="vertical"
           onFinish={onFinish}
           className="md:grid grid-cols-2 gap-x-6 py-10"
-          initialValues={{ role: "athlete" }}
+          initialValues={{ role: "admin" }}
         >
           <h1 className="font-semibold text-lg">What is your role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
@@ -238,13 +249,39 @@ export const Register = () => {
                 },
               ]}
             >
-              <Select placeholder="Choose" className="w-full" size="large">
+              <Select
+                onChange={(value) => handleTeams(value)}
+                placeholder="Choose"
+                className="w-full"
+                size="large"
+              >
                 {admins?.map((admin) => (
                   <Option key={admin?._id} value={admin?.email}>
                     {admin?.organization}{" "}
                     <span className="text-xs text-slate-400">
                       ({admin?.fullName})
                     </span>
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
+          {role === "athlete" && (
+            <Form.Item
+              name="team"
+              label="Select Team"
+              rules={[
+                {
+                  required: true,
+                  message: `Team selection is required for ${role}!`,
+                },
+              ]}
+            >
+              <Select placeholder="Choose" className="w-full" size="large">
+                {teams?.map((team) => (
+                  <Option key={team?._id} value={team?._id}>
+                    {team?.teamName}
                   </Option>
                 ))}
               </Select>

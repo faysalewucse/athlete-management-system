@@ -47,13 +47,17 @@ export const Dashboard = () => {
   } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      if (currentUser?.role === "admin" || currentUser?.role === "coach") {
-        const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-        );
-        return data;
+      let URL = `teams/${currentUser?.email}`;
+
+      if (currentUser?.role === "coach") {
+        URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
       }
-      return [];
+      const { data } = await axiosSecure.get(
+        `${import.meta.env.VITE_BASE_API_URL}/${URL}`
+      );
+      return data;
     },
   });
 

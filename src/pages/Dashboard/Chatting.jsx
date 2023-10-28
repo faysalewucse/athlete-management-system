@@ -14,7 +14,6 @@ import { BiChat } from "react-icons/bi";
 
 const Chatting = () => {
   const socket = io.connect("http://localhost:5000");
-  // Initialize the socket connection
 
   useEffect(() => {
     socket.on("chatMessage", (data) => {
@@ -41,16 +40,11 @@ const Chatting = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
-      let URL = "/users";
-      if (currentUser?.role === "admin")
-        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
-      else if (currentUser?.role === "coach")
-        URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
-      else if (
-        currentUser?.role === "parents" ||
-        currentUser?.role === "athlete"
-      )
-        URL = `/users/athlete/${currentUser?.email}`;
+      let URL = `/users/chat/${currentUser.email}`;
+
+      if (currentUser?.role !== "admin") {
+        URL = `/users/chat/${currentUser?.adminEmail}`;
+      }
 
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}${URL}`
@@ -58,8 +52,6 @@ const Chatting = () => {
       return data;
     },
   });
-
-  console.log(currentUser.adminEmail);
 
   const {
     isMessageLoading,
@@ -105,6 +97,7 @@ const Chatting = () => {
   };
 
   useEffect(() => {
+    console.log("YEs");
     refetchChats();
   }, [selectedChat, refetchChats]);
 
@@ -114,24 +107,23 @@ const Chatting = () => {
     <div className="min-h-[90vh] bg-transparent p-2 md:p-10 mt-10 text-dark">
       {!isLoading ? (
         <Container>
-          <div className="  flex gap-3 mb-5">
-            {currentUser?.role === "coach" ? (
-              <UserType
-                selectedRole={selectedRole}
-                setSelectedRole={setSelectedRole}
-                role={"Admin"}
-                setSelectedChat={setSelectedChat}
-                refetchChats={refetchChats}
-              />
-            ) : (
-              <UserType
-                selectedRole={selectedRole}
-                setSelectedRole={setSelectedRole}
-                role={"Coach"}
-                setSelectedChat={setSelectedChat}
-                refetchChats={refetchChats}
-              />
-            )}
+          <div className="flex gap-3 mb-5">
+            <UserType
+              selectedRole={selectedRole}
+              setSelectedRole={setSelectedRole}
+              role={"Admin"}
+              setSelectedChat={setSelectedChat}
+              refetchChats={refetchChats}
+            />
+
+            <UserType
+              selectedRole={selectedRole}
+              setSelectedRole={setSelectedRole}
+              role={"Coach"}
+              setSelectedChat={setSelectedChat}
+              refetchChats={refetchChats}
+            />
+
             <UserType
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
@@ -173,12 +165,12 @@ const Chatting = () => {
                       selectedChat?._id === user?._id
                         ? "bg-dark text-white"
                         : "bg-white text-dark"
-                    } hover:bg-dark hover:text-white transition-300`}
+                    } hover:bg-dark hover:text-white transition-300 mb-2`}
                   >
                     <img
                       src={user.photoURL ? user.photoURL : avatar}
                       alt="avatar"
-                      className="w-5"
+                      className="w-7 rounded-full h-7"
                     />
                     <p className="text-sm">{user.fullName}</p>
                   </div>
@@ -220,34 +212,53 @@ const Chatting = () => {
                   </Form>
                 </div>
               )}
-              {selectedChat ? (
-                <div>
-                  {chatHistory.map((chat) => (
-                    <p
-                      key={chat._id}
-                      className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
-                        chat.from === currentUser?.email
-                          ? "ml-auto mr-2"
-                          : "mr-auto ml-2"
-                      }`}
-                    >
-                      {chat.message}
-                    </p>
-                  ))}
-                  {/* <div
+              <div>
+                {!isMessageLoading ? (
+                  <div>
+                    {selectedChat ? (
+                      <div>
+                        {chatHistory.length > 0 ? (
+                          <div>
+                            {" "}
+                            {chatHistory.map((chat) => (
+                              <p
+                                key={chat._id}
+                                className={`mb-2 w-fit py-1 px-2 rounded-xl bg-dark text-white ${
+                                  chat.from === currentUser?.email
+                                    ? "ml-auto mr-2"
+                                    : "mr-auto ml-2"
+                                }`}
+                              >
+                                {chat.message}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center min-h-full">
+                            <div className="flex items-center  gap-2  p-2 rounded border-b border-dark">
+                              No Message Yet
+                            </div>
+                          </div>
+                        )}
+                        {/* <div
                 className="absolute top-0"
                 onClick={() => setChatOpen(!chatOpen)}
               >
                 {chatOpen ? <AiOutlineClose /> : <FaBarsStaggered />}
               </div> */}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center min-h-full">
-                  <div className="flex items-center  gap-2  p-2 rounded border border-dark">
-                    <GiClick /> Select a User
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center min-h-full">
+                        <div className="flex items-center  gap-2  p-2 rounded border border-dark">
+                          <GiClick /> Select a User
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
+                ) : (
+                  <CustomLoader />
+                )}
+              </div>
             </div>
           </div>
         </Container>
@@ -275,7 +286,7 @@ const UserType = ({ role, selectedRole, setSelectedRole, setSelectedChat }) => {
         selectedRole === role.toLowerCase()
           ? "bg-dark text-white"
           : "border border-dark text-dark"
-      } px-4  py-2 rounded-lg cursor-pointer`}
+      } px-4  py-1 rounded-lg cursor-pointer`}
     >
       {role}
     </p>

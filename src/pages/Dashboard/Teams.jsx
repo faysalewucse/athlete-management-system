@@ -32,14 +32,17 @@ const Teams = () => {
         URL = `teams/${currentUser?.email}`;
       } else if (currentUser?.role === "coach") {
         URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
       }
-
       const { data } = await axiosSecure.get(
         `${import.meta.env.VITE_BASE_API_URL}/${URL}`
       );
       return data;
     },
   });
+
+  console.log(teams);
 
   const { data: coaches = [] } = useQuery({
     queryKey: ["coaches", currentUser?.email],

@@ -9,7 +9,7 @@ import { format, parseISO } from "date-fns";
 import { MdCoPresent, MdEventAvailable } from "react-icons/md";
 import { RxClock } from "react-icons/rx";
 import { Container } from "../../components/Container";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiMoney } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Pagination } from "antd";
 import { SectionHeader } from "../../components/shared/SectionHeader";
@@ -86,7 +86,7 @@ const Events = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
       {!isLoading && !isLoadingAthletes ? (
         <Container>
-          {currentUser?.role === "admin" && (
+          {currentUser?.role === "coach" && (
             <Button
               style={"rounded-lg mb-5"}
               onClickHandler={() => setIsModalOpen(true)}
@@ -106,28 +106,18 @@ const Events = () => {
                     key={event._id}
                   >
                     <div>
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-center justify-between">
                         <div className="flex justify-between items-center w-full">
                           <h3 className="text-xl font-semibold">
                             {event.eventName}
                           </h3>
-                          <MdCoPresent
-                            className="text-xl cursor-pointer"
-                            onClick={() => handleAttendanceModal(event)}
-                          />
+                          {currentUser?.role === "coach" && (
+                            <MdCoPresent
+                              className="text-xl cursor-pointer"
+                              onClick={() => handleAttendanceModal(event)}
+                            />
+                          )}
                         </div>
-                        {currentUser?.role === "admin" && (
-                          <div className="text-lg flex gap-1">
-                            <BiEdit
-                              onClick={() => handleUpdateEvent(event)}
-                              className="cursor-pointer"
-                            />
-                            <AiFillDelete
-                              onClick={() => handleDeleteEvents(event?._id)}
-                              className="cursor-pointer text-danger/90 hover:text-danger2/90"
-                            />
-                          </div>
-                        )}
                       </div>
                       <p className="my-1 text-sm text-gradient capitalize">
                         {event.eventType}
@@ -139,24 +129,35 @@ const Events = () => {
                       </p>
                     </div>
                     <div>
-                      <div className="mt-10 flex items-center gap-2">
-                        <RxClock />
-                        <p>{format(parseISO(event.time), "hh:mm a")}</p>
-                      </div>
-                      <div className="flex items-center gap-2 justify-between">
+                      <p className="mt-10 font-semibold text-gradient flex items-center gap-2">
+                        <BiMoney className="text-black text-lg" />
+                        {event.fee === "0" || !event.fee
+                          ? "Free"
+                          : `$${event.fee}`}
+                      </p>
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <MdEventAvailable />
-                          <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
+                          <div className="flex items-center gap-2">
+                            <RxClock />
+                            <p>{format(parseISO(event.time), "hh:mm a")}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MdEventAvailable />
+                            <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
+                          </div>
                         </div>
-                        <p
-                          className={`font-semibold ${
-                            event.fee === "0" || !event.fee
-                              ? "bg-dark"
-                              : "bg-gradient"
-                          } text-white py-1 px-4 rounded-md`}
-                        >
-                          {event.fee === "0" || !event.fee ? "Free" : event.fee}
-                        </p>
+                        {currentUser?.role === "coach" && (
+                          <div className="text-lg flex gap-1">
+                            <BiEdit
+                              onClick={() => handleUpdateEvent(event)}
+                              className="cursor-pointer"
+                            />
+                            <AiFillDelete
+                              onClick={() => handleDeleteEvents(event?._id)}
+                              className="cursor-pointer text-danger/90 hover:text-danger2/90"
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

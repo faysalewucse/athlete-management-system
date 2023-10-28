@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import { Button } from "antd";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -108,16 +109,16 @@ export const Login = () => {
                   Create new account
                 </small>
               </div>
-              <div className="text-center mt-6">
-                <input
-                  disabled={loading}
-                  type="submit"
-                  value="SIGN IN"
-                  className={`${
-                    loading && "disabled cursor-not-allowed opacity-50"
-                  } bg-gradient cursor-pointer hover:shadow-xl transition-300 text-white w-full p-2 font-semibold rounded`}
-                />
-              </div>
+
+              <Button
+                loading={loading}
+                disabled={loading}
+                size="large"
+                htmlType="submit"
+                className="bg-gradient text-white mt-5 w-full"
+              >
+                SIGN IN
+              </Button>
             </form>
           </div>
         </div>

@@ -1,37 +1,52 @@
-import { Button, Checkbox, Dropdown, Modal, Table } from "antd";
+import { Button, Checkbox, Dropdown, Modal, Table, Tooltip } from "antd";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { BiChevronDown } from "react-icons/bi";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const EventAttendanceModal = ({
   isAttendanceModalOpen,
   setAttendaceModalOpen,
   event,
   athletes,
-  refetchAthletes,
+  refetchEvents,
 }) => {
+  const [axiosSecure] = useAxiosSecure();
+  const [participants, setParticipants] = useState(event?.participants || []);
+
   const handleCancel = () => {
     setAttendaceModalOpen(false);
   };
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (text) => <a>{text}</a>,
+      title: <div className="border h-5 w-5 rounded"></div>,
+      key: "present",
+      dataIndex: "email",
+      render: (email) => (
+        <Checkbox
+          checked={participants?.indexOf(email) !== -1}
+          onChange={() => checkedAthletes(email)}
+        ></Checkbox>
+      ),
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Name",
+      dataIndex: "nameEmail",
+      key: "nameEmail",
+      render: (data) => (
+        <Tooltip placement="top" title={data.email}>
+          {data.name}
+          <div className="sm:hidden text-xs text-gray-400">{data.email}</div>
+        </Tooltip>
+      ),
     },
     {
       title: "Teams",
       dataIndex: "teams",
       key: "teams",
       render: (teams) => (
-        <div>
+        <div className="">
           {teams?.length > 0 && (
             <div className="flex gap-2">
               {console.log(teams)}
@@ -58,48 +73,49 @@ const EventAttendanceModal = ({
         </div>
       ),
     },
-    {
-      title: "Present",
-      key: "present",
-      dataIndex: "email",
-      render: (email) => (
-        <Checkbox onChange={() => checkedAthletes(email)}></Checkbox>
-      ),
-    },
   ];
 
   const data = athletes?.map((athlete) => {
     return {
       key: athlete._id,
-      name: athlete.fullName,
+      nameEmail: { name: athlete.fullName, email: athlete.email },
       email: athlete.email,
       teams: athlete.teams,
     };
   });
 
-  const [uniqueEmails, setUniqueEmails] = useState([]);
-
   // Function to add or remove athleteEmail from the state
   const checkedAthletes = (athleteEmail) => {
-    setUniqueEmails((prevEmails) => {
-      const index = prevEmails.indexOf(athleteEmail);
+    setParticipants((prevEmails) => {
+      const index = prevEmails?.indexOf(athleteEmail);
 
       if (index === -1) {
         // If not in the array, add it
         return [...prevEmails, athleteEmail];
       } else {
         // If already in the array, remove it
-        prevEmails.splice(index, 1);
+        prevEmails?.splice(index, 1);
         return [...prevEmails];
       }
     });
   };
 
-  const uploadAttendance = () => {
+  const uploadAttendance = async () => {
     try {
-      console.log(uniqueEmails);
-      setAttendaceModalOpen(false);
+      await axiosSecure
+        .post(
+          `${import.meta.env.VITE_BASE_API_URL}/event/add-participants/${
+            event._id
+          }`,
+          participants
+        )
+        .then(() => {
+          refetchEvents();
+          setAttendaceModalOpen(false);
+          toast.success("Participants Added");
+        });
     } catch (error) {
+      console.log({ error });
       toast.error("Error uploading");
     }
   };

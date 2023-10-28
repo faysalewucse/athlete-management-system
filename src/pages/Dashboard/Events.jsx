@@ -46,11 +46,7 @@ const Events = () => {
     },
   });
 
-  const {
-    isLoadingAthletes,
-    data: athletes = [],
-    refetch: refetchAthletes,
-  } = useQuery({
+  const { isLoadingAthletes, data: athletes = [] } = useQuery({
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       const URL = `adminEmail=${currentUser?.adminEmail}`;
@@ -189,7 +185,7 @@ const Events = () => {
             setAttendaceModalOpen={setOpenAttendanceModal}
             event={event}
             athletes={athletes}
-            refetchAthletes={refetchAthletes}
+            refetchEvents={refetch}
           />
           <UpdateEventModal
             event={event}

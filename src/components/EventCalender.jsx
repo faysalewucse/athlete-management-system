@@ -39,7 +39,7 @@ const EventCalender = () => {
     const date = value.format("YYYY-MM-DD");
     const title = dateTitleMap[date];
     return title ? (
-      <div className="flex gap-2 border border-secondary px-3">
+      <div className="flex gap-2 border border-primary rounded-lg px-3">
         <Badge color="blue" />
         {title}
       </div>

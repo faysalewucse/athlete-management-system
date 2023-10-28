@@ -13,6 +13,7 @@ import AddAthleteModal from "../../components/modals/AddAthleteModal";
 import EventCalender from "../../components/EventCalender";
 import { TeamPerformanceChart } from "./TeamPerformanceChart";
 import GamedAndPracticeStatsChart from "./GamedAndPracticeStatsChart";
+import FileUpload from "../../components/FileUpload";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -234,6 +235,12 @@ export const Dashboard = () => {
               )}
             </div>
           </div>
+          {(currentUser?.role === "athlete" ||
+            currentUser?.role === "parents") && (
+            <div>
+              <FileUpload />
+            </div>
+          )}
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

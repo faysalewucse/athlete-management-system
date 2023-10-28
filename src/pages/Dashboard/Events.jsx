@@ -47,16 +47,15 @@ const Events = () => {
   });
 
   const {
-    isLoadingTeams,
-    data: teams = [],
-    refetch: refetchCoachTeams,
+    isLoadingAthletes,
+    data: athletes = [],
+    refetch: refetchAthletes,
   } = useQuery({
-    queryKey: ["teams", currentUser?.email],
+    queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
+      const URL = `adminEmail=${currentUser?.adminEmail}`;
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team-athleteDetails/${
-          currentUser?.email
-        }`
+        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
       );
       return data;
     },
@@ -89,7 +88,7 @@ const Events = () => {
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
-      {!isLoading && !isLoadingTeams ? (
+      {!isLoading && !isLoadingAthletes ? (
         <Container>
           {currentUser?.role === "admin" && (
             <Button
@@ -189,8 +188,8 @@ const Events = () => {
             isAttendanceModalOpen={openAttendanceModal}
             setAttendaceModalOpen={setOpenAttendanceModal}
             event={event}
-            teams={teams}
-            refetchCoachTeams={refetchCoachTeams}
+            athletes={athletes}
+            refetchAthletes={refetchAthletes}
           />
           <UpdateEventModal
             event={event}

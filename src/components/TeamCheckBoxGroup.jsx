@@ -2,7 +2,7 @@ import { Checkbox, Divider } from "antd";
 import { useState } from "react";
 const CheckboxGroup = Checkbox.Group;
 
-const TeamCheckBoxGroup = ({ team }) => {
+const TeamCheckBoxGroup = ({ team, onChecked }) => {
   const onChange = (list) => {
     setCheckedList(list);
   };

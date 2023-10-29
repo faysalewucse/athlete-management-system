@@ -205,9 +205,12 @@ export const Athletes = () => {
           ) : (
             <div>
               {currentUser?.role === "coach" ? (
-                <Button onClick={() => modalHandler(record)}>
-                  Assign To Team
-                </Button>
+                <div>
+                  <Button onClick={() => modalHandler(record)}>
+                    Assign To Team
+                  </Button>
+                  <p></p>
+                </div>
               ) : (
                 <p>No Teams Assigned</p>
               )}
@@ -282,6 +285,7 @@ export const Athletes = () => {
       email: athlete.email,
       teams: athlete.teams,
       status: athlete.status,
+      reqTeamId: athlete.reqTeamId,
     };
   });
 
@@ -291,6 +295,7 @@ export const Athletes = () => {
         <Container>
           <SectionHeader title={"Athletes"} quantity={athletes?.length} />
           <Table
+            size="small"
             className="mt-5"
             dataSource={data}
             columns={columns}

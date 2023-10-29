@@ -1,5 +1,5 @@
 import { Form, Input, Button, Select, Modal, DatePicker } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -11,6 +11,7 @@ const { Option } = Select;
 const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [teams, setTeams] = useState([]);
 
   const { currentUser } = useAuth();
 
@@ -29,6 +30,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         state,
         city,
         zip,
+        reqTeam,
       } = data;
 
       const userData = {
@@ -47,6 +49,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
       };
 
       userData.adminEmail = origanization;
+      userData.reqTeamId = reqTeam;
 
       await axios
         .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
@@ -83,6 +86,17 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
 
     return Promise.resolve();
   };
+
+  const fetchTeams = async () => {
+    const URL = `teams/${currentUser?.adminEmail}`;
+    await axios
+      .get(`${import.meta.env.VITE_BASE_API_URL}/${URL}`)
+      .then((res) => setTeams(res.data));
+  };
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
   return (
     <Modal
@@ -137,7 +151,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           <DatePicker
             className="w-full px-4 py-2 rounded-lg"
             size="large"
-            format="YYYY-MM-DD"
+            format="MM-DD-YYYY"
           />
         </Form.Item>
 
@@ -153,6 +167,26 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
             <Option value="others">Others</Option>
           </Select>
         </Form.Item>
+
+        <Form.Item
+          name="reqTeam"
+          label="Select Team"
+          rules={[
+            {
+              required: true,
+              message: `Team selection is required for Athlete!`,
+            },
+          ]}
+        >
+          <Select placeholder="Choose" className="w-full" size="large">
+            {teams?.map((team) => (
+              <Option key={team?._id} value={team._id}>
+                {team?.teamName}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name="phoneNumber"
           label="Phone Number"

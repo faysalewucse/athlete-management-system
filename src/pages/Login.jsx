@@ -99,11 +99,11 @@ export const Login = () => {
                 </div>
               </div>
               <div className="flex md:flex-row text-center justify-between flex-col mt-6 text-secondary text-xl">
-                <div className="">
+                <div className="cursor-pointer">
                   <small>Forgot password?</small>
                 </div>
                 <small
-                  className="underline"
+                  className="underline cursor-pointer"
                   onClick={() => navigate("/register")}
                 >
                   Create new account

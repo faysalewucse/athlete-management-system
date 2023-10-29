@@ -16,7 +16,6 @@ export const Register = () => {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("admin");
   const [teams, setTeams] = useState([]);
-
   const { signup } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
@@ -48,6 +47,7 @@ export const Register = () => {
         state,
         city,
         zip,
+        reqTeam,
       } = data;
 
       const fullName = firstName + " " + lastName;
@@ -68,6 +68,10 @@ export const Register = () => {
 
       if (role === "admin") userData.organization = organization;
       else userData.adminEmail = organization;
+      if (role === "athlete") {
+        userData.reqTeamId = reqTeam;
+      }
+
       await signup(email, password, fullName, userData);
 
       await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
@@ -101,15 +105,13 @@ export const Register = () => {
 
   const handleTeams = async (adminEmail) => {
     const URL = `teams/${adminEmail}`;
-
-    console.log(adminEmail);
     await axios
       .get(`${import.meta.env.VITE_BASE_API_URL}/${URL}`)
       .then((res) => setTeams(res.data));
   };
 
   return (
-    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
+    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center md:p-20 p-5">
       <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5 mt-16 md:mt-0">
         <h2 className="text-4xl font-bold text-center">Registration</h2>
         <Form
@@ -118,7 +120,7 @@ export const Register = () => {
           className="md:grid grid-cols-2 gap-x-6 py-10"
           initialValues={{ role: "admin" }}
         >
-          <h1 className="font-semibold text-lg">What is your role?</h1>
+          <h1 className="font-semibold text-lg">Role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
             <Radio.Group onChange={(e) => setRole(e.target.value)}>
               <Radio value="admin">Admin</Radio>
@@ -221,7 +223,7 @@ export const Register = () => {
             <DatePicker
               className="w-full px-4 py-2 rounded-lg"
               size="large"
-              format="YYYY-MM-DD"
+              format="MM-DD-YYYY"
             />
           </Form.Item>
 
@@ -269,7 +271,7 @@ export const Register = () => {
 
           {role === "athlete" && (
             <Form.Item
-              name="team"
+              name="reqTeam"
               label="Select Team"
               rules={[
                 {
@@ -280,7 +282,7 @@ export const Register = () => {
             >
               <Select placeholder="Choose" className="w-full" size="large">
                 {teams?.map((team) => (
-                  <Option key={team?._id} value={team?._id}>
+                  <Option key={team?._id} value={team._id}>
                     {team?.teamName}
                   </Option>
                 ))}

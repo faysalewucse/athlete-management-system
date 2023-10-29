@@ -168,7 +168,12 @@ const Parents = () => {
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Parents"} quantity={parents.length} />
-          <Table dataSource={data} columns={columns} pagination={false} />
+          <Table
+            size="small"
+            dataSource={data}
+            columns={columns}
+            pagination={false}
+          />
           <Pagination
             current={currentPage}
             total={parents.length}

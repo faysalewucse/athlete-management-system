@@ -84,6 +84,22 @@ const AssignTeamModal = ({
             Add Teams for
             <span className="font-bold"> {selectedUser?.name}</span>
           </p>
+
+          {selectedUser.reqTeamId && (
+            <div>
+              <p>
+                {selectedUser.name} Requested to Join
+                <span className="text-gradient">
+                  {" `"}
+                  {
+                    teams.find((team) => team._id === selectedUser.reqTeamId)
+                      .teamName
+                  }
+                  {"` "}
+                </span>
+              </p>
+            </div>
+          )}
           <h1>Teams</h1>
         </div>
       }

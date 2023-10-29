@@ -228,20 +228,22 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
-          <div className="lg:flex lg:flex-row flex-col gap-5">
-            <div className="lg:w-1/2">
-              <EventCalender />
+          {currentUser.status === "approved" && (
+            <div className="lg:flex lg:flex-row flex-col gap-5">
+              <div className="lg:w-1/2">
+                <EventCalender />
+              </div>
+              <div className="lg:flex-1 bg-white rounded-lg w-full lg:mt-0 mt-5">
+                {currentUser?.role === "coach" && <TeamPerformanceChart />}
+                {currentUser?.role === "athlete" && (
+                  <GamedAndPracticeStatsChart />
+                )}
+              </div>
             </div>
-            <div className="lg:flex-1 bg-white rounded-lg w-full lg:mt-0 mt-5">
-              {currentUser?.role === "coach" && <TeamPerformanceChart />}
-              {currentUser?.role === "athlete" && (
-                <GamedAndPracticeStatsChart />
-              )}
-            </div>
-          </div>
+          )}
           {(currentUser?.role === "athlete" ||
             currentUser?.role === "parents") && (
-            <div>
+            <div className="">
               <FileUpload />
             </div>
           )}

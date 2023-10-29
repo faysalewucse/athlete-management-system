@@ -43,7 +43,7 @@ const FileUpload = () => {
 
   return (
     <div className="flex my-5 gap-2">
-      <Upload className="flex-1" multiple={false} {...props}>
+      <Upload className="" multiple={false} {...props}>
         <Button className="bg-white" icon={<BiUpload />}>
           Select File
         </Button>

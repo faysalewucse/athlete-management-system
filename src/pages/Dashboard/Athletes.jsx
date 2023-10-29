@@ -113,15 +113,16 @@ export const Athletes = () => {
     const filteredTeams = teams?.filter(
       (team) => !selectedTeamsId?.includes(team?._id)
     );
+
     return filteredTeams;
   };
 
   const handleRemoveAthlete = async (team, athlete) => {
     await axiosSecure
-      .patch(
+      .delete(
         `${import.meta.env.VITE_BASE_API_URL}/teams/athlete/${
           athlete?.email
-        }?team=${team?._id}`
+        }?teamId=${team?._id}`
       )
       .then((res) => {
         if (res.status === 200) {
@@ -154,7 +155,12 @@ export const Athletes = () => {
       title: "E-mail",
       dataIndex: "email",
       key: "email",
-      render: (text) => <a>{text}</a>,
+      render: (email, record) => (
+        <div>
+          <p>{email}</p>
+          <p className="text-danger">{record.parentsEmail && "(Under 18)"}</p>
+        </div>
+      ),
     },
     {
       title: "Teams",
@@ -239,10 +245,6 @@ export const Athletes = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  {/* <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                    Position +
-                  </button> */}
-
                   <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
@@ -257,7 +259,10 @@ export const Athletes = () => {
                         {
                           key: 2,
                           label: (
-                            <p className="text-danger hover:text-danger2">
+                            <p
+                              onClick={() => toast.error("Not Implemented")}
+                              className="text-danger hover:text-danger2"
+                            >
                               Delete
                             </p>
                           ),
@@ -286,6 +291,7 @@ export const Athletes = () => {
       teams: athlete.teams,
       status: athlete.status,
       reqTeamId: athlete.reqTeamId,
+      parentsEmail: athlete.parentsEmail,
     };
   });
 

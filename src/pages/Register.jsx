@@ -283,7 +283,7 @@ export const Register = () => {
               <Select placeholder="Choose" className="w-full" size="large">
                 {teams?.map((team) => (
                   <Option key={team?._id} value={team._id}>
-                    {team?.teamName}
+                    {team?.teamName} ({team?.sports})
                   </Option>
                 ))}
               </Select>

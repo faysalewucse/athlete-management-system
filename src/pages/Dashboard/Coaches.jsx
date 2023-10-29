@@ -281,6 +281,7 @@ const Coaches = () => {
           <SectionHeader title={"Coaches"} quantity={coaches?.length} />
 
           <Table
+            size="small"
             className="mt-5"
             dataSource={data}
             pagination={false}

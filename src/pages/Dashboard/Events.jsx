@@ -143,7 +143,7 @@ const Events = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <MdEventAvailable />
-                            <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
+                            <p>{format(parseISO(event.date), "MM-dd-yyyy")}</p>
                           </div>
                         </div>
                         {currentUser?.role === "coach" && (

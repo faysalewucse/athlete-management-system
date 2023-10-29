@@ -41,6 +41,36 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
       });
   };
 
+  const sportsList = [
+    "Badminton",
+    "Baseball (Boys)",
+    "Basketball",
+    "Bowling",
+    "Cheerleading / Competitive Spirit Squads",
+    "Cross Country",
+    "Dance Team",
+    "Field Hockey",
+    "Flag Football (Girls)",
+    "Football (Boys)",
+    "Golf",
+    "Gymnastics",
+    "Hockey",
+    "Indoor Track & Field",
+    "Lacrosse",
+    "Skiing & Snowboarding",
+    "Soccer",
+    "Softball (Girls)",
+    "Slow Pitch Softball (Girls)",
+    "Surf",
+    "Swimming & Diving",
+    "Tennis",
+    "Track & Field",
+    "Volleyball",
+    "Water Polo",
+    "Weightlifting",
+    "Wrestling",
+  ];
+
   return (
     <Modal
       open={isModalOpen}
@@ -74,12 +104,11 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
           rules={[{ required: true, message: "Please select sport!" }]}
         >
           <Select placeholder="Select sports">
-            <Option value="football">Football</Option>
-            <Option value="cricket">Cricket</Option>
-            <Option value="basketball">Basketball</Option>
-            <Option value="tennis">Tennis</Option>
-            <Option value="volleyball">Volleyball</Option>
-            {/* Add more sports options as needed */}
+            {sportsList.map((sport, index) => (
+              <Option key={index} value={sport}>
+                {sport}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 

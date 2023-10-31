@@ -78,6 +78,8 @@ export const Navbar = ({ setSidebarOpen }) => {
     setIsModalOpen(false);
   };
 
+  console.log(currentUser);
+
   return (
     <div className="bg-white z-10 sticky top-0">
       <div className="flex items-center justify-between p-2 md:p-5 ">

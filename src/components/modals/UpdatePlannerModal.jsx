@@ -88,7 +88,7 @@ const UpdatePlannerModal = ({
             },
           ]}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
 
         <Form.Item
@@ -124,7 +124,10 @@ const UpdatePlannerModal = ({
           name="duration"
           label="Plan Duration"
         >
-          <Input placeholder="Please mention time (eg. days, hours)" />
+          <Input
+            size="large"
+            placeholder="Please mention time (eg. days, hours)"
+          />
         </Form.Item>
       </Form>
     </Modal>

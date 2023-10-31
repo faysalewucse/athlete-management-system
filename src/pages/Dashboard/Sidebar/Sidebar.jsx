@@ -3,7 +3,6 @@ import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
 import { MdClose, MdEvent } from "react-icons/md";
 import { RiAdminLine, RiOrganizationChart, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
-import { TbMap2 } from "react-icons/tb";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import Brand from "../../../components/Brand";
@@ -98,12 +97,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "planners",
         icon: <BiTask />,
       },
-      {
-        key: 9,
-        label: "Trip Planners",
-        route: "trip",
-        icon: <TbMap2 />,
-      },
+      // {
+      //   key: 9,
+      //   label: "Trip Planners",
+      //   route: "trip",
+      //   icon: <TbMap2 />,
+      // },
       {
         key: 7,
         label: "Chatting",
@@ -142,12 +141,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "planners",
         icon: <BiTask />,
       },
-      {
-        key: 9,
-        label: "Trip Planners",
-        route: "trip",
-        icon: <TbMap2 />,
-      },
+      // {
+      //   key: 9,
+      //   label: "Trip Planners",
+      //   route: "trip",
+      //   icon: <TbMap2 />,
+      // },
       {
         key: 7,
         label: "Chatting",
@@ -174,12 +173,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "planners",
         icon: <BiTask />,
       },
-      {
-        key: 9,
-        label: "Trip Planners",
-        route: "trip",
-        icon: <TbMap2 />,
-      },
+      // {
+      //   key: 9,
+      //   label: "Trip Planners",
+      //   route: "trip",
+      //   icon: <TbMap2 />,
+      // },
       {
         key: 7,
         label: "Chatting",

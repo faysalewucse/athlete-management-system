@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { Pagination } from "antd";
+import { Button, Pagination } from "antd";
 import CreatePlannerModal from "../../components/modals/CreatePlannerModal";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../components/Container";
 import CustomLoader from "../../components/CustomLoader";
-import Button from "../../components/shared/Button";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
@@ -14,6 +13,8 @@ import { RxClock } from "react-icons/rx";
 import { format, parseISO } from "date-fns";
 import toast from "react-hot-toast";
 import UpdatePlannerModal from "../../components/modals/UpdatePlannerModal";
+import AddPlanerTaskModal from "../../components/modals/AddPlannerTaskModal";
+import ViewTasksModal from "../../components/modals/ViewTasksModal";
 
 const Planner = () => {
   const { currentUser } = useAuth();
@@ -22,6 +23,8 @@ const Planner = () => {
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openTaskAddModal, setOpenTaskAddModal] = useState(false);
+  const [openViewTaskModal, setOpenViewTaskModal] = useState(false);
   const [plan, setPlan] = useState({});
 
   const {
@@ -54,8 +57,18 @@ const Planner = () => {
   };
 
   const handleUpdatePlan = (plan) => {
-    setOpenUpdateModal(true);
     setPlan(plan);
+    setOpenUpdateModal(true);
+  };
+
+  const handleAddTaskModal = (plan) => {
+    setPlan(plan);
+    setOpenTaskAddModal(true);
+  };
+
+  const handleViewTaskModal = (plan) => {
+    setPlan(plan);
+    setOpenViewTaskModal(true);
   };
 
   return (
@@ -64,10 +77,13 @@ const Planner = () => {
         <Container>
           {currentUser?.role === "coach" && (
             <Button
-              style={"rounded-lg mb-5"}
-              onClickHandler={() => setIsModalOpen(true)}
-              text={"Create Plan +"}
-            />
+              type="btn"
+              size="large"
+              className="hover:scale-105 bg-gradient rounded-lg mb-5 text-white"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Create Plan +
+            </Button>
           )}
           <SectionHeader title={"Plans"} quantity={plans.length} />
           <div className="mt-5">
@@ -114,6 +130,20 @@ const Planner = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="mt-2 flex gap-2">
+                      <Button
+                        onClick={() => handleViewTaskModal(plan)}
+                        className="w-full"
+                      >
+                        View Task
+                      </Button>
+                      <Button
+                        onClick={() => handleAddTaskModal(plan)}
+                        className="w-1/2"
+                      >
+                        Add Task
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -134,6 +164,21 @@ const Planner = () => {
             setIsModalOpen={setIsModalOpen}
             refetch={refetch}
           />
+
+          <AddPlanerTaskModal
+            modalOpen={openTaskAddModal}
+            setIsModalOpen={setOpenTaskAddModal}
+            plan={plan}
+            refetch={refetch}
+          />
+
+          <ViewTasksModal
+            modalOpen={openViewTaskModal}
+            setIsModalOpen={setOpenViewTaskModal}
+            plan={plan}
+            refetch={refetch}
+          />
+
           <UpdatePlannerModal
             openUpdateModal={openUpdateModal}
             setOpenUpdateModal={setOpenUpdateModal}

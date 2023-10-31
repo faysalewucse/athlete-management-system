@@ -27,6 +27,7 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const onCreate = async (values) => {
     const planData = {
       ...values,
+      duration: values.duration + " " + values.days,
       createdAt: Date.now(),
       coachEmail: currentUser?.email,
     };
@@ -114,7 +115,7 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             },
           ]}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
         <Form.Item
           name="planType"
@@ -126,7 +127,11 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             },
           ]}
         >
-          <Select onChange={onPlanTypeChange} placeholder="Select a plan type">
+          <Select
+            size="large"
+            onChange={onPlanTypeChange}
+            placeholder="Select a plan type"
+          >
             <Option value="Away Trip">Away Trip</Option>
             <Option value="Practice">Practice</Option>
             <Option value="Home Game">Home Game</Option>
@@ -158,9 +163,23 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             size="middle"
           />
         </Form.Item>
-        <Form.Item className="col-span-2" name="duration" label="Plan Duration">
-          <Input placeholder="Please mention time (eg. days, hours)" />
-        </Form.Item>
+        <div className="flex gap-2 col-span-2">
+          <Form.Item
+            rules={[{ required: true, message: "Duration is Required" }]}
+            className=""
+            name="duration"
+            label="Plan Duration"
+          >
+            <Input size="large" type="number" placeholder="Ex: 3" />
+          </Form.Item>
+          <Form.Item initialValue={"Day"} name="days" label="Plan Days">
+            <Select size="large" onChange={onPlanTypeChange} placeholder="Day">
+              <Option value="Day">Day</Option>
+              <Option value="Month">Month</Option>
+              <Option value="Year">Year</Option>
+            </Select>
+          </Form.Item>
+        </div>
       </Form>
     </Modal>
   );

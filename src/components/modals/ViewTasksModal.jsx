@@ -9,7 +9,7 @@ const ViewTasksModal = ({ modalOpen, setIsModalOpen, plan }) => {
       footer={null}
     >
       <div>
-        {plan?.tasks.map((task) => (
+        {plan?.tasks?.map((task) => (
           <div
             key={task._id}
             className="border border-dashed border-secondary p-2 rounded-md mb-3"

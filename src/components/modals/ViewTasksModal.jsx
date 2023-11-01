@@ -16,7 +16,7 @@ const ViewTasksModal = ({ modalOpen, setIsModalOpen, plan }) => {
           >
             <p>Name: {task.taskName}</p>
             <p>Duration: {task.duration}</p>
-            <p>Assigne: {task.assigne}</p>
+            <p>Assignee: {task.assigne}</p>
             <p>Notes: {task.notes}</p>
           </div>
         ))}

@@ -139,7 +139,7 @@ const Planner = () => {
                       </Button>
                       <Button
                         onClick={() => handleAddTaskModal(plan)}
-                        className="w-1/2"
+                        className="w-1/2 border-secondary text-secondary"
                       >
                         Add Task
                       </Button>

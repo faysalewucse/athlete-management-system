@@ -156,7 +156,7 @@ export const Dashboard = () => {
             {currentUser?.role === "coach" && (
               <div className="">
                 {currentUser.status === "pending" ? (
-                  <Pending />
+                  <Pending role={currentUser?.role} />
                 ) : (
                   <div>
                     <Button

@@ -27,7 +27,6 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const onCreate = async (values) => {
     const planData = {
       ...values,
-      duration: values.duration + " " + values.days,
       createdAt: Date.now(),
       coachEmail: currentUser?.email,
     };
@@ -163,23 +162,6 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             size="middle"
           />
         </Form.Item>
-        <div className="flex gap-2 col-span-2">
-          <Form.Item
-            rules={[{ required: true, message: "Duration is Required" }]}
-            className=""
-            name="duration"
-            label="Plan Duration"
-          >
-            <Input size="large" type="number" placeholder="Ex: 3" />
-          </Form.Item>
-          <Form.Item initialValue={"Day"} name="days" label="Plan Days">
-            <Select size="large" onChange={onPlanTypeChange} placeholder="Day">
-              <Option value="Day">Day</Option>
-              <Option value="Month">Month</Option>
-              <Option value="Year">Year</Option>
-            </Select>
-          </Form.Item>
-        </div>
       </Form>
     </Modal>
   );

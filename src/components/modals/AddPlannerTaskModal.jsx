@@ -21,7 +21,7 @@ const AddPlanerTaskModal = ({ modalOpen, setIsModalOpen, refetch, plan }) => {
     const taskData = {
       ...values,
       planId: plan._id,
-      duration: values.duration + " " + values.days,
+      duration: values.duration + " " + values.time,
       createdAt: Date.now(),
       coachEmail: currentUser?.email,
     };
@@ -100,24 +100,24 @@ const AddPlanerTaskModal = ({ modalOpen, setIsModalOpen, refetch, plan }) => {
           </Form.Item>
           <Form.Item
             className="flex-1"
-            initialValue={"Day"}
-            name="days"
-            label="Days"
+            initialValue={"Seconds"}
+            name="time"
+            label="Length"
           >
-            <Select placeholder="Day">
-              <Option value="Day">Day</Option>
-              <Option value="Month">Month</Option>
-              <Option value="Year">Year</Option>
+            <Select placeholder="Time">
+              <Option value="Seconds">Seconds</Option>
+              <Option value="Minutes">Minutes</Option>
+              <Option value="Hour">Hour</Option>
             </Select>
           </Form.Item>
         </div>
         <Form.Item
           name="assigne"
-          label="Assigne"
+          label="Assignee"
           rules={[
             {
               required: true,
-              message: "Please enter the plan name",
+              message: "Please enter the assigne",
             },
           ]}
         >

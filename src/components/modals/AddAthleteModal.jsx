@@ -13,7 +13,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [loading, setLoading] = useState(false);
   const [teams, setTeams] = useState([]);
 
-  const { currentUser } = useAuth();
+  const { currentUser, signup } = useAuth();
 
   const onFinish = async (data) => {
     try {
@@ -26,11 +26,11 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         lastName,
         phoneNumber,
         dateOfBirth,
-        origanization,
         state,
         city,
         zip,
         reqTeam,
+        password,
       } = data;
 
       const userData = {
@@ -46,10 +46,11 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         role: "athlete",
         status: "pending",
         parentsEmail: currentUser?.email,
+        adminEmail: currentUser?.adminEmail,
+        reqTeamId: reqTeam,
       };
 
-      userData.adminEmail = origanization;
-      userData.reqTeamId = reqTeam;
+      await signup(email, password, firstName + " " + lastName, userData);
 
       await axios
         .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
@@ -181,7 +182,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           <Select placeholder="Choose" className="w-full" size="large">
             {teams?.map((team) => (
               <Option key={team?._id} value={team._id}>
-                {team?.teamName}
+                {team?.teamName} ({team.sports})
               </Option>
             ))}
           </Select>
@@ -190,7 +191,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         <Form.Item
           name="phoneNumber"
           label="Phone Number"
-          className={`w-full col-span-2`}
+          className={`w-full`}
           rules={[
             { required: true, message: "Phone Number is required" },
             {
@@ -200,6 +201,21 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           ]}
         >
           <Input type="number" className="rounded-lg" size="large" />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label="Set Password"
+          className={`w-full`}
+          rules={[
+            { required: true, message: "Password is required" },
+            {
+              min: 6,
+              message: "Password must be at least 6 characters long",
+            },
+          ]}
+        >
+          <Input className="rounded-lg" size="large" />
         </Form.Item>
 
         <Form.Item

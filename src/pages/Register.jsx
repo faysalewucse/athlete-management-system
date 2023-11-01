@@ -48,6 +48,7 @@ export const Register = () => {
         city,
         zip,
         reqTeam,
+        parentCode,
       } = data;
 
       const fullName = firstName + " " + lastName;
@@ -58,6 +59,7 @@ export const Register = () => {
         lastName,
         fullName: fullName,
         photoURL: "",
+        parentCode,
         address: { state, city, zip, address },
         gender,
         dateOfBirth,

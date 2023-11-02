@@ -35,9 +35,7 @@ const Teams = () => {
       } else if (currentUser?.role === "athlete") {
         URL = `teams/athlete-team/${currentUser?.email}`;
       }
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/${URL}`
-      );
+      const { data } = await axiosSecure.get(`/${URL}`);
       return data;
     },
   });
@@ -48,9 +46,7 @@ const Teams = () => {
     queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -85,11 +81,7 @@ const Teams = () => {
 
   const handleRemoveCoach = async (coach, record) => {
     await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach/${
-          coach?.email
-        }?team=${record.key}`
-      )
+      .patch(`/teams/coach/${coach?.email}?team=${record.key}`)
       .then((res) => {
         if (res.status === 200) {
           refetch();

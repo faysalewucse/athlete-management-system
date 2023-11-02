@@ -27,12 +27,10 @@ const TeamDetailsModal = ({
       return toast.error("Please select a position");
     }
     try {
-      await axiosSecure.patch(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete-position/${
-          teamDetails._id
-        }`,
-        { athleteEmail: selectedAthlete, position: selectedPosition }
-      );
+      await axiosSecure.patch(`/teams/athlete-position/${teamDetails._id}`, {
+        athleteEmail: selectedAthlete,
+        position: selectedPosition,
+      });
       toast.success("Position has been updated");
       setPosition();
       setSelectedPosition("");
@@ -48,12 +46,9 @@ const TeamDetailsModal = ({
       return toast.error("Position is empty. Write Position name");
     }
     try {
-      await axiosSecure.patch(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/team-position/${
-          teamDetails._id
-        }`,
-        { position: position }
-      );
+      await axiosSecure.patch(`/teams/team-position/${teamDetails._id}`, {
+        position: position,
+      });
       toast.success("Position has been added");
       setPosition();
       addPosition(position);

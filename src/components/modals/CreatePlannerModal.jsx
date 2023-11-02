@@ -32,17 +32,15 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/plans`, planData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Plan created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/plans`, planData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Plan created");
+        refetch();
+      }
+    });
   };
   const validateDateOfPlan = (rule, value) => {
     if (value && value.isBefore()) {

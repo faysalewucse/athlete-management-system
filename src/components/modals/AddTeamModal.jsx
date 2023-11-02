@@ -28,17 +28,15 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, teamData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Team created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/teams`, teamData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Team created");
+        refetch();
+      }
+    });
   };
 
   const sportsList = [

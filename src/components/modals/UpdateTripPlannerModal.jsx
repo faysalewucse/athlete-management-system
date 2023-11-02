@@ -21,17 +21,15 @@ const UpdateTripPlannerModal = ({
 
   const onUpdate = async (values) => {
     setSubmitting(true);
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/trips/${trip?._id}`, values)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          setOpenUpdateModal(false);
-          form.resetFields();
-          toast.success("Trip Updated");
-          refetch();
-        }
-      });
+    await axiosSecure.patch(`/trips/${trip?._id}`, values).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        setOpenUpdateModal(false);
+        form.resetFields();
+        toast.success("Trip Updated");
+        refetch();
+      }
+    });
   };
   const validateDateOfTrip = (rule, value) => {
     if (value && value.isBefore()) {

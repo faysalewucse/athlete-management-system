@@ -23,17 +23,15 @@ const CreateTripPlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/trips`, tripData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Trip Plan Created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/trips`, tripData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Trip Plan Created");
+        refetch();
+      }
+    });
   };
   const validateDateOfTrip = (rule, value) => {
     if (value && value.isBefore()) {

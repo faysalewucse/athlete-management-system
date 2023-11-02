@@ -34,9 +34,7 @@ const Planner = () => {
   } = useQuery({
     queryKey: ["plan", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/plans/${currentUser?.email}`
-      );
+      const { data } = await axiosSecure.get(`/plans/${currentUser?.email}`);
       return data;
     },
   });
@@ -46,14 +44,12 @@ const Planner = () => {
   const visiblePlans = plans.slice(startIdx, endIdx);
 
   const handleDeletePlans = async (id) => {
-    await axiosSecure
-      .delete(`${import.meta.env.VITE_BASE_API_URL}/plans/${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch();
-          toast.success("Plan deleted successfully");
-        }
-      });
+    await axiosSecure.delete(`/plans/${id}`).then((res) => {
+      if (res.status === 200) {
+        refetch();
+        toast.success("Plan deleted successfully");
+      }
+    });
   };
 
   const handleUpdatePlan = (plan) => {

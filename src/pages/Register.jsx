@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import { baseUrl } from "../utils/Constant";
 
 const { Option } = Select;
 
@@ -23,9 +24,7 @@ export const Register = () => {
   const { data: admins = [] } = useQuery({
     queryKey: ["admins"],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/admins`
-      );
+      const { data } = await axiosSecure.get(`${baseUrl}/admins`);
       return data;
     },
   });
@@ -76,7 +75,7 @@ export const Register = () => {
 
       await signup(email, password, fullName, userData);
 
-      await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
+      await axios.post(`${baseUrl}/user`, userData);
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
         () => {
@@ -107,9 +106,7 @@ export const Register = () => {
 
   const handleTeams = async (adminEmail) => {
     const URL = `teams/${adminEmail}`;
-    await axios
-      .get(`${import.meta.env.VITE_BASE_API_URL}/${URL}`)
-      .then((res) => setTeams(res.data));
+    await axios.get(`${baseUrl}/${URL}`).then((res) => setTeams(res.data));
   };
 
   return (

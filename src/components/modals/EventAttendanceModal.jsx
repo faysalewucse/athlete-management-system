@@ -157,12 +157,7 @@ const EventAttendanceModal = ({
 
     try {
       await axiosSecure
-        .post(
-          `${import.meta.env.VITE_BASE_API_URL}/event/add-participants/${
-            event._id
-          }`,
-          updatedParticipants
-        )
+        .post(`/event/add-participants/${event._id}`, updatedParticipants)
         .then(() => {
           refetchEvents();
           setAttendaceModalOpen(false);

@@ -21,9 +21,7 @@ const EventCalender = () => {
           ? currentUser.email
           : currentUser?.adminEmail;
 
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/events/${adminEmail}`
-      );
+      const { data } = await axiosSecure.get(`/events/${adminEmail}`);
       return data;
     },
   });

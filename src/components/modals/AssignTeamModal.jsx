@@ -22,9 +22,7 @@ const AssignTeamModal = ({
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/${assignTo}/assignTeam/${
-            selectedUser.email
-          }`,
+          `/${assignTo}/assignTeam/${selectedUser.email}`,
           selectedTeam
         );
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API_URL,
+  baseURL: "https://ams-server-kjc1.onrender.com",
 });
 
 const useAxiosSecure = () => {

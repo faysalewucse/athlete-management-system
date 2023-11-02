@@ -20,9 +20,7 @@ const Organizations = () => {
   } = useQuery({
     queryKey: ["organizations", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/organizations`
-      );
+      const { data } = await axiosSecure.get(`/organizations`);
       return data;
     },
   });

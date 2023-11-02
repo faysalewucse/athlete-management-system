@@ -21,17 +21,15 @@ const UpdatePlannerModal = ({
 
   const onUpdate = async (values) => {
     setSubmitting(true);
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/plans/${plan?._id}`, values)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          setOpenUpdateModal(false);
-          form.resetFields();
-          toast.success("Plan Updated");
-          refetch();
-        }
-      });
+    await axiosSecure.patch(`/plans/${plan?._id}`, values).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        setOpenUpdateModal(false);
+        form.resetFields();
+        toast.success("Plan Updated");
+        refetch();
+      }
+    });
   };
   const validateDateOfPlan = (rule, value) => {
     if (value && value.isBefore()) {

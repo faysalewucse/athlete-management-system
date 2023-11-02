@@ -27,17 +27,15 @@ const AddPlanerTaskModal = ({ modalOpen, setIsModalOpen, refetch, plan }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/task`, taskData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Task Added Successfully");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/task`, taskData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Task Added Successfully");
+        refetch();
+      }
+    });
   };
 
   return (

@@ -26,7 +26,7 @@ export const Navbar = ({ setSidebarOpen }) => {
     queryFn: async () => {
       if (currentUser?.role !== "admin" && currentUser?.role !== "sadmin") {
         const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/user/${currentUser?.adminEmail}`
+          `/user/${currentUser?.adminEmail}`
         );
         return data;
       }

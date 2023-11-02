@@ -31,9 +31,7 @@ const TripPlanner = () => {
   } = useQuery({
     queryKey: ["trips", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/trips/${currentUser?.email}`
-      );
+      const { data } = await axiosSecure.get(`/trips/${currentUser?.email}`);
       return data;
     },
   });
@@ -43,14 +41,12 @@ const TripPlanner = () => {
   const visibleTrips = trips.slice(startIdx, endIdx);
 
   const handleDeleteTrips = async (id) => {
-    await axiosSecure
-      .delete(`${import.meta.env.VITE_BASE_API_URL}/trips/${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch();
-          toast.success("Trip deleted successfully");
-        }
-      });
+    await axiosSecure.delete(`/trips/${id}`).then((res) => {
+      if (res.status === 200) {
+        refetch();
+        toast.success("Trip deleted successfully");
+      }
+    });
   };
 
   const handleUpdateTrip = (trip) => {

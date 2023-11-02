@@ -39,9 +39,7 @@ const Events = () => {
           ? currentUser.email
           : currentUser?.adminEmail;
 
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/events/${adminEmail}`
-      );
+      const { data } = await axiosSecure.get(`/events/${adminEmail}`);
       return data;
     },
   });
@@ -51,7 +49,7 @@ const Events = () => {
     queryFn: async () => {
       const URL = `adminEmail=${currentUser?.adminEmail}`;
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
+        `/users/byRole?role=athlete&${URL}`
       );
       return data;
     },
@@ -68,14 +66,12 @@ const Events = () => {
   };
 
   const handleDeleteEvents = async (id) => {
-    await axiosSecure
-      .delete(`${import.meta.env.VITE_BASE_API_URL}/events/${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch();
-          toast.success("event deleted successfully");
-        }
-      });
+    await axiosSecure.delete(`/events/${id}`).then((res) => {
+      if (res.status === 200) {
+        refetch();
+        toast.success("event deleted successfully");
+      }
+    });
   };
 
   const startIdx = (currentPage - 1) * itemsPerPage;

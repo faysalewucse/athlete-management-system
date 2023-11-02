@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { baseUrl } from "../../utils/Constant";
 
 const { Option } = Select;
 
@@ -52,20 +53,18 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
 
       await signup(email, password, firstName + " " + lastName, userData);
 
-      await axios
-        .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
-        .then((res) => {
-          if (res.status === 200) {
-            form.resetFields();
-            setIsModalOpen(false);
-            Swal.fire(
-              "Welcome!",
-              "Athlete registration done successfully",
-              "success"
-            );
-            refetch();
-          }
-        });
+      await axios.post(`${baseUrl}/user`, userData).then((res) => {
+        if (res.status === 200) {
+          form.resetFields();
+          setIsModalOpen(false);
+          Swal.fire(
+            "Welcome!",
+            "Athlete registration done successfully",
+            "success"
+          );
+          refetch();
+        }
+      });
 
       setLoading(false);
     } catch (error) {
@@ -90,9 +89,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
 
   const fetchTeams = async () => {
     const URL = `teams/${currentUser?.adminEmail}`;
-    await axios
-      .get(`${import.meta.env.VITE_BASE_API_URL}/${URL}`)
-      .then((res) => setTeams(res.data));
+    await axios.get(`${baseUrl}/${URL}`).then((res) => setTeams(res.data));
   };
 
   useEffect(() => {

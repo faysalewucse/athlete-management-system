@@ -35,7 +35,7 @@ const Parents = () => {
         URL = `adminEmail=${currentUser?.adminEmail}`;
       }
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents&${URL}`
+        `/users/byRole?role=parents&${URL}`
       );
       return data;
     },
@@ -43,13 +43,11 @@ const Parents = () => {
 
   // status update
   const handleApprove = async (id) => {
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() => toast.success("Parents approved"));
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=approved`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() => toast.success("Parents approved"));
+      }
+    });
   };
 
   // pagination

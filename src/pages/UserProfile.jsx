@@ -18,6 +18,7 @@ import useAxiosSecure from "../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { MdCameraAlt, MdSave } from "react-icons/md";
 import axios from "axios";
+import { baseUrl } from "../utils/Constant";
 
 const UserProfile = () => {
   const [form] = Form.useForm();
@@ -46,12 +47,7 @@ const UserProfile = () => {
 
     // console.log(newData);
     await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/updateProfile/${
-          currentUser?.email
-        }`,
-        newData
-      )
+      .patch(`/updateProfile/${currentUser?.email}`, newData)
       .then((res) => {
         if (res.status === 200) {
           form.resetFields();
@@ -90,18 +86,14 @@ const UserProfile = () => {
         formdata.append("image", photoUrl);
 
         const response = await axios.post(
-          `https://api.imgbb.com/1/upload?key=${
-            import.meta.env.VITE_IMAGE_UPLOAD_API
-          }`,
+          `https://api.imgbb.com/1/upload?key=e6a3a8192dcd75c54fb73248c0ccde0f`,
           formdata
         );
 
         if (response?.data?.status === 200) {
           const url = response.data.data.display_url;
           const res = await axios.patch(
-            `${import.meta.env.VITE_BASE_API_URL}/users/change-profile-pic/${
-              currentUser.email
-            }`,
+            `${baseUrl}/users/change-profile-pic/${currentUser.email}`,
             { url: url }
           );
           if (res.status === 200) {

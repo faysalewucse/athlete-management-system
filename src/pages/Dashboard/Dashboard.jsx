@@ -33,9 +33,7 @@ export const Dashboard = () => {
       else if (currentUser?.role === "parents")
         URL = `/users/athlete/${currentUser?.email}`;
       else if (currentUser?.role === "athlete") return [];
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}${URL}`
-      );
+      const { data } = await axiosSecure.get(`${URL}`);
       return data;
     },
   });
@@ -54,9 +52,7 @@ export const Dashboard = () => {
       } else if (currentUser?.role === "athlete") {
         URL = `teams/athlete-team/${currentUser?.email}`;
       }
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/${URL}`
-      );
+      const { data } = await axiosSecure.get(`/${URL}`);
       return data;
     },
   });

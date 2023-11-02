@@ -34,7 +34,7 @@ export const Athletes = () => {
         URL = `parentsEmail=${currentUser?.email}`;
       }
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
+        `/users/byRole?role=athlete&${URL}`
       );
       return data;
     },
@@ -44,9 +44,7 @@ export const Athletes = () => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
-          currentUser?.email
-        }`
+        `/teams/coach-team/${currentUser?.email}`
       );
       return data;
     },
@@ -58,13 +56,11 @@ export const Athletes = () => {
       toast.error("you are not eligible to approve!");
       return;
     }
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() => toast.success("Athlete approved"));
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=approved`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() => toast.success("Athlete approved"));
+      }
+    });
   };
 
   // pagination
@@ -119,11 +115,7 @@ export const Athletes = () => {
 
   const handleRemoveAthlete = async (team, athlete) => {
     await axiosSecure
-      .delete(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete/${
-          athlete?.email
-        }?teamId=${team?._id}`
-      )
+      .delete(`/teams/athlete/${athlete?.email}?teamId=${team?._id}`)
       .then((res) => {
         if (res.status === 200) {
           refetch();

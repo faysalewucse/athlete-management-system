@@ -46,9 +46,7 @@ const Chatting = () => {
         URL = `/users/chat/${currentUser?.adminEmail}`;
       }
 
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}${URL}`
-      );
+      const { data } = await axiosSecure.get(`${URL}`);
       return data;
     },
   });
@@ -62,9 +60,7 @@ const Chatting = () => {
     queryFn: async () => {
       if (selectedChat?.email) {
         const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/message?to=${
-            selectedChat?.email
-          }&from=${currentUser?.email}`
+          `/message?to=${selectedChat?.email}&from=${currentUser?.email}`
         );
         return data;
       } else return [];
@@ -80,10 +76,7 @@ const Chatting = () => {
         createdAt: Date.now(),
       };
 
-      await axiosSecure.post(
-        `${import.meta.env.VITE_BASE_API_URL}/message`,
-        messageData
-      );
+      await axiosSecure.post(`/message`, messageData);
 
       if (socket) {
         socket.emit("chatMessage", values.message);

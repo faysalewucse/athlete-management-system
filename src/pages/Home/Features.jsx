@@ -29,8 +29,9 @@ const Features = ({ scrollRef }) => {
                 </svg>
               </span>
               <p className="text-gray-500">
-                Allow coaches to assign training plans for individual athletes.
-                Provide scheduling tools and reminders for training sessions.
+              Empower coaches to efficiently assign athletes to teams and coordinate 
+              team-related activities while providing athletes and parents with a 
+              comprehensive view of their team affiliations.
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -54,9 +55,9 @@ const Features = ({ scrollRef }) => {
                 </svg>
               </span>
               <p className="text-gray-500">
-                Track progress over time and identify areas for improvement.
-                Make data-driven decisions for training and strategy
-                adjustments.
+              Simplify event management with a shared calendar where coaches can 
+              effortlessly schedule games, practices, meetings, and fundraising activities, 
+              ensuring everyone stays informed.
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -72,8 +73,9 @@ const Features = ({ scrollRef }) => {
                 </svg>
               </span>
               <p className="text-gray-500">
-                Monitor and record various performance metrics such as speed,
-                strength, endurance, and more.
+              Streamline the registration process for athletes and their parents, 
+              ensuring smooth onboarding with built-in age verification and 
+              parental consent, all within a user-friendly interface.
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -88,8 +90,9 @@ const Features = ({ scrollRef }) => {
                 </svg>
               </span>
               <p className="text-gray-500">
-                Offer user support options, including tutorials, documentation,
-                and customer service channels.
+              Foster real-time collaboration and connection among coaches, athletes, 
+              parents, and administrators through our integrated chat feature, enabling 
+              instant communication and enhancing teamwork within your athletic organization.
               </p>
             </div>
           </div>

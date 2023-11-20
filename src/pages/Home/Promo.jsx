@@ -11,7 +11,7 @@ const Promo = () => {
     <div className="bg-white py-20 overflow-hidden">
       <Container extraStyle={"flex flex-col justify-center items-center "}>
         <h1 className="text-center text-2xl md:text-4xl font-semibold ">
-          Why You Choose Overtime?
+          Bring Your Game Into Overtime!
         </h1>
         <p className=" text-center text-lg text-gray-500 mt-5">
           Experience the power of our athlete management application, designed
@@ -39,7 +39,7 @@ const Promo = () => {
             <img className="w-16" src={image3} alt="" />
             <h3 className="text-lg font-semibold">Optimize Performance</h3>
             <p className="text-gray-500">
-              Give your athletes the competitive edge they deserve.
+              Bring your athletes together with collaborative chat and calendars.
             </p>
           </div>
           <div

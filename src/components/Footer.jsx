@@ -8,11 +8,10 @@ export default function Footer() {
         {/* news letter */}
         <div className="md:pr-16 px-10 md:px-0 mb-5 md:mb-0">
           <h1 className="font-semibold text-2xl font-display mb-3">
-            Newsletter
+            Sign Up For Beta Testing
           </h1>
           <p className="text-gray-300 font-light tracking-wider mb-4">
-            Subscribe for our latest & Articles. We Won’t Give <br /> You Spam
-            Mails
+            Enter in your email address and we will be in touch in 24-48 hours.
           </p>
           <form className="relative">
             <input
@@ -48,18 +47,13 @@ export default function Footer() {
           </div>
           <div className="mt-5 md:mt-0">
             <ul className="flex flex-col font-light text-white">
-              <Link className="hover:text-secondary" to="/">
+              <Link className="hover:text-secondary" to="https://www.facebook.com/people/Bartholomew-Development/61551365503922/">
                 Facebook
               </Link>
-              <Link className="hover:text-secondary" to="/blog">
-                Instagram
+              <Link className="hover:text-secondary" to="https://www.linkedin.com/company/bartholomew-development/about/">
+                LinkedIn
               </Link>
-              <Link className="hover:text-secondary" to="/alltoys">
-                Medium
-              </Link>
-              <Link className="hover:text-secondary" to="/alltoys">
-                Twitter
-              </Link>
+
             </ul>
           </div>
 
@@ -75,8 +69,7 @@ export default function Footer() {
       <hr className="border-t border-gray-500 mt-10" />
       <div className="flex flex-col md:flex-row justify-between  text-[14px] md:px-24 py-5 z-10">
         <h1 className="">
-          &copy; 2023 <span className=" font-semibold underline">Overtime</span>
-          . All Rights Reserved
+        © 2023 BARTHOLOMEW DEVELOPMENT All Rights Reserved. Designed & Developed By Bartholomew Development LLC
         </h1>
         <h1 className="">
           Powered by <a className="underline font-semibold">ArtifConnect</a>

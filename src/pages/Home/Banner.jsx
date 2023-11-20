@@ -34,7 +34,7 @@ export const Banner = ({ scrollRef, handleScroll }) => {
         </div>
         <div className="md:w-1/2 text-center md:text-start">
           <h1 className="lg:text-6xl text-4xl text-white font-semibold tracking-wide">
-            Maximize Athletic Performance
+            Maximize Athletic Department Performance
           </h1>
 
           <motion.p
@@ -43,8 +43,7 @@ export const Banner = ({ scrollRef, handleScroll }) => {
             transition={{ delay: 0.2, duration: 0.1 }}
             className="md:w-3/4 md:text-justify text-gray-300 text-center my-5"
           >
-            Our athlete management system empowers coaches and organizations to
-            maximize athlete performance.
+            Overtime Athletic Management software is a comprehensive platform designed for athletic organizations, coaches, athletes, parents, and administrators. It streamlines athlete registration, team management, event scheduling, and communication while offering various user roles and functionalities for a seamless sports management experience.
           </motion.p>
           <div className="flex flex-col md:flex-row md:justify-start justify-center items-center gap-5">
             <Button

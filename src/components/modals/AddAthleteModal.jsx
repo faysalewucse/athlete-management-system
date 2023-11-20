@@ -59,8 +59,8 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           setIsModalOpen(false);
           Swal.fire(
             "Welcome!",
-            "Athlete registration done successfully",
-            "success"
+            "Registration completed successfully",
+            "Success"
           );
           refetch();
         }
@@ -207,8 +207,8 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           rules={[
             { required: true, message: "Password is required" },
             {
-              min: 6,
-              message: "Password must be at least 6 characters long",
+              min: 8,
+              message: "Password must be at least 8 characters long",
             },
           ]}
         >

@@ -40,9 +40,7 @@ export default function Footer() {
               <Link className="hover:text-secondary" to="/">
                 Profile
               </Link>
-              <Link className="hover:text-secondary" to="/">
-                Blog
-              </Link>
+            
             </ul>
           </div>
           <div className="mt-5 md:mt-0">

@@ -1,5 +1,6 @@
-import { BiSolidStopwatch } from "react-icons/bi";
+// import { BiSolidStopwatch } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import brand from "/brandLogo.png";
 
 const Brand = ({ white = false }) => {
   return (
@@ -11,11 +12,12 @@ const Brand = ({ white = false }) => {
           : "text-transparent bg-clip-text bg-gradient-to-r to-primary from-secondary"
       } text-4xl`}
     >
-      <BiSolidStopwatch
+      {/* <BiSolidStopwatch
         strokeWidth={0.5}
         className={`text-[40px] ${white ? "text-white" : "text-secondary"}`}
       />
-      <span className="font-bold mt-1">VERTIME</span>
+      <span className="font-bold mt-1">VERTIME</span> */}
+      <img src={brand} className="w-60" alt="logo_brand" />
     </Link>
   );
 };

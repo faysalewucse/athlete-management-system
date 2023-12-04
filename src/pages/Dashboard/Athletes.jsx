@@ -13,6 +13,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
 import AssignTeamModal from "../../components/modals/AssignTeamModal";
+import { Link } from "react-router-dom";
 
 export const Athletes = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -141,7 +142,9 @@ export const Athletes = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      render: (name, record) => (
+        <Link to={`/profile/${record.key}`}>{name}</Link>
+      ),
     },
     {
       title: "E-mail",

@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { baseUrl } from "../utils/Constant";
 
 const axiosSecure = axios.create({
-  baseURL: "https://ams-server-kjc1.onrender.com",
+  baseURL: baseUrl,
 });
 
 const useAxiosSecure = () => {

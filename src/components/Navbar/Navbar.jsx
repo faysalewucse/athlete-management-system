@@ -36,7 +36,7 @@ export const Navbar = () => {
       key: "2",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={`/profile/${currentUser?._id}`}>Profile</Link>,
       key: "3",
     },
     {

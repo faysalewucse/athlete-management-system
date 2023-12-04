@@ -27,7 +27,7 @@ export const userRouter = [
     ),
   },
   {
-    path: "/profile",
+    path: "/profile/:userId",
     element: (
       <PrivateRoute>
         <UserProfile />

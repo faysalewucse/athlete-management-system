@@ -156,6 +156,7 @@ export const Dashboard = () => {
                 ) : (
                   <div>
                     <Button
+                      style={"rounded-lg"}
                       onClickHandler={() => setIsModalOpen(true)}
                       text={"Add Team +"}
                     />

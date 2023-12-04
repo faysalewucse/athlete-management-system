@@ -218,7 +218,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       } bg-white shadow border-r border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >
       <div className="px-3 lg:px-10 md:px-5 py-5">
-        <Brand />
+        <Brand dark />
       </div>
       <div
         onClick={() => setSidebarOpen(false)}

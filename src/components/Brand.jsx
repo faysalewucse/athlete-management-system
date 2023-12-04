@@ -1,8 +1,9 @@
 // import { BiSolidStopwatch } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import brand from "/brandLogo.png";
+import brandDark from "/brandLogoDark.png";
 
-const Brand = ({ white = false }) => {
+const Brand = ({ white = false, dark = false }) => {
   return (
     <Link
       to="/"
@@ -17,7 +18,7 @@ const Brand = ({ white = false }) => {
         className={`text-[40px] ${white ? "text-white" : "text-secondary"}`}
       />
       <span className="font-bold mt-1">VERTIME</span> */}
-      <img src={brand} className="w-60" alt="logo_brand" />
+      <img src={dark ? brandDark : brand} className="w-60" alt="logo_brand" />
     </Link>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Container } from "../components/Container";
 import {
@@ -19,8 +19,12 @@ import toast from "react-hot-toast";
 import { MdCameraAlt, MdSave } from "react-icons/md";
 import axios from "axios";
 import { baseUrl } from "../utils/Constant";
+import { useParams } from "react-router-dom";
+import CustomLoader from "../components/CustomLoader";
 
 const UserProfile = () => {
+  const { userId } = useParams();
+
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
   const { currentUser } = useAuth();
@@ -29,6 +33,9 @@ const UserProfile = () => {
   const [imageUploading, setImageUploading] = useState(false);
   const [newImage, setNewImage] = useState(null);
   const [photoUrl, setPhotoUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState();
+  const [userPerformance, setUserPerformance] = useState();
 
   const updateBasicInfo = async (values) => {
     setSubmitting(true);
@@ -47,7 +54,7 @@ const UserProfile = () => {
 
     // console.log(newData);
     await axiosSecure
-      .patch(`/updateProfile/${currentUser?.email}`, newData)
+      .patch(`/updateProfile/${userDetails?.email}`, newData)
       .then((res) => {
         if (res.status === 200) {
           form.resetFields();
@@ -57,6 +64,19 @@ const UserProfile = () => {
       });
   };
 
+  const updatePerformance = async (values) => {
+    setSubmitting(true);
+
+    await axiosSecure
+      .put(`/performance`, { userEmail: userDetails?.email, ...values })
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success("Performanced Updated Successfully");
+          form.resetFields();
+          setSubmitting(false);
+        }
+      });
+  };
   // birthday validator
   const validateDateOfBirth = (rule, value) => {
     if (value && value.isAfter()) {
@@ -93,7 +113,7 @@ const UserProfile = () => {
         if (response?.data?.status === 200) {
           const url = response.data.data.display_url;
           const res = await axios.patch(
-            `${baseUrl}/users/change-profile-pic/${currentUser.email}`,
+            `${baseUrl}/users/change-profile-pic/${userDetails.email}`,
             { url: url }
           );
           if (res.status === 200) {
@@ -110,382 +130,455 @@ const UserProfile = () => {
     }
   };
 
+  const getUserDetails = async () => {
+    setLoading(true);
+    const { data: user } = await axiosSecure.get(`/user/byId/${userId}`);
+
+    const { data: performance } = await axiosSecure.get(
+      `/performance/${user.email}`
+    );
+
+    console.log(performance);
+
+    setUserDetails(user);
+    setUserPerformance(performance);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
   return (
     <div className="py-40 p-5 ">
-      <Container
-        extraStyle={
-          "flex justify-center flex-col md:flex-row md:items-start gap-8 "
-        }
-      >
-        {/* profile image card */}
-        <div className="bg-primary/5 flex flex-col items-center p-10 rounded-lg">
-          <h1 className="lg:text-3xl md:text-2xl font-bold">
-            {currentUser?.fullName}
-          </h1>
-          <h1>{currentUser?.email}</h1>
-          <img
-            src={newImage ? newImage : currentUser?.photoURL || avatar}
-            alt=""
-            className="my-10 rounded-full border border-primary w-60 h-60  object-cover"
-          />
-          <h3 className="text-base font-medium text-gray-500">
-            Profile Completed
-          </h3>
-          <Progress percent={10} className="w-52 mx-auto" />
-
-          <div className="flex gap-2">
-            <Upload
-              accept=".jpg, .png, .jpeg"
-              maxCount={1}
-              listType="picture"
-              showUploadList={false}
-              beforeUpload={() => false}
-              onChange={changeProfileHandler}
-              className="flex w-full justify-center"
-            >
-              <Button
-                size="large"
-                icon={<MdCameraAlt className="text-secondary" />}
-                className="text-gradient w-full"
-              >
-                Change Profile Picture
-              </Button>
-            </Upload>
-            {newImage && photoUrl && (
-              <Button
-                size="large"
-                loading={imageUploading}
-                icon={<MdSave className="text-secondary" />}
-                className="text-gradient w-full"
-                onClick={updateProfilePicture}
-              >
-                Save
-              </Button>
-            )}
-          </div>
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[80vh]">
+          {" "}
+          <CustomLoader />
         </div>
-        {/* edit info */}
-        <div className="flex-1 bg-primary/5 text-center p-5 md:p-10 rounded-lg">
-          <h1 className="text-3xl font-bold text-start">Edit Profile</h1>
+      ) : (
+        <Container
+          extraStyle={
+            "flex justify-center flex-col md:flex-row md:items-start gap-8 "
+          }
+        >
+          {/* profile image card */}
+          <div className="bg-primary/5 flex flex-col items-center p-10 rounded-lg">
+            <h1 className="lg:text-3xl md:text-2xl font-bold">
+              {userDetails?.fullName}
+            </h1>
+            <h1>{userDetails?.email}</h1>
+            <img
+              src={newImage ? newImage : userDetails?.photoURL || avatar}
+              alt=""
+              className="my-10 rounded-full border border-primary w-60 h-60  object-cover"
+            />
+            <h3 className="text-base font-medium text-gray-500">
+              Profile Completed
+            </h3>
+            <Progress percent={10} className="w-52 mx-auto" />
 
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Basic Info" key="1">
-              <Form onFinish={updateBasicInfo} layout="vertical">
-                <div className="grid lg:grid-cols-2 gap-x-5">
-                  <Form.Item
-                    name="firstName"
-                    label="First Name"
-                    initialValue={currentUser?.firstName}
-                    className="mt-2 text-base font-medium"
-                  >
-                    <Input className="text-gray-500  py-2 px-3" />
-                  </Form.Item>
-                  <Form.Item
-                    name="lastName"
-                    label="Last Name"
-                    initialValue={currentUser?.lastName}
-                    className=" mt-2 text-base font-medium"
-                  >
-                    <Input className="text-gray-500  py-2 px-3" />
-                  </Form.Item>
-                  <Form.Item
-                    name="dateOfBirth"
-                    label="Date of Birth"
-                    rules={[{ validator: validateDateOfBirth }]}
-                    className=" mt-2 text-base font-medium"
-                    initialValue={moment(currentUser?.dateOfBirth)}
-                  >
-                    <DatePicker
-                      className="text-gray-500 w-full  py-2"
-                      format="YYYY-MM-DD"
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="gender"
-                    label="Gender"
-                    className="mt-2 text-base font-medium"
-                    initialValue={currentUser?.gender}
-                  >
-                    <Select size="large" className="rounded-lg text-start">
-                      <Option value="male">Male</Option>
-                      <Option value="female">Female</Option>
-                      <Option value="others">Others</Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item
-                    name="phoneNumber"
-                    label="Phone Number"
-                    className="mt-2 text-base font-medium"
-                    initialValue={currentUser?.phoneNumber}
-                    rules={[
-                      {
-                        min: 10,
-                        message: "Phone Number must be at least 10 digits",
-                      },
-                    ]}
-                  >
-                    <Input type="number" className="text-gray-500  py-2 px-3" />
-                  </Form.Item>
-                  <div className="col-span-2">
-                    <Form.Item
-                      initialValue={currentUser?.address.address}
-                      name="address"
-                      label="Address"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input.TextArea className="text-gray-500  px-3" />
-                    </Form.Item>
-                  </div>
-                </div>
+            <div className="flex gap-2">
+              <Upload
+                accept=".jpg, .png, .jpeg"
+                maxCount={1}
+                listType="picture"
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={changeProfileHandler}
+                className="flex w-full justify-center"
+              >
                 <Button
-                  htmlType="submit"
-                  loading={submitting}
-                  className="bg-gradient text-white h-10 rounded px-6 mr-auto block"
+                  size="large"
+                  icon={<MdCameraAlt className="text-secondary" />}
+                  className="text-gradient w-full"
                 >
-                  Update
+                  Change Profile Picture
                 </Button>
-              </Form>
-            </TabPane>
-            {currentUser?.role === "athlete" && (
-              <TabPane tab="Performance" key="2">
-                <Form layout="vertical">
+              </Upload>
+              {newImage && photoUrl && (
+                <Button
+                  size="large"
+                  loading={imageUploading}
+                  icon={<MdSave className="text-secondary" />}
+                  className="text-gradient w-full"
+                  onClick={updateProfilePicture}
+                >
+                  Save
+                </Button>
+              )}
+            </div>
+          </div>
+          {/* edit info */}
+          <div className="flex-1 bg-primary/5 text-center p-5 md:p-10 rounded-lg">
+            <h1 className="text-3xl font-bold text-start">Edit Profile</h1>
+
+            <Tabs defaultActiveKey="1">
+              <TabPane tab="Basic Info" key="1">
+                <Form onFinish={updateBasicInfo} layout="vertical">
                   <div className="grid lg:grid-cols-2 gap-x-5">
                     <Form.Item
-                      name="sports"
-                      label="Sports"
+                      name="firstName"
+                      label="First Name"
+                      initialValue={userDetails?.firstName}
                       className="mt-2 text-base font-medium"
                     >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        placeholder="The sports you are involved"
-                      />
+                      <Input className="text-gray-500  py-2 px-3" />
                     </Form.Item>
                     <Form.Item
-                      name="position"
-                      label="Position"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        placeholder="The position you play"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="speed"
-                      label="Speed"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="Your average speed"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="strength"
-                      label="Strength"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="Your Strength Measurement based on weight lifting"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="accuracy"
-                      label="Accuracy"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="accuracy in shooting or passing"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="endurance"
-                      label="Endurance"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="Measures of endurance, like distance covered or duration"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="goalsScored"
-                      label="Goals Scored"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="The number of goals scored in a sport like soccer"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="assists"
-                      label="Assists"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="The number of assists provided to teammates"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="rebounds"
-                      label="Rebounds"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="The number of rebounds in a sport like basketball"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="goalsSaved"
-                      label="Goals Saved"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="For sports like hockey or soccer"
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name="pointsScored"
-                      label="Points Scored"
-                      className=" mt-2 text-base font-medium"
-                    >
-                      <Input
-                        readOnly
-                        className="text-gray-500  py-2 px-3"
-                        type="number"
-                        placeholder="Total points scored in a game or season"
-                      />
-                    </Form.Item>
-                  </div>
-                </Form>
-              </TabPane>
-            )}
-            {currentUser?.role === "athlete" && (
-              <TabPane tab="Medical Info" key="3">
-                <Form layout="vertical">
-                  <div className="grid lg:grid-cols-2 gap-x-5">
-                    <Form.Item
-                      name="allergies"
-                      label="Allergies"
+                      name="lastName"
+                      label="Last Name"
+                      initialValue={userDetails?.lastName}
                       className=" mt-2 text-base font-medium"
                     >
                       <Input className="text-gray-500  py-2 px-3" />
                     </Form.Item>
-
-                    <Form.List name="pastInjuries">
-                      {(fields, { add, remove }) => (
-                        <div>
-                          {fields.map(({ key, name }) => (
-                            <div key={key}>
-                              <Form.Item
-                                name={[name, "type"]}
-                                label="Type"
-                                className=" mt-2 text-base font-medium"
-                              >
-                                <Input
-                                  className="text-gray-500  py-2 px-3"
-                                  placeholder="The injury type"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name={[name, "date"]}
-                                label="Date"
-                                className=" mt-2 text-base font-medium"
-                              >
-                                <DatePicker
-                                  className="text-gray-500 w-full  py-2 px-3"
-                                  format="YYYY-MM-DD"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name={[name, "treatment"]}
-                                label="Treatment"
-                                className=" mt-2 text-base font-medium"
-                              >
-                                <Input
-                                  className="text-gray-500  py-2 px-3"
-                                  placeholder="How the injury was treated"
-                                />
-                              </Form.Item>
-                              <Form.Item
-                                name={[name, "recoveryStatus"]}
-                                label="Recovery Status"
-                                className=" mt-2 text-base font-medium"
-                              >
-                                <Select
-                                  placeholder="Recovery Status"
-                                  className="text-gray-500  h-10 text-start"
-                                >
-                                  <Option value="fully recovered">
-                                    Fully Recovered
-                                  </Option>
-                                  <Option value="ongoing recovery">
-                                    Ongoing Recovery
-                                  </Option>
-                                  <Option value="not recovered">
-                                    Not Recovered
-                                  </Option>
-                                </Select>
-                              </Form.Item>
-                              <Form.Item
-                                name={[name, "rehabilitation"]}
-                                label="Rehabilitation Notes"
-                                className=" mt-2 text-base font-medium"
-                              >
-                                <Input.TextArea className="text-gray-500  py-2 px-3" />
-                              </Form.Item>
-                              <Button
-                                className="bg-red-500 bg-opacity-50 h-10 w-full"
-                                type="dashed"
-                                onClick={() => remove(name)}
-                              >
-                                Remove Past Injury
-                              </Button>
-                            </div>
-                          ))}
-                          <Form.Item>
-                            <Button
-                              className="bg-green-500 bg-opacity-50 h-10 mt-10 w-full"
-                              type="dashed"
-                              onClick={() => add()}
-                            >
-                              Add Past Injury
-                            </Button>
-                          </Form.Item>
-                        </div>
-                      )}
-                    </Form.List>
+                    <Form.Item
+                      name="dateOfBirth"
+                      label="Date of Birth"
+                      rules={[{ validator: validateDateOfBirth }]}
+                      className=" mt-2 text-base font-medium"
+                      initialValue={moment(userDetails?.dateOfBirth)}
+                    >
+                      <DatePicker
+                        className="text-gray-500 w-full  py-2"
+                        format="YYYY-MM-DD"
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name="gender"
+                      label="Gender"
+                      className="mt-2 text-base font-medium"
+                      initialValue={userDetails?.gender}
+                    >
+                      <Select size="large" className="rounded-lg text-start">
+                        <Option value="male">Male</Option>
+                        <Option value="female">Female</Option>
+                        <Option value="others">Others</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name="phoneNumber"
+                      label="Phone Number"
+                      className="mt-2 text-base font-medium"
+                      initialValue={userDetails?.phoneNumber}
+                      rules={[
+                        {
+                          min: 10,
+                          message: "Phone Number must be at least 10 digits",
+                        },
+                      ]}
+                    >
+                      <Input
+                        type="number"
+                        className="text-gray-500  py-2 px-3"
+                      />
+                    </Form.Item>
+                    <div className="col-span-2">
+                      <Form.Item
+                        initialValue={userDetails?.address.address}
+                        name="address"
+                        label="Address"
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input.TextArea className="text-gray-500  px-3" />
+                      </Form.Item>
+                    </div>
                   </div>
+                  {currentUser?._id === userDetails?._id && (
+                    <Button
+                      htmlType="submit"
+                      loading={submitting}
+                      className="bg-gradient text-white h-10 rounded px-6 mr-auto block"
+                    >
+                      Update
+                    </Button>
+                  )}
                 </Form>
               </TabPane>
-            )}
-          </Tabs>
-        </div>
-      </Container>
+              {userDetails?.role === "athlete" && (
+                <TabPane tab="Performance" key="2">
+                  <Form onFinish={updatePerformance} layout="vertical">
+                    <div className="grid lg:grid-cols-3 grid-cols-2 gap-x-5">
+                      <Form.Item
+                        name="sports"
+                        label="Sports"
+                        initialValue={userPerformance?.sports}
+                        className="mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          placeholder="The sports you are involved"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="position"
+                        label="Position"
+                        initialValue={userPerformance?.position}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          placeholder="The position you play"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="speed"
+                        label="Speed"
+                        initialValue={userPerformance?.speed}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="Your average speed"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="strength"
+                        label="Strength"
+                        initialValue={userPerformance?.strength}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="Your Strength Measurement based on weight lifting"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="accuracy"
+                        label="Accuracy"
+                        initialValue={userPerformance?.accuracy}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="accuracy in shooting or passing"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="endurance"
+                        label="Endurance"
+                        initialValue={userPerformance?.endurance}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="Measures of endurance, like distance covered or duration"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="goalsScored"
+                        label="Goals Scored"
+                        initialValue={userPerformance?.goalsScored}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="The number of goals scored in a sport like soccer"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="assists"
+                        label="Assists"
+                        initialValue={userPerformance?.assists}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="The number of assists provided to teammates"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="rebounds"
+                        label="Rebounds"
+                        initialValue={userPerformance?.rebounds}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="The number of rebounds in a sport like basketball"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="goalsSaved"
+                        label="Goals Saved"
+                        initialValue={userPerformance?.goalsSaved}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="For sports like hockey or soccer"
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        name="pointsScored"
+                        label="Points Scored"
+                        initialValue={userPerformance?.pointsScored}
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input
+                          readOnly={
+                            currentUser?.role === "coach" ? false : true
+                          }
+                          className="text-gray-500  py-2 px-3"
+                          type="number"
+                          placeholder="Total points scored in a game or season"
+                        />
+                      </Form.Item>
+                    </div>
+                    {currentUser?.role === "coach" && (
+                      <Button
+                        htmlType="submit"
+                        loading={submitting}
+                        className="bg-gradient text-white h-10 rounded px-6 mr-auto block"
+                      >
+                        Update
+                      </Button>
+                    )}
+                  </Form>
+                </TabPane>
+              )}
+              {userDetails?.role === "athlete" && (
+                <TabPane tab="Medical Info" key="3">
+                  <Form layout="vertical">
+                    <div className="grid lg:grid-cols-2 gap-x-5">
+                      <Form.Item
+                        name="allergies"
+                        label="Allergies"
+                        className=" mt-2 text-base font-medium"
+                      >
+                        <Input className="text-gray-500  py-2 px-3" />
+                      </Form.Item>
+
+                      <Form.List name="pastInjuries">
+                        {(fields, { add, remove }) => (
+                          <div>
+                            {fields.map(({ key, name }) => (
+                              <div key={key}>
+                                <Form.Item
+                                  name={[name, "type"]}
+                                  label="Type"
+                                  className=" mt-2 text-base font-medium"
+                                >
+                                  <Input
+                                    className="text-gray-500  py-2 px-3"
+                                    placeholder="The injury type"
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[name, "date"]}
+                                  label="Date"
+                                  className=" mt-2 text-base font-medium"
+                                >
+                                  <DatePicker
+                                    className="text-gray-500 w-full  py-2 px-3"
+                                    format="YYYY-MM-DD"
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[name, "treatment"]}
+                                  label="Treatment"
+                                  className=" mt-2 text-base font-medium"
+                                >
+                                  <Input
+                                    className="text-gray-500  py-2 px-3"
+                                    placeholder="How the injury was treated"
+                                  />
+                                </Form.Item>
+                                <Form.Item
+                                  name={[name, "recoveryStatus"]}
+                                  label="Recovery Status"
+                                  className=" mt-2 text-base font-medium"
+                                >
+                                  <Select
+                                    placeholder="Recovery Status"
+                                    className="text-gray-500  h-10 text-start"
+                                  >
+                                    <Option value="fully recovered">
+                                      Fully Recovered
+                                    </Option>
+                                    <Option value="ongoing recovery">
+                                      Ongoing Recovery
+                                    </Option>
+                                    <Option value="not recovered">
+                                      Not Recovered
+                                    </Option>
+                                  </Select>
+                                </Form.Item>
+                                <Form.Item
+                                  name={[name, "rehabilitation"]}
+                                  label="Rehabilitation Notes"
+                                  className=" mt-2 text-base font-medium"
+                                >
+                                  <Input.TextArea className="text-gray-500  py-2 px-3" />
+                                </Form.Item>
+                                <Button
+                                  className="bg-red-500 bg-opacity-50 h-10 w-full"
+                                  type="dashed"
+                                  onClick={() => remove(name)}
+                                >
+                                  Remove Past Injury
+                                </Button>
+                              </div>
+                            ))}
+                            <Form.Item>
+                              <Button
+                                className="bg-green-500 bg-opacity-50 h-10 mt-10 w-full"
+                                type="dashed"
+                                onClick={() => add()}
+                              >
+                                Add Past Injury
+                              </Button>
+                            </Form.Item>
+                          </div>
+                        )}
+                      </Form.List>
+                    </div>
+                  </Form>
+                </TabPane>
+              )}
+            </Tabs>
+          </div>
+        </Container>
+      )}
     </div>
   );
 };

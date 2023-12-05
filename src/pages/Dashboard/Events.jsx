@@ -17,7 +17,7 @@ import UpdateEventModal from "../../components/modals/UpdateEventModal";
 import toast from "react-hot-toast";
 import EventAttendanceModal from "../../components/modals/EventAttendanceModal";
 
-const Events = () => {
+export const Events = () => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [currentPage, setCurrentPage] = useState(1);
@@ -200,4 +200,97 @@ const Events = () => {
   );
 };
 
-export default Events;
+// import React from "react";
+// import { useReactToPrint } from "react-to-print";
+// import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+
+// // Styles for PDF
+// const styles = StyleSheet.create({
+//   page: {
+//     flexDirection: "column",
+//     padding: 20,
+//   },
+//   eventContainer: {
+//     marginBottom: 10,
+//     borderBottom: "1 solid #000",
+//     paddingBottom: 10,
+//   },
+//   eventName: {
+//     fontSize: 16,
+//     fontWeight: "bold",
+//     marginBottom: 5,
+//   },
+//   eventDetails: {
+//     fontSize: 12,
+//     marginBottom: 3,
+//   },
+// });
+
+// const EventListPDF = React.forwardRef(({ events }, ref) => (
+//   <Document>
+//     <Page size="A4" style={styles.page} ref={ref}>
+//       <View>
+//         {events.map((event) => (
+//           <View key={event._id} style={styles.eventContainer}>
+//             <Text style={styles.eventName}>{event.eventName}</Text>
+//             <Text style={styles.eventDetails}>Type: {event.eventType}</Text>
+//             <Text style={styles.eventDetails}>
+//               Date: {new Date(event.date).toLocaleDateString()}
+//             </Text>
+//             <Text style={styles.eventDetails}>
+//               Time: {new Date(event.time).toLocaleTimeString()}
+//             </Text>
+//             <Text style={styles.eventDetails}>Fee: {event.fee}</Text>
+//             <Text style={styles.eventDetails}>
+//               Created At: {new Date(event.createdAt).toString()}
+//             </Text>
+//             <Text style={styles.eventDetails}>
+//               Admin Email: {event.adminEmail}
+//             </Text>
+//             {/* Additional event details can be added here */}
+//           </View>
+//         ))}
+//       </View>
+//     </Page>
+//   </Document>
+// ));
+
+// const YourComponent = ({ isLoading, data }) => {
+//   const componentRef = React.useRef();
+
+//   const handlePrint = useReactToPrint({
+//     content: () => componentRef.current,
+//   });
+
+//   if (isLoading) {
+//     return <p>Loading...</p>;
+//   }
+
+//   return (
+//     <div>
+//       <h1 className="text-2xl font-bold mb-4">Events</h1>
+//       <button
+//         onClick={handlePrint}
+//         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+//       >
+//         Print
+//       </button>
+//       {data && data.length > 0 ? (
+//         <div style={{ display: "none" }}>
+//           {/* Hidden component for printing */}
+//           <EventListPDF
+//             ref={componentRef}
+//             events={data.map((event) => ({
+//               ...event,
+//               participants: undefined,
+//             }))}
+//           />
+//         </div>
+//       ) : (
+//         <p>No events available</p>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default YourComponent;

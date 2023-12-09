@@ -16,8 +16,9 @@ import { SectionHeader } from "../../components/shared/SectionHeader";
 import UpdateEventModal from "../../components/modals/UpdateEventModal";
 import toast from "react-hot-toast";
 import EventAttendanceModal from "../../components/modals/EventAttendanceModal";
+import EventCard from "../../components/cards/EventCard";
 
-export const Events = () => {
+const Events = () => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,68 +96,15 @@ export const Events = () => {
             {events.length === 0 ? (
               <div className="bg-white p-2 rounded-lg">No Events Created</div>
             ) : (
-              <div className="grid lg:grid-cols-3  md:grid-cols-2 sm:grid-cols-2 gap-5">
+              <div className="grid lg:grid-cols-2  md:grid-cols-2 sm:grid-cols-2 gap-5">
                 {visibleEvents?.map((event) => (
-                  <div
-                    className="flex flex-col justify-between bg-white shadow-lg p-4 rounded-lg"
+                  <EventCard
                     key={event._id}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex justify-between items-center w-full">
-                          <h3 className="text-xl font-semibold">
-                            {event.eventName}
-                          </h3>
-                          {currentUser?.role === "coach" && (
-                            <MdCoPresent
-                              className="text-xl cursor-pointer"
-                              onClick={() => handleAttendanceModal(event)}
-                            />
-                          )}
-                        </div>
-                      </div>
-                      <p className="my-1 text-sm text-gradient capitalize">
-                        {event.eventType}
-                      </p>
-                      <p className="text-sm">
-                        {event.eventDescription
-                          ? event.eventDescription
-                          : "No Description"}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="mt-10 font-semibold text-gradient flex items-center gap-2">
-                        <BiMoney className="text-black text-lg" />
-                        {event.fee === "0" || !event.fee
-                          ? "Free"
-                          : `$${event.fee}`}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-2">
-                            <RxClock />
-                            <p>{format(parseISO(event.time), "hh:mm a")}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <MdEventAvailable />
-                            <p>{format(parseISO(event.date), "MM-dd-yyyy")}</p>
-                          </div>
-                        </div>
-                        {currentUser?.role === "coach" && (
-                          <div className="text-lg flex gap-1">
-                            <BiEdit
-                              onClick={() => handleUpdateEvent(event)}
-                              className="cursor-pointer"
-                            />
-                            <AiFillDelete
-                              onClick={() => handleDeleteEvents(event?._id)}
-                              className="cursor-pointer text-danger/90 hover:text-danger2/90"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                    event={event}
+                    handleAttendanceModal={handleAttendanceModal}
+                    handleDeleteEvents={handleDeleteEvents}
+                    handleUpdateEvent={handleUpdateEvent}
+                  />
                 ))}
               </div>
             )}
@@ -200,97 +148,4 @@ export const Events = () => {
   );
 };
 
-// import React from "react";
-// import { useReactToPrint } from "react-to-print";
-// import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-
-// // Styles for PDF
-// const styles = StyleSheet.create({
-//   page: {
-//     flexDirection: "column",
-//     padding: 20,
-//   },
-//   eventContainer: {
-//     marginBottom: 10,
-//     borderBottom: "1 solid #000",
-//     paddingBottom: 10,
-//   },
-//   eventName: {
-//     fontSize: 16,
-//     fontWeight: "bold",
-//     marginBottom: 5,
-//   },
-//   eventDetails: {
-//     fontSize: 12,
-//     marginBottom: 3,
-//   },
-// });
-
-// const EventListPDF = React.forwardRef(({ events }, ref) => (
-//   <Document>
-//     <Page size="A4" style={styles.page} ref={ref}>
-//       <View>
-//         {events.map((event) => (
-//           <View key={event._id} style={styles.eventContainer}>
-//             <Text style={styles.eventName}>{event.eventName}</Text>
-//             <Text style={styles.eventDetails}>Type: {event.eventType}</Text>
-//             <Text style={styles.eventDetails}>
-//               Date: {new Date(event.date).toLocaleDateString()}
-//             </Text>
-//             <Text style={styles.eventDetails}>
-//               Time: {new Date(event.time).toLocaleTimeString()}
-//             </Text>
-//             <Text style={styles.eventDetails}>Fee: {event.fee}</Text>
-//             <Text style={styles.eventDetails}>
-//               Created At: {new Date(event.createdAt).toString()}
-//             </Text>
-//             <Text style={styles.eventDetails}>
-//               Admin Email: {event.adminEmail}
-//             </Text>
-//             {/* Additional event details can be added here */}
-//           </View>
-//         ))}
-//       </View>
-//     </Page>
-//   </Document>
-// ));
-
-// const YourComponent = ({ isLoading, data }) => {
-//   const componentRef = React.useRef();
-
-//   const handlePrint = useReactToPrint({
-//     content: () => componentRef.current,
-//   });
-
-//   if (isLoading) {
-//     return <p>Loading...</p>;
-//   }
-
-//   return (
-//     <div>
-//       <h1 className="text-2xl font-bold mb-4">Events</h1>
-//       <button
-//         onClick={handlePrint}
-//         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-//       >
-//         Print
-//       </button>
-//       {data && data.length > 0 ? (
-//         <div style={{ display: "none" }}>
-//           {/* Hidden component for printing */}
-//           <EventListPDF
-//             ref={componentRef}
-//             events={data.map((event) => ({
-//               ...event,
-//               participants: undefined,
-//             }))}
-//           />
-//         </div>
-//       ) : (
-//         <p>No events available</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default YourComponent;
+export default Events;

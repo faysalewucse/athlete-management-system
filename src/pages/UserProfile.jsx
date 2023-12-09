@@ -21,6 +21,7 @@ import axios from "axios";
 import { baseUrl } from "../utils/Constant";
 import { useParams } from "react-router-dom";
 import CustomLoader from "../components/CustomLoader";
+import MedicalInformation from "./profile/MedicalInformation";
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -36,7 +37,6 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState();
   const [userPerformance, setUserPerformance] = useState();
-  const [userMedicalInfo, setUserMedicalInfo] = useState();
 
   const updateBasicInfo = async (values) => {
     setSubmitting(true);
@@ -79,23 +79,6 @@ const UserProfile = () => {
       });
   };
 
-  const updateMedicalInfo = async (values) => {
-    setSubmitting(true);
-
-    await axiosSecure
-      .put(`/medicalInfo`, { userEmail: userDetails?.email, ...values })
-      .then((res) => {
-        if (res.status === 200) {
-          toast.success("Medical Information Updated Successfully");
-          form.resetFields();
-          setSubmitting(false);
-        }
-      })
-      .catch(() => {
-        toast.error("Error updating");
-        setSubmitting(false);
-      });
-  };
   // birthday validator
   const validateDateOfBirth = (rule, value) => {
     if (value && value.isAfter()) {
@@ -165,7 +148,6 @@ const UserProfile = () => {
 
     setUserDetails(user);
     setUserPerformance(performance);
-    setUserMedicalInfo(medicalInfo);
     setLoading(false);
   };
 
@@ -502,179 +484,7 @@ const UserProfile = () => {
               )}
               {userDetails?.role === "athlete" && (
                 <TabPane tab="Medical Info" key="3">
-                  <Form onFinish={updateMedicalInfo} layout="vertical">
-                    <div className="grid lg:grid-cols-2 gap-x-5">
-                      <Form.Item
-                        name="allergies"
-                        label="Allergies"
-                        initialValue={userMedicalInfo?.allergies}
-                        className=" mt-2 text-base font-medium"
-                      >
-                        <Input className="text-gray-500  py-2 px-3" />
-                      </Form.Item>
-
-                      {userMedicalInfo?.pastInjuries?.map((injury, index) => (
-                        <div key={index}>
-                          <Form.Item
-                            initialValue={injury?.type}
-                            label="Type"
-                            className=" mt-2 text-base font-medium"
-                          >
-                            <Input
-                              className="text-gray-500  py-2 px-3"
-                              placeholder="The injury type"
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            initialValue={moment(injury?.date)}
-                            label="Date"
-                            className=" mt-2 text-base font-medium"
-                          >
-                            <DatePicker
-                              className="text-gray-500 w-full  py-2 px-3"
-                              format="YYYY-MM-DD"
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            initialValue={injury?.treatment}
-                            label="Treatment"
-                            className=" mt-2 text-base font-medium"
-                          >
-                            <Input
-                              className="text-gray-500  py-2 px-3"
-                              placeholder="How the injury was treated"
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            initialValue={injury?.recoveryStatus}
-                            label="Recovery Status"
-                            className=" mt-2 text-base font-medium"
-                          >
-                            <Select
-                              placeholder="Recovery Status"
-                              className="text-gray-500  h-10 text-start"
-                            >
-                              <Option value="fully recovered">
-                                Fully Recovered
-                              </Option>
-                              <Option value="ongoing recovery">
-                                Ongoing Recovery
-                              </Option>
-                              <Option value="not recovered">
-                                Not Recovered
-                              </Option>
-                            </Select>
-                          </Form.Item>
-                          <Form.Item
-                            name={[name, "rehabilitation"]}
-                            label="Rehabilitation Notes"
-                            className=" mt-2 text-base font-medium"
-                          >
-                            <Input.TextArea className="text-gray-500  py-2 px-3" />
-                          </Form.Item>
-                          <Button
-                            className="bg-red-500 bg-opacity-50 h-10 w-full"
-                            type="dashed"
-                            onClick={() => remove(name)}
-                          >
-                            Remove Past Injury
-                          </Button>
-                        </div>
-                      ))}
-                      <Form.List name="pastInjuries">
-                        {(fields, { add, remove }) => (
-                          <div>
-                            {fields.map(({ key, name }) => (
-                              <div key={key}>
-                                <Form.Item
-                                  name={[name, "type"]}
-                                  label="Type"
-                                  className=" mt-2 text-base font-medium"
-                                >
-                                  <Input
-                                    className="text-gray-500  py-2 px-3"
-                                    placeholder="The injury type"
-                                  />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "date"]}
-                                  label="Date"
-                                  className=" mt-2 text-base font-medium"
-                                >
-                                  <DatePicker
-                                    className="text-gray-500 w-full  py-2 px-3"
-                                    format="YYYY-MM-DD"
-                                  />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "treatment"]}
-                                  label="Treatment"
-                                  className=" mt-2 text-base font-medium"
-                                >
-                                  <Input
-                                    className="text-gray-500  py-2 px-3"
-                                    placeholder="How the injury was treated"
-                                  />
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "recoveryStatus"]}
-                                  label="Recovery Status"
-                                  className=" mt-2 text-base font-medium"
-                                >
-                                  <Select
-                                    placeholder="Recovery Status"
-                                    className="text-gray-500  h-10 text-start"
-                                  >
-                                    <Option value="fully recovered">
-                                      Fully Recovered
-                                    </Option>
-                                    <Option value="ongoing recovery">
-                                      Ongoing Recovery
-                                    </Option>
-                                    <Option value="not recovered">
-                                      Not Recovered
-                                    </Option>
-                                  </Select>
-                                </Form.Item>
-                                <Form.Item
-                                  name={[name, "rehabilitation"]}
-                                  label="Rehabilitation Notes"
-                                  className=" mt-2 text-base font-medium"
-                                >
-                                  <Input.TextArea className="text-gray-500  py-2 px-3" />
-                                </Form.Item>
-                                <Button
-                                  className="bg-red-500 bg-opacity-50 h-10 w-full"
-                                  type="dashed"
-                                  onClick={() => remove(name)}
-                                >
-                                  Remove Past Injury
-                                </Button>
-                              </div>
-                            ))}
-                            <Form.Item>
-                              <Button
-                                className="bg-green-500 bg-opacity-50 h-10 mt-10 w-full"
-                                type="dashed"
-                                onClick={() => add()}
-                              >
-                                Add Past Injury
-                              </Button>
-                            </Form.Item>
-                          </div>
-                        )}
-                      </Form.List>
-                    </div>
-                    {currentUser?.role === "coach" && (
-                      <Button
-                        htmlType="submit"
-                        loading={submitting}
-                        className="bg-gradient text-white h-10 rounded px-6 mr-auto block"
-                      >
-                        Update
-                      </Button>
-                    )}
-                  </Form>
+                  <MedicalInformation userId={userId} />
                 </TabPane>
               )}
             </Tabs>

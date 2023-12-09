@@ -213,7 +213,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   return (
     <aside
       ref={sideRef}
-      className={`md:block ${
+      className={`md:block lg:w-80 md:w-60 ${
         sidebarOpen ? "fixed bg-white z-50" : "hidden"
       } bg-white shadow border-r border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >

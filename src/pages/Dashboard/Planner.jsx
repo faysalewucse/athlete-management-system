@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import UpdatePlannerModal from "../../components/modals/UpdatePlannerModal";
 import AddPlanerTaskModal from "../../components/modals/AddPlannerTaskModal";
 import ViewTasksModal from "../../components/modals/ViewTasksModal";
+import PdfPrint from "./PdfPrint";
 
 const Planner = () => {
   const { currentUser } = useAuth();
@@ -81,6 +82,7 @@ const Planner = () => {
               Create Plan +
             </Button>
           )}
+          {plans.length > 0 && <PdfPrint dataArray={plans} dataType="Plans" />}
           <SectionHeader title={"Plans"} quantity={plans.length} />
           <div className="mt-5">
             {plans.length === 0 ? (

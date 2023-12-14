@@ -1,17 +1,29 @@
 import React from "react";
 import jsPDF from "jspdf";
 
-const PdfPrint = ({ events }) => {
+const PdfPrint = ({ dataArray, dataType }) => {
   const generateData = () => {
-    const generatedData = events?.map((event, index) => ({
-      id: (index + 1).toString(),
-      eventName: event.eventName,
-      eventType: event.eventType,
-      eventDate: event.date,
-      eventTime: event.time,
-      eventFee: event.fee,
-      eventDescription: event.eventDescription,
-    }));
+    let generatedData;
+
+    if (dataType === "Events") {
+      generatedData = dataArray?.map((data, index) => ({
+        id: (index + 1).toString(),
+        eventName: data.eventName,
+        eventType: data.eventType,
+        eventDate: data.date,
+        eventTime: data.time,
+        eventFee: data.fee,
+        eventDescription: data.eventDescription,
+      }));
+    } else {
+      generatedData = dataArray?.map((data, index) => ({
+        id: (index + 1).toString(),
+        planName: data.planName,
+        planType: data.planType,
+        planDate: data.date,
+        planTime: data.time,
+      }));
+    }
 
     return generatedData;
   };
@@ -32,20 +44,31 @@ const PdfPrint = ({ events }) => {
   };
 
   const generatePDF = () => {
-    const headers = createHeaders([
-      "id",
-      "eventName",
-      "eventType",
-      "eventDate",
-      "eventTime",
-      "eventFee",
-      "eventDescription",
-    ]);
+    let headers;
+    if (dataType === "Events") {
+      headers = createHeaders([
+        "id",
+        "eventName",
+        "eventType",
+        "eventDate",
+        "eventTime",
+        "eventFee",
+        "eventDescription",
+      ]);
+    } else {
+      headers = createHeaders([
+        "id",
+        "planName",
+        "planType",
+        "planDate",
+        "planTime",
+      ]);
+    }
 
-    const doc = new jsPDF({ putOnlyUsedFonts: true, orientation: "landscape" });
+    const doc = new jsPDF({ putOnlyUsedFonts: true, orientation: "a4" });
     doc.table(1, 1, generateData(), headers, { autoSize: true });
 
-    doc.save("events.pdf");
+    doc.save(`${dataType}.pdf`);
   };
 
   return (

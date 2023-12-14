@@ -89,7 +89,9 @@ const Events = () => {
               text={"Create Event +"}
             />
           )}
-          {events.length > 0 && <PdfPrint events={events} />}
+          {events.length > 0 && (
+            <PdfPrint dataArray={events} dataType="Events" />
+          )}
 
           <SectionHeader title={"Events"} quantity={events.length} />
           <div className="mt-5">

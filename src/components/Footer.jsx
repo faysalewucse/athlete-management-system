@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import shape from "../assets/footer-top-shape.png";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Footer() {
+  const { currentUser } = useAuth();
+
   return (
     <footer className="relative bg-gradient-2 md:text-left text-center text-white">
       <div className=" flex flex-col md:flex-row justify-between  max-w-7xl mx-auto pt-16 md:pt-24 z-10">
@@ -34,24 +37,30 @@ export default function Footer() {
               <Link className="hover:text-secondary" to="/">
                 Home
               </Link>
-              <Link className="hover:text-secondary" to="/">
-                Dashboard
-              </Link>
+              {currentUser && (
+                <Link className="hover:text-secondary" to="/">
+                  Dashboard
+                </Link>
+              )}
               <Link className="hover:text-secondary" to="/">
                 Profile
               </Link>
-            
             </ul>
           </div>
           <div className="mt-5 md:mt-0">
             <ul className="flex flex-col font-light text-white">
-              <Link className="hover:text-secondary" to="https://www.facebook.com/people/Bartholomew-Development/61551365503922/">
+              <Link
+                className="hover:text-secondary"
+                to="https://www.facebook.com/people/Bartholomew-Development/61551365503922/"
+              >
                 Facebook
               </Link>
-              <Link className="hover:text-secondary" to="https://www.linkedin.com/company/bartholomew-development/about/">
+              <Link
+                className="hover:text-secondary"
+                to="https://www.linkedin.com/company/bartholomew-development/about/"
+              >
                 LinkedIn
               </Link>
-
             </ul>
           </div>
 
@@ -67,7 +76,8 @@ export default function Footer() {
       <hr className="border-t border-gray-500 mt-10" />
       <div className="flex flex-col md:flex-row justify-between  text-[14px] md:px-24 py-5 z-10">
         <h1 className="">
-        © 2023 BARTHOLOMEW DEVELOPMENT All Rights Reserved. Designed & Developed By Bartholomew Development LLC
+          © 2023 BARTHOLOMEW DEVELOPMENT All Rights Reserved. Designed &
+          Developed By Bartholomew Development LLC
         </h1>
         <h1 className="">
           Powered by <a className="underline font-semibold">ArtifConnect</a>

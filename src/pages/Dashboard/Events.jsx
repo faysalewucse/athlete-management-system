@@ -17,6 +17,7 @@ import UpdateEventModal from "../../components/modals/UpdateEventModal";
 import toast from "react-hot-toast";
 import EventAttendanceModal from "../../components/modals/EventAttendanceModal";
 import EventCard from "../../components/cards/EventCard";
+import PdfPrint from "./PdfPrint";
 
 const Events = () => {
   const { currentUser } = useAuth();
@@ -36,9 +37,7 @@ const Events = () => {
     queryKey: ["event", currentUser?.email],
     queryFn: async () => {
       const adminEmail =
-        currentUser?.role === "admin"
-          ? currentUser.email
-          : currentUser?.adminEmail;
+        currentUser?.role === "admin" ? currentUser.email : currentUser?.email;
 
       const { data } = await axiosSecure.get(`/events/${adminEmail}`);
       return data;
@@ -90,6 +89,7 @@ const Events = () => {
               text={"Create Event +"}
             />
           )}
+          {events.length > 0 && <PdfPrint events={events} />}
 
           <SectionHeader title={"Events"} quantity={events.length} />
           <div className="mt-5">

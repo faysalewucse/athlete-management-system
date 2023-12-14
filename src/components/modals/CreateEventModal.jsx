@@ -30,7 +30,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     const eventData = {
       ...values,
       createdAt: Date.now(),
-      adminEmail: currentUser?.adminEmail,
+      adminEmail: currentUser?.adminEmail || currentUser?.email,
     };
 
     setSubmitting(true);

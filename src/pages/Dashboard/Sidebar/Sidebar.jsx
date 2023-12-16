@@ -1,5 +1,5 @@
 import { HiSquares2X2 } from "react-icons/hi2";
-import { FaChalkboardTeacher, FaUsers } from "react-icons/fa";
+import { FaChalkboardTeacher, FaUsers, FaWpforms } from "react-icons/fa";
 import { MdClose, MdEvent } from "react-icons/md";
 import { RiAdminLine, RiOrganizationChart, RiParentLine } from "react-icons/ri";
 import { PiMicrosoftTeamsLogoFill } from "react-icons/pi";
@@ -159,6 +159,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "chatting",
         icon: <BiChat />,
       },
+      {
+        key: 8,
+        label: "Form",
+        route: "form",
+        icon: <FaWpforms />,
+      },
     ],
     sub_coach: [
       {
@@ -202,6 +208,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Chatting",
         route: "chatting",
         icon: <BiChat />,
+      },
+      {
+        key: 8,
+        label: "Form",
+        route: "form",
+        icon: <FaWpforms />,
       },
     ],
     athlete: [

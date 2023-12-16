@@ -17,6 +17,8 @@ import TripPlanner from "../pages/Dashboard/TripPlanner";
 import Organizations from "../pages/Dashboard/Organizations";
 import SubCoaches from "../pages/Dashboard/SubCoaches";
 
+import FormLib from "../pages/Dashboard/Form";
+
 export const dashboardRouter = [
   {
     path: "/dashboard",
@@ -75,6 +77,14 @@ export const dashboardRouter = [
     element: (
       <ValidUserRoute>
         <Chatting />
+      </ValidUserRoute>
+    ),
+  },
+  {
+    path: "form",
+    element: (
+      <ValidUserRoute>
+        <FormLib />
       </ValidUserRoute>
     ),
   },

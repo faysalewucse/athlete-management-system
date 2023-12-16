@@ -1,3 +1,4 @@
+import StepFour from "./StepFour";
 import StepOne from "./StepOne";
 
 import StepThree from "./StepThree";
@@ -17,6 +18,10 @@ const FormLib = () => {
     {
       title: "Step Three",
       content: <StepThree />,
+    },
+    {
+      title: "Step Four",
+      content: <StepFour />,
     },
   ];
 

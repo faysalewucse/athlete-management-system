@@ -15,6 +15,7 @@ import { AthleteRoute } from "./AthleteRoute";
 import Planner from "../pages/Dashboard/Planner";
 import TripPlanner from "../pages/Dashboard/TripPlanner";
 import Organizations from "../pages/Dashboard/Organizations";
+import SubCoaches from "../pages/Dashboard/SubCoaches";
 
 export const dashboardRouter = [
   {
@@ -50,6 +51,14 @@ export const dashboardRouter = [
     element: (
       <AdminRoute>
         <Coaches />
+      </AdminRoute>
+    ),
+  },
+  {
+    path: "sub-coaches",
+    element: (
+      <AdminRoute>
+        <SubCoaches />
       </AdminRoute>
     ),
   },

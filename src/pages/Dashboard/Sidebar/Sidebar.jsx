@@ -74,6 +74,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         icon: <FaChalkboardTeacher />,
       },
       {
+        key: 9,
+        label: "Sub Coaches",
+        route: "sub-coaches",
+        icon: <FaChalkboardTeacher />,
+      },
+      {
         key: 4,
         label: "Parents",
         route: "parents",
@@ -111,6 +117,50 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       },
     ],
     coach: [
+      {
+        key: 1,
+        label: "Athletes",
+        route: "athletes",
+        icon: <FaUsers />,
+      },
+      {
+        key: 4,
+        label: "Parents",
+        route: "parents",
+        icon: <RiParentLine />,
+      },
+      {
+        key: 5,
+        label: "Teams",
+        route: "teams",
+        icon: <PiMicrosoftTeamsLogoFill />,
+      },
+      {
+        key: 6,
+        label: "Events",
+        route: "events",
+        icon: <MdEvent />,
+      },
+      {
+        key: 8,
+        label: "Planners",
+        route: "planners",
+        icon: <BiTask />,
+      },
+      // {
+      //   key: 9,
+      //   label: "Trip Planners",
+      //   route: "trip",
+      //   icon: <TbMap2 />,
+      // },
+      {
+        key: 7,
+        label: "Chatting",
+        route: "chatting",
+        icon: <BiChat />,
+      },
+    ],
+    sub_coach: [
       {
         key: 1,
         label: "Athletes",
@@ -231,7 +281,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
           <div key={item.key}>
             <Link
               className={`flex items-center gap-4 p-3 text-lg font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary ${
-                currentPath.pathname.endsWith(item.route)
+                currentPath.pathname.split("/").pop() === item.route ||
+                `/${currentPath.pathname.split("/").pop()}` === item.route
                   ? "bg-gradient text-white"
                   : ""
               }`}

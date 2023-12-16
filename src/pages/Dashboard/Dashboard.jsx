@@ -27,7 +27,7 @@ export const Dashboard = () => {
     queryFn: async () => {
       let URL = "/users";
       if (currentUser?.role === "admin")
-        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
+        URL = `/users/coach-sub_coach-athlete-parents/${currentUser?.email}`;
       else if (currentUser?.role === "coach")
         URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
       else if (currentUser?.role === "parents")
@@ -66,6 +66,7 @@ export const Dashboard = () => {
       admin: 0,
       coach: 0,
       athlete: 0,
+      sub_coach: 0,
       parents: 0,
     }
   );
@@ -140,6 +141,11 @@ export const Dashboard = () => {
                         route="/dashboard/parents"
                       />
                       <DashboardCard
+                        number={quantity.sub_coach}
+                        title={"Total Sub Coaches"}
+                        route="/dashboard/sub-coaches"
+                      />
+                      <DashboardCard
                         number={teams.length}
                         title={"Total Teams"}
                         route="/dashboard/teams"
@@ -150,6 +156,43 @@ export const Dashboard = () => {
               </div>
             )}
             {currentUser?.role === "coach" && (
+              <div className="">
+                {currentUser.status === "pending" ? (
+                  <Pending role={currentUser?.role} />
+                ) : (
+                  <div>
+                    <Button
+                      style={"rounded-lg"}
+                      onClickHandler={() => setIsModalOpen(true)}
+                      text={"Add Team +"}
+                    />
+                    <AddTeamModal
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      refetch={refetch}
+                    />
+                    <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                      <DashboardCard
+                        number={quantity.athlete}
+                        title={"Total Athletes"}
+                        route="/dashboard/athletes"
+                      />
+                      <DashboardCard
+                        number={quantity.parents}
+                        title={"Total Parents"}
+                        route="/dashboard/parents"
+                      />
+                      <DashboardCard
+                        number={teams.length}
+                        title={"Total Teams"}
+                        route="/dashboard/teams"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {currentUser?.role === "sub_coach" && (
               <div className="">
                 {currentUser.status === "pending" ? (
                   <Pending role={currentUser?.role} />

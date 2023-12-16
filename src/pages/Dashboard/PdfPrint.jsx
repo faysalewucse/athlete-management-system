@@ -1,32 +1,31 @@
 import React from "react";
 import jsPDF from "jspdf";
+import { format, parseISO } from "date-fns";
 
 const PdfPrint = ({ dataArray, dataType }) => {
-  const generateData = () => {
-    let generatedData;
-
+  const generatedData = dataArray?.map((data, index) => {
     if (dataType === "Events") {
-      generatedData = dataArray?.map((data, index) => ({
-        id: (index + 1).toString(),
-        eventName: data.eventName,
-        eventType: data.eventType,
-        eventDate: data.date,
-        eventTime: data.time,
-        eventFee: data.fee,
-        eventDescription: data.eventDescription,
-      }));
+      return {
+        Serial: (index + 1).toString(),
+        Name: String(data.eventName),
+        Type: String(data.eventType),
+        Date: String(format(parseISO(data.date), "MM-dd-yyyy")),
+        Time: String(format(parseISO(data.time), "hh:mm a")),
+        Fee: String(data.fee),
+        Description: String(
+          data.eventDescription ? data.eventDescription : "N/A"
+        ),
+      };
     } else {
-      generatedData = dataArray?.map((data, index) => ({
+      return {
         id: (index + 1).toString(),
-        planName: data.planName,
-        planType: data.planType,
-        planDate: data.date,
-        planTime: data.time,
-      }));
+        Name: String(data.planName),
+        Type: String(data.planType),
+        Date: String(data.date),
+        Time: String(data.time),
+      };
     }
-
-    return generatedData;
-  };
+  });
 
   const createHeaders = (keys) => {
     const result = [];
@@ -47,26 +46,20 @@ const PdfPrint = ({ dataArray, dataType }) => {
     let headers;
     if (dataType === "Events") {
       headers = createHeaders([
-        "id",
-        "eventName",
-        "eventType",
-        "eventDate",
-        "eventTime",
-        "eventFee",
-        "eventDescription",
+        "Serial",
+        "Name",
+        "Type",
+        "Date",
+        "Time",
+        "Fee",
+        "Description",
       ]);
     } else {
-      headers = createHeaders([
-        "id",
-        "planName",
-        "planType",
-        "planDate",
-        "planTime",
-      ]);
+      headers = createHeaders(["id", "Name", "Type", "Date", "Time"]);
     }
 
     const doc = new jsPDF({ putOnlyUsedFonts: true, orientation: "a4" });
-    doc.table(1, 1, generateData(), headers, { autoSize: true });
+    doc.table(1, 1, generatedData, headers, { autoSize: true });
 
     doc.save(`${dataType}.pdf`);
   };

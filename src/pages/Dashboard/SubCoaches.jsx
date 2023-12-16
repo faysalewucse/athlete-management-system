@@ -6,27 +6,42 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { CiMenuKebab } from "react-icons/ci";
 import toast from "react-hot-toast";
-import { Button, Dropdown, Pagination, Space, Table } from "antd";
+import {
+  Button,
+  Dropdown,
+  Modal,
+  Pagination,
+  Space,
+  Table,
+  Tooltip,
+} from "antd";
 import { useState } from "react";
 import CustomLoader from "../../components/CustomLoader";
 import AssignTeamModal from "../../components/modals/AssignTeamModal";
-import { BiChevronDown } from "react-icons/bi";
+import { BiChevronDown, BiEdit } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
 import Swal from "sweetalert2";
 import ChangeRoleModal from "../../components/modals/ChangeRoleModal";
+import { MdEdit } from "react-icons/md";
+import { coachTitles } from "../../utils/Constant";
 
 const SubCoaches = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCoach, setSelectedCoach] = useState("");
+  const [selectedCoachEmail, setCoachEmail] = useState("");
+  const [titleUpdateLoading, setTitleUpdateLoading] = useState(false);
+
+  const [currentTitle, setCurrentTitle] = useState("");
   const [pageSize, setPageSize] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTeamDetailsModal, setIsTeamDetailsModal] = useState(false);
   const [teamDetails, setTeamDetails] = useState([]);
   const [changeRoleModal, setChangeRoleModal] = useState(false);
   const [coach, setCoach] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     isLoading,
@@ -35,8 +50,12 @@ const SubCoaches = () => {
   } = useQuery({
     queryKey: ["sub-coaches", currentUser?.email],
     queryFn: async () => {
+      let email;
+      if (currentUser.role === "admin") email = currentUser.email;
+      else email = currentUser?.adminEmail;
+
       const { data } = await axiosSecure.get(
-        `/users/byRole?role=sub_coach&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=sub_coach&adminEmail=${email}`
       );
       return data;
     },
@@ -78,6 +97,15 @@ const SubCoaches = () => {
     if (coach.status === "pending") {
       toast.error("Approve sub coach before assigning team");
     } else setIsModalOpen(true);
+  };
+
+  const titleChangeModalHandler = (coach) => {
+    setCoachEmail(coach.email);
+    setCurrentTitle(coach.title);
+
+    if (coach.status === "pending") {
+      toast.error("Approve sub coach before assigning team");
+    } else setModalOpen(true);
   };
 
   const handleChangeRole = (record) => {
@@ -123,6 +151,27 @@ const SubCoaches = () => {
     console.log(user);
   };
 
+  const updateTitle = async () => {
+    try {
+      setTitleUpdateLoading(true);
+      const response = await axiosSecure.patch(
+        `/change-title/${selectedCoachEmail}?newTitle=${currentTitle}`
+      );
+
+      refetch();
+      if (response.status === 200) {
+        toast.success("Title Updated Successfully");
+        setModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Error updating title");
+    } finally {
+      setTitleUpdateLoading(false);
+    }
+  };
+
   const data = currentCoaches?.map((coach) => {
     return {
       key: coach?._id,
@@ -131,6 +180,7 @@ const SubCoaches = () => {
       name: coach?.fullName,
       teams: coach?.teams,
       status: coach?.status,
+      title: coach?.title,
       role: coach?.role,
     };
   });
@@ -159,6 +209,24 @@ const SubCoaches = () => {
       dataIndex: "email",
       key: "email",
       render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (title, record) => (
+        <div className="flex items-center gap-2">
+          <p>{title}</p>
+          {currentUser?.role === "coach" && (
+            <Tooltip placement="topRight" title={"Change Title"}>
+              <MdEdit
+                onClick={() => titleChangeModalHandler(record)}
+                className="bg-gradient text-white p-1 text-2xl rounded-md hover:shadow-md transition-300 cursor-pointer"
+              />
+            </Tooltip>
+          )}
+        </div>
+      ),
     },
     {
       title: "Teams",
@@ -316,6 +384,35 @@ const SubCoaches = () => {
           <CustomLoader isLoading={isLoading} />
         </div>
       )}
+
+      <Modal
+        width={1000}
+        footer={null}
+        onCancel={() => setModalOpen(false)}
+        open={modalOpen}
+      >
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-x-5">
+          {coachTitles.map((title, index) => (
+            <p
+              onClick={() => setCurrentTitle(title)}
+              className={`${
+                title === currentTitle && "text-white bg-gradient"
+              } cursor-pointer rounded p-2`}
+              key={index}
+            >
+              {index + 1}. {title}
+            </p>
+          ))}
+        </div>
+        <Button
+          onClick={() => updateTitle()}
+          loading={titleUpdateLoading}
+          className="hover:shadow-md mt-10 bg-gradient text-white"
+          type="btn"
+        >
+          Update
+        </Button>
+      </Modal>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import { baseUrl } from "../utils/Constant";
+import { baseUrl, coachTitles } from "../utils/Constant";
 
 const { Option } = Select;
 
@@ -46,6 +46,7 @@ export const Register = () => {
         state,
         city,
         zip,
+        title,
         reqTeam,
         parentCode,
       } = data;
@@ -71,6 +72,9 @@ export const Register = () => {
       else userData.adminEmail = organization;
       if (role === "athlete") {
         userData.reqTeamId = reqTeam;
+      }
+      if (role === "sub_coach") {
+        userData.title = title;
       }
 
       await signup(email, password, fullName, userData);
@@ -169,6 +173,30 @@ export const Register = () => {
             <Input className="w-full px-4 py-2 rounded-lg" size="large" />
           </Form.Item>
 
+          {role === "sub_coach" && (
+            <Form.Item
+              name="title"
+              label="Select Title"
+              rules={[
+                {
+                  required: true,
+                  message: `Title selection is required!`,
+                },
+              ]}
+            >
+              <Select
+                placeholder="Choose Title"
+                className="w-full"
+                size="large"
+              >
+                {coachTitles?.map((title, index) => (
+                  <Select.Option key={index} value={title}>
+                    {title}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
           <Form.Item
             name="password"
             label="Password"

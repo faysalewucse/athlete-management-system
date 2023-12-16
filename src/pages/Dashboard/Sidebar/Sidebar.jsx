@@ -118,6 +118,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
     ],
     coach: [
       {
+        key: 0,
+        label: "Sub Coaches",
+        route: "sub-coaches",
+        icon: <FaChalkboardTeacher />,
+      },
+      {
         key: 1,
         label: "Athletes",
         route: "athletes",
@@ -263,7 +269,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
   return (
     <aside
       ref={sideRef}
-      className={`md:block lg:w-80 md:w-60 ${
+      className={`md:block lg:w-72 md:w-52 ${
         sidebarOpen ? "fixed bg-white z-50" : "hidden"
       } bg-white shadow border-r border-primary/25 border-opacity-50 min-h-screen overscroll-auto `}
     >
@@ -276,11 +282,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       >
         <MdClose />
       </div>
-      <div className="mt-10 flex flex-col gap-5 px-3 lg:px-10 md:px-5 pb-10">
+      <div className="mt-10 flex flex-col gap-2 px-3 lg:px-10 md:px-5 pb-10">
         {items?.map((item) => (
           <div key={item.key}>
             <Link
-              className={`flex items-center gap-4 p-3 text-lg font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary ${
+              className={`flex items-center gap-4 p-3 text-md font-medium hover:bg-primary transition-300 rounded-xl hover:text-white text-primary ${
                 currentPath.pathname.split("/").pop() === item.route ||
                 `/${currentPath.pathname.split("/").pop()}` === item.route
                   ? "bg-gradient text-white"

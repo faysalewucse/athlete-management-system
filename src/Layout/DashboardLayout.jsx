@@ -47,7 +47,6 @@ export const DashboardLayout = () => {
           <Outlet />
         </div>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

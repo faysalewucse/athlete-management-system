@@ -101,7 +101,7 @@ const StepTwo = () => {
         <Form.Item
           name="rating"
           label="Rate your fitness level"
-          rules={[{ required: true, message: "Answer is required" }]}
+          rules={[{ required: true, message: "Rating is required" }]}
         >
           <Select size="large" className="rounded-lg">
             <Option value="1">1</Option>

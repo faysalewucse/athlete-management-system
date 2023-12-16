@@ -1,4 +1,4 @@
-import { Form, Input } from "antd";
+import { Checkbox, Form, Input } from "antd";
 
 import CustomFieldsForm from "./CustomFields";
 
@@ -36,6 +36,9 @@ const StepFour = () => {
       </div>
 
       <CustomFieldsForm />
+
+      <Checkbox>Agree Liability Waiver</Checkbox>
+      <Checkbox>Agree to the event's terms and conditions</Checkbox>
     </>
   );
 };

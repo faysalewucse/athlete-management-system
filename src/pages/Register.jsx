@@ -83,7 +83,7 @@ export const Register = () => {
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
         () => {
-          navigate("/");
+          navigate("/dashboard");
         }
       );
 

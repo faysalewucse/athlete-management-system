@@ -5,6 +5,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Button } from "antd";
+import Swal from "sweetalert2";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -24,9 +25,17 @@ export const Login = () => {
       .then((result) => {
         if (result.user) {
           setLoading(false);
+          Swal.fire(
+            "Welcome back!",
+            "You have logged in Successfully!",
+            "success"
+          ).then(() => {
+            navigate("/dashboard");
+          });
         }
       })
       .catch((e) => {
+        console.log({ e });
         setLoading(false);
         toast.error(
           e.message.includes("password") ? "Wrong password" : "User Not Found"

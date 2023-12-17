@@ -1,10 +1,11 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { BiEdit, BiMoney } from "react-icons/bi";
+import { BiEdit, BiMoney, BiPrinter } from "react-icons/bi";
 import { RxClock } from "react-icons/rx";
 import { MdCoPresent, MdEventAvailable } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
 import { format, parseISO } from "date-fns";
+import { generatePDF } from "../../pages/Dashboard/PdfPrint";
 
 const EventCard = ({
   event,
@@ -56,6 +57,10 @@ const EventCard = ({
           </div>
           {currentUser?.role === "coach" && (
             <div className="text-lg flex gap-1">
+              <BiPrinter
+                onClick={() => generatePDF(event, "Events")}
+                className="cursor-pointer"
+              />
               <BiEdit
                 onClick={() => handleUpdateEvent(event)}
                 className="cursor-pointer"

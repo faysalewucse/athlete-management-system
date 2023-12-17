@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../components/Container";
 import CustomLoader from "../../components/CustomLoader";
 import { SectionHeader } from "../../components/shared/SectionHeader";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiPrinter } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { RxClock } from "react-icons/rx";
 import { format, parseISO } from "date-fns";
@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 import UpdatePlannerModal from "../../components/modals/UpdatePlannerModal";
 import AddPlanerTaskModal from "../../components/modals/AddPlannerTaskModal";
 import ViewTasksModal from "../../components/modals/ViewTasksModal";
-import PdfPrint from "./PdfPrint";
+import { generatePDF } from "./PdfPrint";
 
 const Planner = () => {
   const { currentUser } = useAuth();
@@ -82,7 +82,7 @@ const Planner = () => {
               Create Plan +
             </Button>
           )}
-          {plans.length > 0 && <PdfPrint dataArray={plans} dataType="Plans" />}
+          {/* {plans.length > 0 && <PdfPrint dataArray={plans} dataType="Plans" />} */}
           <SectionHeader title={"Plans"} quantity={plans.length} />
           <div className="mt-5">
             {plans.length === 0 ? (
@@ -101,6 +101,10 @@ const Planner = () => {
                         </h3>
                         {currentUser?.role === "coach" && (
                           <div className="text-lg flex gap-1">
+                            <BiPrinter
+                              onClick={() => generatePDF(plan, "Plans")}
+                              className="cursor-pointer"
+                            />
                             <BiEdit
                               onClick={() => handleUpdatePlan(plan)}
                               className="cursor-pointer"

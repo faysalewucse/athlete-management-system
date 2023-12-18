@@ -1,14 +1,16 @@
-import { Button, Form, Modal, Select } from "antd";
-import FileUpload from "../../components/FileUpload";
+import { Button, Form, Modal, Select, Upload } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useState } from "react";
+import { FileOutlined } from "@ant-design/icons";
+const { Dragger } = Upload;
 
 const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [teamValue, setTeamValue] = useState("");
+  const [fileList, setFileList] = useState([]);
   const {
     isLoading,
     data: teams = [],
@@ -33,6 +35,20 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
   const handleTeamChange = (value) => {
     setTeamValue(value);
   };
+
+  const props = {
+    onRemove: () => {
+      setFileList([]);
+    },
+    beforeUpload: (file) => {
+      setFileList([file]);
+      return false;
+    },
+    fileList,
+  };
+
+  console.log(fileList);
+
   return (
     <Modal
       width={400}
@@ -63,8 +79,20 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           </Form.Item>
         </div>
 
-        <div>
-          <FileUpload />
+        <div className="mb-10">
+          <Dragger
+            {...props}
+            accept="application/pdf"
+            // onChange={handleOnChange}
+          >
+            <p className="ant-upload-drag-icon">
+              <FileOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">Support only PDF files.</p>
+          </Dragger>
         </div>
 
         <Button

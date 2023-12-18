@@ -4,6 +4,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useState } from "react";
 import { FileOutlined } from "@ant-design/icons";
+import toast from "react-hot-toast";
 const { Dragger } = Upload;
 
 const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
@@ -11,6 +12,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
   const [axiosSecure] = useAxiosSecure();
   const [teamValue, setTeamValue] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -35,12 +37,6 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
     },
   });
 
-  console.log(currentUser);
-
-  const handleTeamChange = (value) => {
-    setTeamValue(value);
-  };
-
   const props = {
     onRemove: () => {
       setFileList([]);
@@ -54,6 +50,31 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
 
   const onFinish = async (data) => {
     console.log({ data });
+
+    const formData = new FormData();
+    formData.append("formFile", fileList[0]);
+    formData.append("coachEmail", data.coachEmail);
+    formData.append("formName", data.formName);
+    formData.append("organization", data.organization);
+    formData.append("teamName", data.teamName);
+    setUploading(true);
+
+    try {
+      await axiosSecure.post(`/upload-form`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Upload successful");
+      form.resetFields();
+      setFileList([]);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error uploading");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -87,7 +108,6 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           <Form.Item
             name="organization"
             label="Organization"
-            // rules={[{ required: true, message: "Form Name is required" }]}
             initialValue={currentUser?.organization}
           >
             <Input
@@ -98,16 +118,11 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           </Form.Item>
         </div>
         <div>
-          <Form.Item
-            name="coachEmail"
-            label="Coach's Email"
-            // rules={[{ required: true, message: "Coach Email is required" }]}
-          >
+          <Form.Item name="coachEmail" label="Coach's Email">
             <Input
               className="w-full px-4 py-2 rounded-lg hover:cursor-danger"
               size="large"
               disabled
-              // value={currentUser?.email}
             />
           </Form.Item>
         </div>
@@ -120,7 +135,6 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
             <Select
               size="large"
               className="rounded-lg"
-              onChange={handleTeamChange}
               placeholder="Select Team"
             >
               {teams.map((team) => (
@@ -138,11 +152,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
             label="Upload Form"
             rules={[{ required: true, message: "Please upload a form" }]}
           >
-            <Dragger
-              {...props}
-              accept="application/pdf"
-              // onChange={handleOnChange}
-            >
+            <Dragger {...props} accept="application/pdf">
               <p className="ant-upload-drag-icon">
                 <FileOutlined />
               </p>
@@ -156,11 +166,16 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
 
         <Button
           htmlType="submit"
-          type="primary"
-          className="bg-blue-500"
-          //   onClick={handleAddCustomField}
+          type={`btn text-white ${
+            uploading || fileList.length === 0
+              ? "bg-gray-300"
+              : "bg-gradient hover:shadow-md"
+          }`}
+          // onClick={handleUpload}
+          disabled={fileList.length === 0}
+          loading={uploading}
         >
-          Add
+          {uploading ? "Adding" : "Add"}
         </Button>
       </Form>
     </Modal>

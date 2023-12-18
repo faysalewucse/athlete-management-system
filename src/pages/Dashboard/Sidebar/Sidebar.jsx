@@ -167,8 +167,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       },
       {
         key: 8,
-        label: "Form",
-        route: "form",
+        label: "Form Library",
+        route: "form-library",
         icon: <FaWpforms />,
       },
     ],
@@ -217,8 +217,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       },
       {
         key: 8,
-        label: "Form",
-        route: "form",
+        label: "Form Library",
+        route: "form-library",
         icon: <FaWpforms />,
       },
     ],

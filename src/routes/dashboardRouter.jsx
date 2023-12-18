@@ -18,6 +18,7 @@ import Organizations from "../pages/Dashboard/Organizations";
 import SubCoaches from "../pages/Dashboard/SubCoaches";
 
 import FormLib from "../pages/Dashboard/Form";
+import FormLibrary from "../pages/Dashboard/FormLibrary";
 
 export const dashboardRouter = [
   {
@@ -81,10 +82,11 @@ export const dashboardRouter = [
     ),
   },
   {
-    path: "form",
+    path: "form-library",
     element: (
       <ValidUserRoute>
-        <FormLib />
+        {/* <FormLib /> */}
+        <FormLibrary />
       </ValidUserRoute>
     ),
   },

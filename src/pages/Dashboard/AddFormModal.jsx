@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Select, Upload } from "antd";
+import { Button, Form, Input, Modal, Select, Upload } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -11,6 +11,9 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
   const [axiosSecure] = useAxiosSecure();
   const [teamValue, setTeamValue] = useState("");
   const [fileList, setFileList] = useState([]);
+
+  const [form] = Form.useForm();
+
   const {
     isLoading,
     data: teams = [],
@@ -32,6 +35,8 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
     },
   });
 
+  console.log(currentUser);
+
   const handleTeamChange = (value) => {
     setTeamValue(value);
   };
@@ -47,22 +52,70 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
     fileList,
   };
 
-  console.log(fileList);
+  const onFinish = async (data) => {
+    console.log({ data });
+  };
 
   return (
     <Modal
-      width={400}
+      width={500}
       open={isModalOpen}
       onOk={() => setIsModalOpen(false)}
       onCancel={() => setIsModalOpen(false)}
       footer
     >
-      <Form className="grid grid-cols-1 " layout="vertical">
+      <Form
+        className="grid grid-cols-1 "
+        layout="vertical"
+        form={form}
+        onFinish={onFinish}
+        initialValues={{
+          ["organization"]: currentUser?.organization,
+          ["coachEmail"]: currentUser?.email,
+        }}
+      >
         <div>
           <Form.Item
-            name="team"
+            name="formName"
+            label="Form Name"
+            rules={[{ required: true, message: "Form Name is required" }]}
+          >
+            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+          </Form.Item>
+        </div>
+        <div>
+          <Form.Item
+            name="organization"
+            label="Organization"
+            // rules={[{ required: true, message: "Form Name is required" }]}
+            initialValue={currentUser?.organization}
+          >
+            <Input
+              className="w-full px-4 py-2 rounded-lg hover:cursor-danger"
+              size="large"
+              disabled
+            />
+          </Form.Item>
+        </div>
+        <div>
+          <Form.Item
+            name="coachEmail"
+            label="Coach's Email"
+            // rules={[{ required: true, message: "Coach Email is required" }]}
+          >
+            <Input
+              className="w-full px-4 py-2 rounded-lg hover:cursor-danger"
+              size="large"
+              disabled
+              // value={currentUser?.email}
+            />
+          </Form.Item>
+        </div>
+        <div>
+          <Form.Item
+            name="teamName"
             label="Select Team"
-            rules={[{ required: true, message: "Answer is required" }]}
+            rules={[{ required: true, message: "Please select a team." }]}
           >
             <Select
               size="large"
@@ -79,24 +132,30 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           </Form.Item>
         </div>
 
-        <div className="mb-10">
-          <Dragger
-            {...props}
-            accept="application/pdf"
-            // onChange={handleOnChange}
+        <div className="">
+          <Form.Item
+            name="formFile"
+            label="Upload Form"
+            rules={[{ required: true, message: "Please upload a form" }]}
           >
-            <p className="ant-upload-drag-icon">
-              <FileOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">Support only PDF files.</p>
-          </Dragger>
+            <Dragger
+              {...props}
+              accept="application/pdf"
+              // onChange={handleOnChange}
+            >
+              <p className="ant-upload-drag-icon">
+                <FileOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">Support only PDF files.</p>
+            </Dragger>
+          </Form.Item>
         </div>
 
         <Button
-          //   htmlType="submit"
+          htmlType="submit"
           type="primary"
           className="bg-blue-500"
           //   onClick={handleAddCustomField}

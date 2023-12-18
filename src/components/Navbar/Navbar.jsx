@@ -26,18 +26,22 @@ export const Navbar = () => {
         </div>
       ),
       key: "0",
+      render: true,
     },
     {
       label: <Link to={"/dashboard"}>Dashboard</Link>,
       key: "1",
+      render: currentUser ? true : false,
     },
     {
       label: <Link to={"/"}>Home</Link>,
       key: "2",
+      render: true,
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={`/profile/${currentUser?._id}`}>Profile</Link>,
       key: "3",
+      render: true,
     },
     {
       type: "divider",
@@ -46,6 +50,7 @@ export const Navbar = () => {
       label: <div onClick={logout}>Logout</div>,
       danger: true,
       key: "4",
+      render: true,
     },
   ];
 
@@ -81,8 +86,12 @@ export const Navbar = () => {
   // }
 
   const navItems = [
-    { route: "/", pathName: "Home" },
-    { route: "/dashboard", pathName: "Dashboard" },
+    { route: "/", pathName: "Home", render: true },
+    {
+      route: "/dashboard",
+      pathName: "Dashboard",
+      render: currentUser ? true : false,
+    },
   ];
 
   return (
@@ -101,24 +110,29 @@ export const Navbar = () => {
               open ? "top-0 h-screen justify-center" : "-top-96"
             } right-0 md:w-fit w-full gap-5 transition-all duration-300 md:h-0 md:gap-10 rounded-b-xl md:rounded-b-none p-5 text-base md:bg-none bg-gradient-to-l from-[rgba(32,87,176,0.95)] from-0% via-[rgba(28,58,125,0.95)] via-40% to-[rgba(31,32,84,1)] to-100% items-center z-20`}
           >
-            {navItems.map((item, index) => (
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "font-semibold text-purple-400"
-                    : "hover:text-white transition-300 text-white"
-                }
-                to={item.route}
-                onClick={() => setOpen(false)}
-                key={index}
-              >
-                {item.pathName}
-              </NavLink>
-            ))}
+            {navItems
+              .filter((item) => item.render)
+              .map((item, index) => (
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-semibold text-purple-400"
+                      : "hover:text-white transition-300 text-white"
+                  }
+                  to={item.route}
+                  onClick={() => setOpen(false)}
+                  key={index}
+                >
+                  {item.pathName}
+                </NavLink>
+              ))}
             <div className="flex items-center gap-8">
               {/* Dropdown Avatar */}
               {currentUser ? (
-                <AvatarDropdown currentUser={currentUser} items={avatarItems} />
+                <AvatarDropdown
+                  currentUser={currentUser}
+                  items={avatarItems.filter((item) => item.render)}
+                />
               ) : (
                 <Button
                   onClick={loginBtnHandler}

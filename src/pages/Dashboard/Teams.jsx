@@ -26,39 +26,29 @@ const Teams = () => {
   } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-      );
+      let URL = "teams";
+
+      if (currentUser?.role === "admin") {
+        URL = `teams/${currentUser?.email}`;
+      } else if (currentUser?.role === "coach") {
+        URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
+      }
+      const { data } = await axiosSecure.get(`/${URL}`);
       return data;
     },
   });
+
+  console.log(teams);
 
   const { data: coaches = [] } = useQuery({
     queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
-    },
-  });
-
-  // data for logged in as coach
-
-  const { data: coachTeams = [] } = useQuery({
-    queryKey: ["coachTeams", currentUser?.email],
-    queryFn: async () => {
-      if (currentUser?.role === "coach") {
-        const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
-            currentUser?.email
-          }`
-        );
-        return data;
-      }
-      return [];
     },
   });
 
@@ -91,11 +81,7 @@ const Teams = () => {
 
   const handleRemoveCoach = async (coach, record) => {
     await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach/${
-          coach?.email
-        }?team=${record.key}`
-      )
+      .patch(`/teams/coach/${coach?.email}?team=${record.key}`)
       .then((res) => {
         if (res.status === 200) {
           refetch();
@@ -194,12 +180,7 @@ const Teams = () => {
       {!isLoading ? (
         <Container>
           <div className="flex justify-between">
-            <SectionHeader
-              title={"Teams"}
-              quantity={
-                currentUser?.role === "admin" ? teams.length : coachTeams.length
-              }
-            />
+            <SectionHeader title={"Teams"} quantity={teams.length} />
             {currentUser?.role === "admin" && (
               <Button
                 type="btn"
@@ -232,7 +213,7 @@ const Teams = () => {
             <Table dataSource={data} columns={columns} pagination={false} />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {coachTeams.map((team) => (
+              {teams.map((team) => (
                 <Card key={team?._id} bordered={false} title={team?.teamName}>
                   <p className="text-base font-medium text-gray-500">
                     Sport: {team?.sports}
@@ -242,7 +223,7 @@ const Teams = () => {
                   </p>
                   <p className="flex flex-wrap text-base font-medium text-gray-500">
                     Coaches:{" "}
-                    {team?.coaches.map((coach, i) => (
+                    {team?.coaches?.map((coach, i) => (
                       <span
                         className={`ml-1 font-normal ${
                           currentUser?.email === coach ? "text-gradient" : ""

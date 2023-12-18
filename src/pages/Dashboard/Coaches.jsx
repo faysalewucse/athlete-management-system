@@ -36,9 +36,7 @@ const Coaches = () => {
     queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=coach&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=coach&adminEmail=${currentUser?.email}`
       );
       return data;
     },
@@ -47,9 +45,7 @@ const Coaches = () => {
   const { data: teams = [] } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-      );
+      const { data } = await axiosSecure.get(`/teams/${currentUser?.email}`);
       return data;
     },
   });
@@ -59,13 +55,11 @@ const Coaches = () => {
       toast.error("you are not eligible to approve!");
       return;
     }
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() => toast.success("Approved"));
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=approved`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() => toast.success("Approved"));
+      }
+    });
   };
 
   // pagination
@@ -115,14 +109,12 @@ const Coaches = () => {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axiosSecure
-          .delete(`${import.meta.env.VITE_BASE_API_URL}/teams/${id}`)
-          .then((res) => {
-            if (res.status === 200) {
-              Swal.fire("Deleted!", "Team deleted.", "success");
-              refetch();
-            }
-          });
+        await axiosSecure.delete(`/teams/${id}`).then((res) => {
+          if (res.status === 200) {
+            Swal.fire("Deleted!", "Team deleted.", "success");
+            refetch();
+          }
+        });
       }
     });
   };
@@ -281,6 +273,7 @@ const Coaches = () => {
           <SectionHeader title={"Coaches"} quantity={coaches?.length} />
 
           <Table
+            size="small"
             className="mt-5"
             dataSource={data}
             pagination={false}

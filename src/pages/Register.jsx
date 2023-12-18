@@ -9,12 +9,14 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment/moment";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
+import { baseUrl, coachTitles } from "../utils/Constant";
 
 const { Option } = Select;
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState("admin");
+  const [teams, setTeams] = useState([]);
   const { signup } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
@@ -22,9 +24,7 @@ export const Register = () => {
   const { data: admins = [] } = useQuery({
     queryKey: ["admins"],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/admins`
-      );
+      const { data } = await axiosSecure.get(`${baseUrl}/admins`);
       return data;
     },
   });
@@ -46,6 +46,9 @@ export const Register = () => {
         state,
         city,
         zip,
+        title,
+        reqTeam,
+        parentCode,
       } = data;
 
       const fullName = firstName + " " + lastName;
@@ -56,6 +59,7 @@ export const Register = () => {
         lastName,
         fullName: fullName,
         photoURL: "",
+        parentCode,
         address: { state, city, zip, address },
         gender,
         dateOfBirth,
@@ -66,9 +70,16 @@ export const Register = () => {
 
       if (role === "admin") userData.organization = organization;
       else userData.adminEmail = organization;
+      if (role === "athlete") {
+        userData.reqTeamId = reqTeam;
+      }
+      if (role === "sub_coach") {
+        userData.title = title;
+      }
+
       await signup(email, password, fullName, userData);
 
-      await axios.post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData);
+      await axios.post(`${baseUrl}/user`, userData);
 
       Swal.fire("Welcome!", "You registered Successfully!", "success").then(
         () => {
@@ -97,21 +108,27 @@ export const Register = () => {
     return Promise.resolve();
   };
 
+  const handleTeams = async (adminEmail) => {
+    const URL = `teams/${adminEmail}`;
+    await axios.get(`${baseUrl}/${URL}`).then((res) => setTeams(res.data));
+  };
+
   return (
-    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center lg:p-20 md:p-10 p-5">
+    <div className="text-dark bg-light min-h-[90vh] flex items-center justify-center md:p-20 p-5">
       <div className="max-w-3xl p-5 lg:w-1/2 w-full  rounded-xl my-5 mt-16 md:mt-0">
         <h2 className="text-4xl font-bold text-center">Registration</h2>
         <Form
           layout="vertical"
           onFinish={onFinish}
           className="md:grid grid-cols-2 gap-x-6 py-10"
-          initialValues={{ role: "athlete" }}
+          initialValues={{ role: "admin" }}
         >
-          <h1 className="font-semibold text-lg">What is your role?</h1>
+          <h1 className="font-semibold text-lg">Role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
             <Radio.Group onChange={(e) => setRole(e.target.value)}>
               <Radio value="admin">Admin</Radio>
               <Radio value="coach">Coach</Radio>
+              <Radio value="sub_coach">Sub Coach</Radio>
               <Radio value="parents">Parents</Radio>
               <Radio value="athlete">Athlete</Radio>
             </Radio.Group>
@@ -156,6 +173,30 @@ export const Register = () => {
             <Input className="w-full px-4 py-2 rounded-lg" size="large" />
           </Form.Item>
 
+          {role === "sub_coach" && (
+            <Form.Item
+              name="title"
+              label="Select Title"
+              rules={[
+                {
+                  required: true,
+                  message: `Title selection is required!`,
+                },
+              ]}
+            >
+              <Select
+                placeholder="Choose Title"
+                className="w-full"
+                size="large"
+              >
+                {coachTitles?.map((title, index) => (
+                  <Select.Option key={index} value={title}>
+                    {title}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
           <Form.Item
             name="password"
             label="Password"
@@ -210,7 +251,7 @@ export const Register = () => {
             <DatePicker
               className="w-full px-4 py-2 rounded-lg"
               size="large"
-              format="YYYY-MM-DD"
+              format="MM-DD-YYYY"
             />
           </Form.Item>
 
@@ -238,13 +279,39 @@ export const Register = () => {
                 },
               ]}
             >
-              <Select placeholder="Choose" className="w-full" size="large">
+              <Select
+                onChange={(value) => handleTeams(value)}
+                placeholder="Choose"
+                className="w-full"
+                size="large"
+              >
                 {admins?.map((admin) => (
                   <Option key={admin?._id} value={admin?.email}>
                     {admin?.organization}{" "}
                     <span className="text-xs text-slate-400">
                       ({admin?.fullName})
                     </span>
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
+          {role === "athlete" && (
+            <Form.Item
+              name="reqTeam"
+              label="Select Team"
+              rules={[
+                {
+                  required: true,
+                  message: `Team selection is required for ${role}!`,
+                },
+              ]}
+            >
+              <Select placeholder="Choose" className="w-full" size="large">
+                {teams?.map((team) => (
+                  <Option key={team?._id} value={team._id}>
+                    {team?.teamName} ({team?.sports})
                   </Option>
                 ))}
               </Select>

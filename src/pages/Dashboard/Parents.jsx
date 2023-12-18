@@ -35,7 +35,7 @@ const Parents = () => {
         URL = `adminEmail=${currentUser?.adminEmail}`;
       }
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=parents&${URL}`
+        `/users/byRole?role=parents&${URL}`
       );
       return data;
     },
@@ -43,13 +43,11 @@ const Parents = () => {
 
   // status update
   const handleApprove = async (id) => {
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() => toast.success("Parents approved"));
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=approved`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() => toast.success("Parents approved"));
+      }
+    });
   };
 
   // pagination
@@ -95,6 +93,12 @@ const Parents = () => {
       render: (text) => <a>{text}</a>,
     },
     {
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
+      render: (text) => <a>{text}</a>,
+    },
+    {
       title:
         currentUser?.role !== "sadmin" && currentUser?.role !== "admin"
           ? "Action"
@@ -115,10 +119,6 @@ const Parents = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                    Change Role
-                  </button>
-
                   <button className="md:block hidden bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
@@ -127,11 +127,6 @@ const Parents = () => {
                       items: [
                         {
                           key: 0,
-                          label: <p>Change Role</p>,
-                        },
-
-                        {
-                          key: 2,
                           label: (
                             <p className="text-danger hover:text-danger2">
                               Delete
@@ -158,6 +153,7 @@ const Parents = () => {
       key: parent._id,
       image: parent.photoURL ? parent.photoURL : avatar,
       name: parent?.fullName,
+      code: parent.parentCode,
       email: parent.email,
       status: parent.status,
     };
@@ -168,7 +164,12 @@ const Parents = () => {
       {!isLoading ? (
         <Container>
           <SectionHeader title={"Parents"} quantity={parents.length} />
-          <Table dataSource={data} columns={columns} pagination={false} />
+          <Table
+            size="small"
+            dataSource={data}
+            columns={columns}
+            pagination={false}
+          />
           <Pagination
             current={currentPage}
             total={parents.length}

@@ -19,12 +19,12 @@ const About = ({ scrollRef, handleScroll }) => {
       >
         <div className="px-3 md:px-0 md:pr-10">
           <h1 className="text-2xl md:text-4xl font-medium mb-6">
-            Passion-Driven Innovators in Athlete Management Technology
+            Passion-Driven Innovators in Athletic Department Management Technology
           </h1>
           <p className=" text-lg leading-7">
             We invite you to join us on this exciting journey to empower
-            athletes and coaches worldwide. Together, we can redefine the
-            standards of athlete management and help individuals and teams
+            athletic directors, coaches, athletes and their parents worldwide. Together, we can redefine the
+            standards of athletic department management and help individuals and teams
             achieve greatness.
           </p>
 

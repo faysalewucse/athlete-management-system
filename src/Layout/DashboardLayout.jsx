@@ -3,10 +3,8 @@ import { Toaster } from "react-hot-toast";
 import Sidebar from "../pages/Dashboard/Sidebar/Sidebar";
 import { Navbar } from "../pages/Dashboard/Navbar";
 import { useRef, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 
 export const DashboardLayout = () => {
-  const { currentUser } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sideRef = useRef(null);
 
@@ -38,16 +36,17 @@ export const DashboardLayout = () => {
           setSidebarOpen={setSidebarOpen}
           sideRef={sideRef}
         />
-        <div
-          className={`flex-1 ${
-            sidebarOpen ? "filter blur-sm bg-gray-300" : ""
-          }`}
-        >
+        <div className={`flex-1`}>
+          {sidebarOpen && (
+            <div
+              onClick={() => setSidebarOpen(false)}
+              className="min-h-full blur-sm"
+            ></div>
+          )}
           <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <Outlet />
         </div>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { AiTwotoneDelete } from "react-icons/ai";
 import TeamDetailsModal from "../../components/modals/TeamDetailsModal";
 import AssignTeamModal from "../../components/modals/AssignTeamModal";
+import { Link } from "react-router-dom";
 
 export const Athletes = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -34,7 +35,7 @@ export const Athletes = () => {
         URL = `parentsEmail=${currentUser?.email}`;
       }
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/users/byRole?role=athlete&${URL}`
+        `/users/byRole?role=athlete&${URL}`
       );
       return data;
     },
@@ -44,9 +45,7 @@ export const Athletes = () => {
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/coach-team/${
-          currentUser?.email
-        }`
+        `/teams/coach-team/${currentUser?.email}`
       );
       return data;
     },
@@ -58,13 +57,11 @@ export const Athletes = () => {
       toast.error("you are not eligible to approve!");
       return;
     }
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=approved`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() => toast.success("Athlete approved"));
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=approved`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() => toast.success("Athlete approved"));
+      }
+    });
   };
 
   // pagination
@@ -113,16 +110,13 @@ export const Athletes = () => {
     const filteredTeams = teams?.filter(
       (team) => !selectedTeamsId?.includes(team?._id)
     );
+
     return filteredTeams;
   };
 
   const handleRemoveAthlete = async (team, athlete) => {
     await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/teams/athlete/${
-          athlete?.email
-        }?team=${team?._id}`
-      )
+      .delete(`/teams/athlete/${athlete?.email}?teamId=${team?._id}`)
       .then((res) => {
         if (res.status === 200) {
           refetch();
@@ -148,13 +142,20 @@ export const Athletes = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      render: (name, record) => (
+        <Link to={`/profile/${record.key}`}>{name}</Link>
+      ),
     },
     {
       title: "E-mail",
       dataIndex: "email",
       key: "email",
-      render: (text) => <a>{text}</a>,
+      render: (email, record) => (
+        <div>
+          <p>{email}</p>
+          <p className="text-danger">{record.parentsEmail && "(Under 18)"}</p>
+        </div>
+      ),
     },
     {
       title: "Teams",
@@ -205,9 +206,12 @@ export const Athletes = () => {
           ) : (
             <div>
               {currentUser?.role === "coach" ? (
-                <Button onClick={() => modalHandler(record)}>
-                  Assign To Team
-                </Button>
+                <div>
+                  <Button onClick={() => modalHandler(record)}>
+                    Assign To Team
+                  </Button>
+                  <p></p>
+                </div>
               ) : (
                 <p>No Teams Assigned</p>
               )}
@@ -236,10 +240,6 @@ export const Athletes = () => {
                 </div>
               ) : (
                 <div className="flex text-sm items-center space-x-4 justify-center">
-                  {/* <button className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                    Position +
-                  </button> */}
-
                   <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
                     Delete
                   </button>
@@ -254,7 +254,10 @@ export const Athletes = () => {
                         {
                           key: 2,
                           label: (
-                            <p className="text-danger hover:text-danger2">
+                            <p
+                              onClick={() => toast.error("Not Implemented")}
+                              className="text-danger hover:text-danger2"
+                            >
                               Delete
                             </p>
                           ),
@@ -282,6 +285,8 @@ export const Athletes = () => {
       email: athlete.email,
       teams: athlete.teams,
       status: athlete.status,
+      reqTeamId: athlete.reqTeamId,
+      parentsEmail: athlete.parentsEmail,
     };
   });
 
@@ -291,6 +296,7 @@ export const Athletes = () => {
         <Container>
           <SectionHeader title={"Athletes"} quantity={athletes?.length} />
           <Table
+            size="small"
             className="mt-5"
             dataSource={data}
             columns={columns}

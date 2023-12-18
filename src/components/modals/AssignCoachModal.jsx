@@ -20,9 +20,7 @@ const AssignCoachModal = ({
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/team/updateCoaches/${
-            selectedTeam.key
-          }`,
+          `/team/updateCoaches/${selectedTeam.key}`,
           selectedCoach
         );
 

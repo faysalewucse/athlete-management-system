@@ -12,6 +12,7 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { baseUrl } from "../utils/Constant";
 
 const AuthContext = React.createContext();
 
@@ -33,7 +34,7 @@ export function AuthProvider({ children }) {
       // getUsersData from Database if not found save to database
       if (user) {
         await axios
-          .get(`${import.meta.env.VITE_BASE_API_URL}/users/${user.email}`)
+          .get(`${baseUrl}/users/${user.email}`)
           .then(({ data: userData }) => {
             if (userData) {
               setCurrentUser(userData);
@@ -45,7 +46,7 @@ export function AuthProvider({ children }) {
 
       if (user) {
         axios
-          .post(`${import.meta.env.VITE_BASE_API_URL}/jwt`, {
+          .post(`${baseUrl}/jwt`, {
             email: user.email,
           })
           .then((response) => {
@@ -63,7 +64,6 @@ export function AuthProvider({ children }) {
   //signup function
   async function signup(email, password, username, userData) {
     await createUserWithEmailAndPassword(auth, email, password);
-    console.log(userData);
     setCurrentUser({ ...userData });
   }
 

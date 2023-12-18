@@ -1,18 +1,20 @@
 import { Form, Input, Button, Select, Modal, DatePicker } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { baseUrl } from "../../utils/Constant";
 
 const { Option } = Select;
 
 const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [teams, setTeams] = useState([]);
 
-  const { currentUser } = useAuth();
+  const { currentUser, signup } = useAuth();
 
   const onFinish = async (data) => {
     try {
@@ -25,10 +27,11 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         lastName,
         phoneNumber,
         dateOfBirth,
-        origanization,
         state,
         city,
         zip,
+        reqTeam,
+        password,
       } = data;
 
       const userData = {
@@ -44,24 +47,24 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         role: "athlete",
         status: "pending",
         parentsEmail: currentUser?.email,
+        adminEmail: currentUser?.adminEmail,
+        reqTeamId: reqTeam,
       };
 
-      userData.adminEmail = origanization;
+      await signup(email, password, firstName + " " + lastName, userData);
 
-      await axios
-        .post(`${import.meta.env.VITE_BASE_API_URL}/user`, userData)
-        .then((res) => {
-          if (res.status === 200) {
-            form.resetFields();
-            setIsModalOpen(false);
-            Swal.fire(
-              "Welcome!",
-              "Athlete registration done successfully",
-              "success"
-            );
-            refetch();
-          }
-        });
+      await axios.post(`${baseUrl}/user`, userData).then((res) => {
+        if (res.status === 200) {
+          form.resetFields();
+          setIsModalOpen(false);
+          Swal.fire(
+            "Welcome!",
+            "Registration completed successfully",
+            "Success"
+          );
+          refetch();
+        }
+      });
 
       setLoading(false);
     } catch (error) {
@@ -83,6 +86,15 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
 
     return Promise.resolve();
   };
+
+  const fetchTeams = async () => {
+    const URL = `teams/${currentUser?.adminEmail}`;
+    await axios.get(`${baseUrl}/${URL}`).then((res) => setTeams(res.data));
+  };
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
   return (
     <Modal
@@ -137,7 +149,7 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           <DatePicker
             className="w-full px-4 py-2 rounded-lg"
             size="large"
-            format="YYYY-MM-DD"
+            format="MM-DD-YYYY"
           />
         </Form.Item>
 
@@ -153,10 +165,30 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
             <Option value="others">Others</Option>
           </Select>
         </Form.Item>
+
+        <Form.Item
+          name="reqTeam"
+          label="Select Team"
+          rules={[
+            {
+              required: true,
+              message: `Team selection is required for Athlete!`,
+            },
+          ]}
+        >
+          <Select placeholder="Choose" className="w-full" size="large">
+            {teams?.map((team) => (
+              <Option key={team?._id} value={team._id}>
+                {team?.teamName} ({team.sports})
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
         <Form.Item
           name="phoneNumber"
           label="Phone Number"
-          className={`w-full col-span-2`}
+          className={`w-full`}
           rules={[
             { required: true, message: "Phone Number is required" },
             {
@@ -166,6 +198,21 @@ const AddAthleteModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
           ]}
         >
           <Input type="number" className="rounded-lg" size="large" />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label="Set Password"
+          className={`w-full`}
+          rules={[
+            { required: true, message: "Password is required" },
+            {
+              min: 8,
+              message: "Password must be at least 8 characters long",
+            },
+          ]}
+        >
+          <Input className="rounded-lg" size="large" />
         </Form.Item>
 
         <Form.Item

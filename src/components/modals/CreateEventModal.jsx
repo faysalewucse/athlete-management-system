@@ -30,21 +30,19 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     const eventData = {
       ...values,
       createdAt: Date.now(),
-      adminEmail: currentUser?.email,
+      adminEmail: currentUser?.adminEmail || currentUser?.email,
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/events`, eventData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Event created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/events`, eventData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Event created");
+        refetch();
+      }
+    });
   };
 
   const validateDateOfEvent = (rule, value) => {

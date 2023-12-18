@@ -13,4 +13,5 @@ module.exports = {
     "react-refresh/only-export-components": "warn",
     "react/prop-types": "off",
   },
+  "react-hooks/exhaustive-deps": 0,
 };

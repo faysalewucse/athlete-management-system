@@ -23,11 +23,7 @@ const ChangeRoleModal = ({
 
   const handleOk = async () => {
     await axiosSecure
-      .patch(
-        `${import.meta.env.VITE_BASE_API_URL}/changeUserRole/${
-          user?.email
-        }?role=${role}`
-      )
+      .patch(`/changeUserRole/${user?.email}?role=${role}`)
       .then((res) => {
         if (res.status === 200) {
           toast.success("Role Updated");

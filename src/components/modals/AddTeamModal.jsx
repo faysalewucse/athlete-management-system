@@ -28,18 +28,46 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/teams`, teamData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Team created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/teams`, teamData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Team created");
+        refetch();
+      }
+    });
   };
+
+  const sportsList = [
+    "Badminton",
+    "Baseball (Boys)",
+    "Basketball",
+    "Bowling",
+    "Cheerleading / Competitive Spirit Squads",
+    "Cross Country",
+    "Dance Team",
+    "Field Hockey",
+    "Flag Football (Girls)",
+    "Football (Boys)",
+    "Golf",
+    "Gymnastics",
+    "Hockey",
+    "Indoor Track & Field",
+    "Lacrosse",
+    "Skiing & Snowboarding",
+    "Soccer",
+    "Softball (Girls)",
+    "Slow Pitch Softball (Girls)",
+    "Surf",
+    "Swimming & Diving",
+    "Tennis",
+    "Track & Field",
+    "Volleyball",
+    "Water Polo",
+    "Weightlifting",
+    "Wrestling",
+  ];
 
   return (
     <Modal
@@ -74,12 +102,11 @@ const AddTeamModal = ({ isModalOpen, setIsModalOpen, refetch, coaches }) => {
           rules={[{ required: true, message: "Please select sport!" }]}
         >
           <Select placeholder="Select sports">
-            <Option value="football">Football</Option>
-            <Option value="cricket">Cricket</Option>
-            <Option value="basketball">Basketball</Option>
-            <Option value="tennis">Tennis</Option>
-            <Option value="volleyball">Volleyball</Option>
-            {/* Add more sports options as needed */}
+            {sportsList.map((sport, index) => (
+              <Option key={index} value={sport}>
+                {sport}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
 

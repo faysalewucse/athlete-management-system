@@ -6,15 +6,18 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import CustomLoader from "../../components/CustomLoader";
 import { format, parseISO } from "date-fns";
-import { MdEventAvailable } from "react-icons/md";
+import { MdCoPresent, MdEventAvailable } from "react-icons/md";
 import { RxClock } from "react-icons/rx";
 import { Container } from "../../components/Container";
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiMoney } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Pagination } from "antd";
 import { SectionHeader } from "../../components/shared/SectionHeader";
 import UpdateEventModal from "../../components/modals/UpdateEventModal";
 import toast from "react-hot-toast";
+import EventAttendanceModal from "../../components/modals/EventAttendanceModal";
+import EventCard from "../../components/cards/EventCard";
+import PdfPrint from "./PdfPrint";
 
 const Events = () => {
   const { currentUser } = useAuth();
@@ -23,6 +26,7 @@ const Events = () => {
   const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openAttendanceModal, setOpenAttendanceModal] = useState(false);
   const [event, setEvent] = useState({});
 
   const {
@@ -37,27 +41,39 @@ const Events = () => {
           ? currentUser.email
           : currentUser?.adminEmail;
 
+      const { data } = await axiosSecure.get(`/events/${adminEmail}`);
+      return data;
+    },
+  });
+
+  const { isLoadingAthletes, data: athletes = [] } = useQuery({
+    queryKey: ["athletes", currentUser?.email],
+    queryFn: async () => {
+      const URL = `adminEmail=${currentUser?.adminEmail}`;
       const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}/events/${adminEmail}`
+        `/users/byRole?role=athlete&${URL}`
       );
       return data;
     },
   });
 
   const handleUpdateEvent = (event) => {
-    setOpenUpdateModal(true);
     setEvent(event);
+    setOpenUpdateModal(true);
+  };
+
+  const handleAttendanceModal = (event) => {
+    setEvent(event);
+    setOpenAttendanceModal(true);
   };
 
   const handleDeleteEvents = async (id) => {
-    await axiosSecure
-      .delete(`${import.meta.env.VITE_BASE_API_URL}/events/${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch();
-          toast.success("event deleted successfully");
-        }
-      });
+    await axiosSecure.delete(`/events/${id}`).then((res) => {
+      if (res.status === 200) {
+        refetch();
+        toast.success("event deleted successfully");
+      }
+    });
   };
 
   const startIdx = (currentPage - 1) * itemsPerPage;
@@ -66,14 +82,17 @@ const Events = () => {
 
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
-      {!isLoading ? (
+      {!isLoading && !isLoadingAthletes ? (
         <Container>
-          {currentUser?.role === "admin" && (
+          {currentUser?.role === "coach" && (
             <Button
               style={"rounded-lg mb-5"}
               onClickHandler={() => setIsModalOpen(true)}
               text={"Create Event +"}
             />
+          )}
+          {events.length > 0 && (
+            <PdfPrint dataArray={events} dataType="Events" />
           )}
 
           <SectionHeader title={"Events"} quantity={events.length} />
@@ -81,61 +100,15 @@ const Events = () => {
             {events.length === 0 ? (
               <div className="bg-white p-2 rounded-lg">No Events Created</div>
             ) : (
-              <div className="grid lg:grid-cols-3  md:grid-cols-2 sm:grid-cols-2 gap-5">
+              <div className="grid lg:grid-cols-2  md:grid-cols-2 sm:grid-cols-2 gap-5">
                 {visibleEvents?.map((event) => (
-                  <div
-                    className="flex flex-col justify-between bg-white shadow-lg p-4 rounded-lg"
+                  <EventCard
                     key={event._id}
-                  >
-                    <div>
-                      <div className="flex items-start justify-between">
-                        <h3 className="text-xl font-semibold">
-                          {event.eventName}
-                        </h3>
-                        {currentUser?.role === "admin" && (
-                          <div className="text-lg flex gap-1">
-                            <BiEdit
-                              onClick={() => handleUpdateEvent(event)}
-                              className="cursor-pointer"
-                            />
-                            <AiFillDelete
-                              onClick={() => handleDeleteEvents(event?._id)}
-                              className="cursor-pointer text-danger/90 hover:text-danger2/90"
-                            />
-                          </div>
-                        )}
-                      </div>
-                      <p className="my-1 text-sm text-gradient capitalize">
-                        {event.eventType}
-                      </p>
-                      <p className="text-sm">
-                        {event.eventDescription
-                          ? event.eventDescription
-                          : "No Description"}
-                      </p>
-                    </div>
-                    <div>
-                      <div className="mt-10 flex items-center gap-2">
-                        <RxClock />
-                        <p>{format(parseISO(event.time), "hh:mm a")}</p>
-                      </div>
-                      <div className="flex items-center gap-2 justify-between">
-                        <div className="flex items-center gap-2">
-                          <MdEventAvailable />
-                          <p>{format(parseISO(event.date), "dd/MM/yyyy")}</p>
-                        </div>
-                        <p
-                          className={`font-semibold ${
-                            event.fee === "0" || !event.fee
-                              ? "bg-dark"
-                              : "bg-gradient"
-                          } text-white py-1 px-4 rounded-md`}
-                        >
-                          {event.fee === "0" || !event.fee ? "Free" : event.fee}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                    event={event}
+                    handleAttendanceModal={handleAttendanceModal}
+                    handleDeleteEvents={handleDeleteEvents}
+                    handleUpdateEvent={handleUpdateEvent}
+                  />
                 ))}
               </div>
             )}
@@ -155,6 +128,13 @@ const Events = () => {
             modalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             refetch={refetch}
+          />
+          <EventAttendanceModal
+            isAttendanceModalOpen={openAttendanceModal}
+            setAttendaceModalOpen={setOpenAttendanceModal}
+            event={event}
+            athletes={athletes}
+            refetchEvents={refetch}
           />
           <UpdateEventModal
             event={event}

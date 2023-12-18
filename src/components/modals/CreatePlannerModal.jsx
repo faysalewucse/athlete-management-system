@@ -1,8 +1,17 @@
-import { Button, DatePicker, Form, Input, Modal, TimePicker } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  TimePicker,
+} from "antd";
 import { useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
+import { Option } from "antd/es/mentions";
 
 const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
@@ -23,17 +32,15 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     };
 
     setSubmitting(true);
-    await axiosSecure
-      .post(`${import.meta.env.VITE_BASE_API_URL}/plans`, planData)
-      .then((res) => {
-        if (res.status === 200) {
-          setSubmitting(false);
-          form.resetFields();
-          setIsModalOpen(false);
-          toast.success("Plan created");
-          refetch();
-        }
-      });
+    await axiosSecure.post(`/plans`, planData).then((res) => {
+      if (res.status === 200) {
+        setSubmitting(false);
+        form.resetFields();
+        setIsModalOpen(false);
+        toast.success("Plan created");
+        refetch();
+      }
+    });
   };
   const validateDateOfPlan = (rule, value) => {
     if (value && value.isBefore()) {
@@ -42,6 +49,22 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
 
     return Promise.resolve();
   };
+
+  const onPlanTypeChange = (value) => {
+    switch (value) {
+      case "Away Trip":
+        form.setFieldsValue();
+        break;
+      case "Practice":
+        form.setFieldsValue();
+        break;
+      case "Home Game":
+        form.setFieldsValue();
+        break;
+      default:
+    }
+  };
+
   return (
     <Modal
       open={modalOpen}
@@ -89,9 +112,28 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             },
           ]}
         >
-          <Input />
+          <Input size="large" />
         </Form.Item>
-
+        <Form.Item
+          name="planType"
+          label="Plan Type"
+          rules={[
+            {
+              required: true,
+              message: "Please select a plan type",
+            },
+          ]}
+        >
+          <Select
+            size="large"
+            onChange={onPlanTypeChange}
+            placeholder="Select a plan type"
+          >
+            <Option value="Away Trip">Away Trip</Option>
+            <Option value="Practice">Practice</Option>
+            <Option value="Home Game">Home Game</Option>
+          </Select>
+        </Form.Item>
         <Form.Item
           name="date"
           label="plan Date"
@@ -117,9 +159,6 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             className="w-full px-4 py-2 rounded-lg"
             size="middle"
           />
-        </Form.Item>
-        <Form.Item className="" name="duration" label="Plan Duration">
-          <Input placeholder="Please mention time (eg. days, hours)" />
         </Form.Item>
       </Form>
     </Modal>

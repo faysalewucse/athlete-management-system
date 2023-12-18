@@ -23,24 +23,20 @@ export const Admins = () => {
     queryKey: ["admins", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `${
-          import.meta.env.VITE_BASE_API_URL
-        }/users/byRole?role=admin&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=admin&adminEmail=${currentUser?.email}`
       );
       return data;
     },
   });
 
   const handleStatus = async (id, status) => {
-    await axiosSecure
-      .patch(`${import.meta.env.VITE_BASE_API_URL}/user/${id}?status=${status}`)
-      .then((res) => {
-        if (res.status === 200) {
-          refetch().then(() =>
-            toast.success("Admin status updated successfully!")
-          );
-        }
-      });
+    await axiosSecure.patch(`/user/${id}?status=${status}`).then((res) => {
+      if (res.status === 200) {
+        refetch().then(() =>
+          toast.success("Admin status updated successfully!")
+        );
+      }
+    });
   };
 
   const handlePageChange = (page) => {

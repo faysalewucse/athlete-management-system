@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { baseUrl } from "../utils/Constant";
 
 const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API_URL,
+  baseURL: baseUrl,
 });
 
 const useAxiosSecure = () => {

@@ -4,12 +4,13 @@ import { Modal } from "antd";
 import { BiSolidBell } from "react-icons/bi";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import SearchField from "../../components/SearchField";
-import { MdDashboard } from "react-icons/md";
+import { GrOrganization } from "react-icons/gr";
 import { useAuth } from "../../contexts/AuthContext";
 import AvatarDropdown from "../../components/AvatarDropdown";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { CgMenuGridR } from "react-icons/cg";
 
 export const Navbar = ({ setSidebarOpen }) => {
   const { currentUser, logout } = useAuth();
@@ -25,7 +26,7 @@ export const Navbar = ({ setSidebarOpen }) => {
     queryFn: async () => {
       if (currentUser?.role !== "admin" && currentUser?.role !== "sadmin") {
         const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/user/${currentUser?.adminEmail}`
+          `/user/${currentUser?.adminEmail}`
         );
         return data;
       }
@@ -55,7 +56,7 @@ export const Navbar = ({ setSidebarOpen }) => {
       key: "2",
     },
     {
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={`/profile/${currentUser?._id}`}>Profile</Link>,
       key: "3",
     },
     {
@@ -77,15 +78,18 @@ export const Navbar = ({ setSidebarOpen }) => {
     setIsModalOpen(false);
   };
 
+  console.log(currentUser);
+
   return (
-    <div className="z-10 sticky top-0">
+    <div className="bg-white z-10 sticky top-0">
       <div className="flex items-center justify-between p-2 md:p-5 ">
         <div className="flex items-center gap-3">
-          <MdDashboard
+          <CgMenuGridR
             onClick={() => setSidebarOpen(true)}
             className="md:hidden text-4xl text-primary"
           />
-          <div>
+          <div className="text-gradient flex items-center gap-2">
+            <GrOrganization className="rotate-180 text-primary" />
             {currentUser?.role === "admin" ? (
               <p className="font-bold text-xl">{currentUser?.organization}</p>
             ) : (

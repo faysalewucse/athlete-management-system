@@ -13,6 +13,7 @@ import AddAthleteModal from "../../components/modals/AddAthleteModal";
 import EventCalender from "../../components/EventCalender";
 import { TeamPerformanceChart } from "./TeamPerformanceChart";
 import GamedAndPracticeStatsChart from "./GamedAndPracticeStatsChart";
+import FileUpload from "../../components/FileUpload";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -26,15 +27,13 @@ export const Dashboard = () => {
     queryFn: async () => {
       let URL = "/users";
       if (currentUser?.role === "admin")
-        URL = `/users/coach-athlete-parents/${currentUser?.email}`;
+        URL = `/users/coach-sub_coach-athlete-parents/${currentUser?.email}`;
       else if (currentUser?.role === "coach")
         URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
       else if (currentUser?.role === "parents")
         URL = `/users/athlete/${currentUser?.email}`;
-
-      const { data } = await axiosSecure.get(
-        `${import.meta.env.VITE_BASE_API_URL}${URL}`
-      );
+      else if (currentUser?.role === "athlete") return [];
+      const { data } = await axiosSecure.get(`${URL}`);
       return data;
     },
   });
@@ -46,13 +45,15 @@ export const Dashboard = () => {
   } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      if (currentUser?.role === "admin" || currentUser?.role === "coach") {
-        const { data } = await axiosSecure.get(
-          `${import.meta.env.VITE_BASE_API_URL}/teams/${currentUser?.email}`
-        );
-        return data;
+      let URL = `teams/${currentUser?.email}`;
+
+      if (currentUser?.role === "coach") {
+        URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
       }
-      return [];
+      const { data } = await axiosSecure.get(`/${URL}`);
+      return data;
     },
   });
 
@@ -65,6 +66,7 @@ export const Dashboard = () => {
       admin: 0,
       coach: 0,
       athlete: 0,
+      sub_coach: 0,
       parents: 0,
     }
   );
@@ -139,6 +141,11 @@ export const Dashboard = () => {
                         route="/dashboard/parents"
                       />
                       <DashboardCard
+                        number={quantity.sub_coach}
+                        title={"Total Sub Coaches"}
+                        route="/dashboard/sub-coaches"
+                      />
+                      <DashboardCard
                         number={teams.length}
                         title={"Total Teams"}
                         route="/dashboard/teams"
@@ -151,10 +158,48 @@ export const Dashboard = () => {
             {currentUser?.role === "coach" && (
               <div className="">
                 {currentUser.status === "pending" ? (
-                  <Pending />
+                  <Pending role={currentUser?.role} />
                 ) : (
                   <div>
                     <Button
+                      style={"rounded-lg"}
+                      onClickHandler={() => setIsModalOpen(true)}
+                      text={"Add Team +"}
+                    />
+                    <AddTeamModal
+                      isModalOpen={isModalOpen}
+                      setIsModalOpen={setIsModalOpen}
+                      refetch={refetch}
+                    />
+                    <div className="mt-2 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
+                      <DashboardCard
+                        number={quantity.athlete}
+                        title={"Total Athletes"}
+                        route="/dashboard/athletes"
+                      />
+                      <DashboardCard
+                        number={quantity.parents}
+                        title={"Total Parents"}
+                        route="/dashboard/parents"
+                      />
+                      <DashboardCard
+                        number={teams.length}
+                        title={"Total Teams"}
+                        route="/dashboard/teams"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {currentUser?.role === "sub_coach" && (
+              <div className="">
+                {currentUser.status === "pending" ? (
+                  <Pending role={currentUser?.role} />
+                ) : (
+                  <div>
+                    <Button
+                      style={"rounded-lg"}
                       onClickHandler={() => setIsModalOpen(true)}
                       text={"Add Team +"}
                     />
@@ -223,17 +268,24 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
-          <div className="lg:flex lg:flex-row flex-col gap-5">
-            <div className="lg:w-1/2">
+          {currentUser.status === "approved" && (
+            <div className="flex flex-col gap-5">
               <EventCalender />
+
+              <div className="lg:flex-1 bg-white rounded-lg w-full lg:mt-0 mt-5">
+                {currentUser?.role === "coach" && <TeamPerformanceChart />}
+                {currentUser?.role === "athlete" && (
+                  <GamedAndPracticeStatsChart />
+                )}
+              </div>
             </div>
-            <div className="lg:flex-1 bg-white rounded-lg w-full lg:mt-0 mt-5">
-              {currentUser?.role === "coach" && <TeamPerformanceChart />}
-              {currentUser?.role === "athlete" && (
-                <GamedAndPracticeStatsChart />
-              )}
+          )}
+          {(currentUser?.role === "athlete" ||
+            currentUser?.role === "parents") && (
+            <div className="">
+              <FileUpload />
             </div>
-          </div>
+          )}
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

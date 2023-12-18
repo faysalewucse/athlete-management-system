@@ -22,9 +22,7 @@ const AssignTeamModal = ({
     } else {
       try {
         const response = await axiosSecure.patch(
-          `${import.meta.env.VITE_BASE_API_URL}/${assignTo}/assignTeam/${
-            selectedUser.email
-          }`,
+          `/${assignTo}/assignTeam/${selectedUser.email}`,
           selectedTeam
         );
 
@@ -58,9 +56,9 @@ const AssignTeamModal = ({
     return {
       label: (
         <div className="flex gap-5 items-center">
-          <h1 className="text-gradient font-bold">{team.teamName}</h1>
+          <h1 className="text-gradient font-bold">{team?.teamName}</h1>
           <small>{"->"}</small>
-          <h4 className="capitalize">Sports: {team.sports}</h4>
+          <h4 className="capitalize">Sports: {team?.sports}</h4>
         </div>
       ),
       value: team._id,
@@ -79,13 +77,33 @@ const AssignTeamModal = ({
   return (
     <Modal
       title={
-        <div className="">
-          <p className="text-gradient">
-            Add Teams for
-            <span className="font-bold"> {selectedUser?.name}</span>
-          </p>
-          <h1>Teams</h1>
-        </div>
+        teams.length === 0 ? (
+          <div>No team available to assign</div>
+        ) : (
+          <div className="">
+            <p className="text-gradient">
+              Add Teams for
+              <span className="font-bold"> {selectedUser?.name}</span>
+            </p>
+
+            {selectedUser.reqTeamId && teams.length !== 0 && (
+              <div>
+                <p>
+                  {selectedUser.name} Requested to Join
+                  <span className="text-gradient">
+                    {" `"}
+                    {
+                      teams?.find((team) => team._id === selectedUser.reqTeamId)
+                        .teamName
+                    }
+                    {"` "}
+                  </span>
+                </p>
+              </div>
+            )}
+            <h1>Teams</h1>
+          </div>
+        )
       }
       open={isModalOpen}
       onOk={handleOk}
@@ -109,24 +127,28 @@ const AssignTeamModal = ({
         )
       }
     >
-      <Input.Search
-        placeholder="Search teams by name"
-        onSearch={handleSearch}
-        className="mb-2"
-        size="large"
-      />
+      {teams.length !== 0 && (
+        <div>
+          <Input.Search
+            placeholder="Search teams by name"
+            onSearch={handleSearch}
+            className="mb-2"
+            size="large"
+          />
 
-      <div>
-        <Checkbox.Group options={options} onChange={onChange} />
+          <div>
+            <Checkbox.Group options={options} onChange={onChange} />
 
-        <Pagination
-          current={currentPage}
-          pageSize={pageSize}
-          total={totalTeams}
-          onChange={(page) => setCurrentPage(page)}
-          className="mt-2"
-        />
-      </div>
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={totalTeams}
+              onChange={(page) => setCurrentPage(page)}
+              className="mt-2"
+            />
+          </div>
+        </div>
+      )}
     </Modal>
   );
 };

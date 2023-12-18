@@ -3,6 +3,7 @@ import { router } from "./routes/router";
 import { AuthProvider } from "./contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ function App() {
           {/* </ThemeProvider> */}
         </QueryClientProvider>
       </AuthProvider>
+      <Toaster position="top-center" reverseOrder={false} />
     </ConfigProvider>
   );
 }

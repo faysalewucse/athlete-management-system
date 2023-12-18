@@ -30,19 +30,14 @@ const UpdateEventModal = ({
   const onUpdate = async (values) => {
     try {
       setSubmitting(true);
-      await axiosSecure
-        .patch(
-          `${import.meta.env.VITE_BASE_API_URL}/events/${event?._id}`,
-          values
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            refetch();
-            toast.success("Event updated successfully");
-            setSubmitting(false);
-            setOpenUpdateModal(false);
-          }
-        });
+      await axiosSecure.patch(`/events/${event?._id}`, values).then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Event updated successfully");
+          setSubmitting(false);
+          setOpenUpdateModal(false);
+        }
+      });
     } catch (error) {
       toast.error(error.message);
       setSubmitting(false);

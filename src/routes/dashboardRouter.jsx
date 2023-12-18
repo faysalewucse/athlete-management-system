@@ -15,6 +15,9 @@ import { AthleteRoute } from "./AthleteRoute";
 import Planner from "../pages/Dashboard/Planner";
 import TripPlanner from "../pages/Dashboard/TripPlanner";
 import Organizations from "../pages/Dashboard/Organizations";
+import SubCoaches from "../pages/Dashboard/SubCoaches";
+
+import FormLib from "../pages/Dashboard/Form";
 
 export const dashboardRouter = [
   {
@@ -54,6 +57,14 @@ export const dashboardRouter = [
     ),
   },
   {
+    path: "sub-coaches",
+    element: (
+      <CoachRoute>
+        <SubCoaches />
+      </CoachRoute>
+    ),
+  },
+  {
     path: "events",
     element: (
       <ValidUserRoute>
@@ -66,6 +77,14 @@ export const dashboardRouter = [
     element: (
       <ValidUserRoute>
         <Chatting />
+      </ValidUserRoute>
+    ),
+  },
+  {
+    path: "form",
+    element: (
+      <ValidUserRoute>
+        <FormLib />
       </ValidUserRoute>
     ),
   },

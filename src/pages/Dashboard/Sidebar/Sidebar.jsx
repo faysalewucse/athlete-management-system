@@ -58,6 +58,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "organizations",
         icon: <RiOrganizationChart />,
       },
+      {
+        key: 7,
+        label: "Form Library",
+        route: "form-library",
+        icon: <FaWpforms />,
+      },
     ],
 
     admin: [
@@ -102,6 +108,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Planners",
         route: "planners",
         icon: <BiTask />,
+      },
+      {
+        key: 10,
+        label: "Form Library",
+        route: "form-library",
+        icon: <FaWpforms />,
       },
       // {
       //   key: 9,

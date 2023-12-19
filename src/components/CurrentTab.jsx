@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Button from "../../components/shared/Button";
-import AddFormModal from "../../components/modals/AddFormModal";
+import Button from "./shared/Button";
+import AddFormModal from "./modals/AddFormModal";
 import { useNavigate } from "react-router-dom";
 import FormsTable from "./FormsTable";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
-import { useAuth } from "../../contexts/AuthContext";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Space } from "antd";
 import toast from "react-hot-toast";
@@ -26,7 +26,7 @@ const CurrentTab = () => {
     queryKey: ["forms", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `/forms?addedBy=${currentUser?.email}`
+        `/forms?addedBy=${currentUser?.email}&isArchived=false`
       );
       return data;
     },
@@ -125,7 +125,11 @@ const CurrentTab = () => {
       <div>
         <FormsTable forms={forms} columns={columns} />
       </div>
-      <AddFormModal setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />
+      <AddFormModal
+        setIsModalOpen={setIsModalOpen}
+        isModalOpen={isModalOpen}
+        refetch={refetch}
+      />
       {/* <ViewFormModal
         setIsModalOpen={setIsViewModalOpen}
         isModalOpen={isViewModalOpen}

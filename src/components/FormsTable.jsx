@@ -9,9 +9,10 @@ const FormsTable = ({ forms, columns }) => {
       teamName: form.teamName,
       organization: form.organization,
       email: form.addedBy.email,
+      isArchived: form?.isArchived,
     };
   });
-
+  console.log(data);
   return (
     <div>
       <Table

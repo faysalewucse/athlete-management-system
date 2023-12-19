@@ -1,9 +1,12 @@
 import { Tabs } from "antd";
-import CurrentTab from "./CurrentTab";
+import CurrentTab from "../../components/CurrentTab";
+import ArchiveTab from "../../components/ArchiveTab";
+import { useState } from "react";
 
 const FormLibrary = () => {
+  const [tab, setTab] = useState(1);
   const onChange = (key) => {
-    console.log(key);
+    setTab(key);
   };
   const items = [
     {
@@ -14,7 +17,7 @@ const FormLibrary = () => {
     {
       key: "2",
       label: "Archive",
-      children: "Content of Tab Pane 2",
+      children: <ArchiveTab tab={tab} />,
     },
   ];
   return (

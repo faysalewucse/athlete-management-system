@@ -7,7 +7,7 @@ import { FileOutlined } from "@ant-design/icons";
 import toast from "react-hot-toast";
 const { Dragger } = Upload;
 
-const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
+const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [teamValue, setTeamValue] = useState("");
@@ -16,11 +16,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
 
   const [form] = Form.useForm();
 
-  const {
-    isLoading,
-    data: teams = [],
-    refetch,
-  } = useQuery({
+  const { isLoading, data: teams = [] } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
       let URL = "teams";
@@ -68,6 +64,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      refetch();
       toast.success("Upload successful");
       form.resetFields();
       setFileList([]);

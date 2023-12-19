@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Button from "../../components/shared/Button";
-import AddFormModal from "./AddFormModal";
+import AddFormModal from "../../components/modals/AddFormModal";
 import { useNavigate } from "react-router-dom";
 
 const CurrentTab = () => {

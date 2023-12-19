@@ -49,11 +49,14 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
   };
 
   const onFinish = async (data) => {
-    console.log({ data });
+    const addedBy = {
+      email: data.addedByEmail,
+      role: currentUser.role,
+    };
 
     const formData = new FormData();
     formData.append("formFile", fileList[0]);
-    formData.append("coachEmail", data.coachEmail);
+    formData.append("addedBy", JSON.stringify(addedBy));
     formData.append("formName", data.formName);
     formData.append("organization", data.organization);
     formData.append("teamName", data.teamName);
@@ -92,7 +95,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
         onFinish={onFinish}
         initialValues={{
           ["organization"]: currentUser?.organization,
-          ["coachEmail"]: currentUser?.email,
+          ["addedByEmail"]: currentUser?.email,
         }}
       >
         <div>
@@ -118,7 +121,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen }) => {
           </Form.Item>
         </div>
         <div>
-          <Form.Item name="coachEmail" label="Coach's Email">
+          <Form.Item name="addedByEmail" label="Email">
             <Input
               className="w-full px-4 py-2 rounded-lg hover:cursor-danger"
               size="large"

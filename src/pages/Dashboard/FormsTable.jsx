@@ -5,6 +5,7 @@ const FormsTable = ({ forms, columns }) => {
     return {
       key: form._id,
       formName: form.formName,
+      formFile: form.formFile,
       teamName: form.teamName,
       organization: form.organization,
       email: form.addedBy.email,

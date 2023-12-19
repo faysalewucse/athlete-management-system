@@ -7,9 +7,12 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Space } from "antd";
+import toast from "react-hot-toast";
 
 const CurrentTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const [axiosSecure] = useAxiosSecure();
@@ -28,6 +31,21 @@ const CurrentTab = () => {
       return data;
     },
   });
+
+  const handleArchive = async (id) => {
+    try {
+      const response = await axiosSecure.patch(`/forms/${id}`, {
+        isArchived: true,
+      });
+
+      if (response.status === 200) {
+        refetch();
+        toast.success("Form archived Successfully");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const columns = [
     {
@@ -69,14 +87,17 @@ const CurrentTab = () => {
           <div>
             <button
               type="btn"
-              // onClick={() => handleApprove(record?.key)}
+              onClick={() => window.open(record?.formFile, "_blank")}
               className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
             >
               View
             </button>
           </div>
 
-          <div className="flex text-sm items-center space-x-4 justify-center">
+          <div
+            className="flex text-sm items-center space-x-4 justify-center"
+            onClick={() => handleArchive(record?.key)}
+          >
             <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
               Archive
             </button>
@@ -105,6 +126,11 @@ const CurrentTab = () => {
         <FormsTable forms={forms} columns={columns} />
       </div>
       <AddFormModal setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} />
+      {/* <ViewFormModal
+        setIsModalOpen={setIsViewModalOpen}
+        isModalOpen={isViewModalOpen}
+        form={form}
+      /> */}
     </div>
   );
 };

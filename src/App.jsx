@@ -4,8 +4,13 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 import { Toaster } from "react-hot-toast";
-
+import { pdfjs } from "react-pdf";
 const queryClient = new QueryClient();
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
 
 function App() {
   return (

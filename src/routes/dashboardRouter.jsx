@@ -19,6 +19,7 @@ import SubCoaches from "../pages/Dashboard/SubCoaches";
 
 import FormLib from "../pages/Dashboard/Form";
 import FormLibrary from "../pages/Dashboard/FormLibrary";
+import CustomForm from "../pages/Dashboard/CustomForm";
 
 export const dashboardRouter = [
   {
@@ -87,6 +88,15 @@ export const dashboardRouter = [
       <ValidUserRoute>
         {/* <FormLib /> */}
         <FormLibrary />
+      </ValidUserRoute>
+    ),
+  },
+  {
+    path: "form-library/custom-form",
+    element: (
+      <ValidUserRoute>
+        {/* <FormLib /> */}
+        <CustomForm />
       </ValidUserRoute>
     ),
   },

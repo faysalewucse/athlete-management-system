@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import Button from "../../components/shared/Button";
-import AddFormModal from "./AddFormModal";
 import { Tabs } from "antd";
 import CurrentTab from "./CurrentTab";
 

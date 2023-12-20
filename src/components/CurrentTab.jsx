@@ -8,10 +8,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { Space } from "antd";
 import toast from "react-hot-toast";
+import EditFormModal from "./modals/EditFormModal";
 
 const CurrentTab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [form, setForm] = useState({});
 
   const navigate = useNavigate();
 
@@ -31,6 +33,11 @@ const CurrentTab = () => {
       return data;
     },
   });
+
+  const handleEditForm = (data) => {
+    setForm(data);
+    setIsEditModalOpen(true);
+  };
 
   const handleArchive = async (id) => {
     try {
@@ -78,7 +85,7 @@ const CurrentTab = () => {
           <div>
             <button
               type="btn"
-              // onClick={() => handleApprove(record?.key)}
+              onClick={() => handleEditForm(record)}
               className="bg-success hover:bg-success2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
             >
               Edit
@@ -130,11 +137,12 @@ const CurrentTab = () => {
         isModalOpen={isModalOpen}
         refetch={refetch}
       />
-      {/* <ViewFormModal
-        setIsModalOpen={setIsViewModalOpen}
-        isModalOpen={isViewModalOpen}
-        form={form}
-      /> */}
+      <EditFormModal
+        setIsModalOpen={setIsEditModalOpen}
+        isModalOpen={isEditModalOpen}
+        formData={form}
+        refetch={refetch}
+      />
     </div>
   );
 };

@@ -1,14 +1,17 @@
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useAuth } from "../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { Space } from "antd";
+import { Popconfirm, Space } from "antd";
 import toast from "react-hot-toast";
 import ArchivedFormsTable from "./ArchivedFormsTable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const ArchiveTab = ({ tab }) => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [itemId, setItemId] = useState("");
 
   const {
     isLoading,
@@ -28,19 +31,29 @@ const ArchiveTab = ({ tab }) => {
     refetch();
   }, [tab]);
 
-  const handleArchive = async (id) => {
+  const deleteHandler = async (id) => {
     try {
-      const response = await axiosSecure.patch(`/forms/${id}`, {
-        isArchived: true,
+      await axiosSecure.delete(`/forms/${id}`).then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Form deleted successfully");
+          setOpen(false);
+          setConfirmLoading(false);
+        }
       });
-
-      if (response.status === 200) {
-        refetch();
-        toast.success("Form archived Successfully");
-      }
     } catch (error) {
+      console.log(error.message);
       toast.error(error.message);
     }
+  };
+
+  const showPopconfirm = (id) => {
+    setItemId(id);
+    setOpen(true);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
   };
 
   const columns = [
@@ -83,11 +96,25 @@ const ArchiveTab = ({ tab }) => {
 
           <div
             className="flex text-sm items-center space-x-4 justify-center"
-            onClick={() => handleArchive(record?.key)}
+            // onClick={() => handleArchive(record?.key)}
           >
-            <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-              Delete
-            </button>
+            <Popconfirm
+              title="Delete Form!"
+              description="Are you sure to delete this Form?"
+              open={itemId === record?.key ? open : false}
+              onConfirm={() => deleteHandler(record?.key)}
+              okButtonProps={{
+                loading: confirmLoading,
+              }}
+              onCancel={handleCancel}
+            >
+              <button
+                onClick={() => showPopconfirm(record?.key)}
+                className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
+              >
+                Delete
+              </button>
+            </Popconfirm>
           </div>
         </Space>
       ),

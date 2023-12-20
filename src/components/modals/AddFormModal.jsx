@@ -70,7 +70,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
       setFileList([]);
       setIsModalOpen(false);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       toast.error("Error uploading");
     } finally {
       setUploading(false);

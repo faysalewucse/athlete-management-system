@@ -15,7 +15,9 @@ import toast from "react-hot-toast";
 import UpdatePlannerModal from "../../components/modals/UpdatePlannerModal";
 import AddPlanerTaskModal from "../../components/modals/AddPlannerTaskModal";
 import ViewTasksModal from "../../components/modals/ViewTasksModal";
-import { generatePDF } from "./PdfPrint";
+
+import PlansPdf from "../../components/PlansPdf";
+import { pdf } from "@react-pdf/renderer";
 
 const Planner = () => {
   const { currentUser } = useAuth();
@@ -68,6 +70,12 @@ const Planner = () => {
     setOpenViewTaskModal(true);
   };
 
+  const downloadPdf = async (plan) => {
+    const fileName = "plan.pdf";
+    const blob = await pdf(<PlansPdf planData={plan} />).toBlob();
+    saveAs(blob, fileName);
+  };
+
   return (
     <div className="min-h-[90vh] bg-transparent p-10 text-dark">
       {!isLoading ? (
@@ -102,7 +110,7 @@ const Planner = () => {
                         {currentUser?.role === "coach" && (
                           <div className="text-lg flex gap-1">
                             <BiPrinter
-                              onClick={() => generatePDF(plan, "Plans")}
+                              onClick={() => downloadPdf(plan)}
                               className="cursor-pointer"
                             />
                             <BiEdit
@@ -193,6 +201,10 @@ const Planner = () => {
           <CustomLoader isLoading={isLoading} />
         </div>
       )}
+
+      <div className="mt-20">
+        <button onClick={downloadPdf}>Down</button>
+      </div>
     </div>
   );
 };

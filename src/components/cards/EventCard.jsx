@@ -5,7 +5,8 @@ import { RxClock } from "react-icons/rx";
 import { MdCoPresent, MdEventAvailable } from "react-icons/md";
 import { AiFillDelete } from "react-icons/ai";
 import { format, parseISO } from "date-fns";
-import { generatePDF } from "../../pages/Dashboard/PdfPrint";
+import { pdf } from "@react-pdf/renderer";
+import EventsPdf from "../EventsPdf";
 
 const EventCard = ({
   event,
@@ -14,6 +15,12 @@ const EventCard = ({
   handleDeleteEvents,
 }) => {
   const { currentUser } = useAuth();
+
+  const downloadPdf = async (event) => {
+    const fileName = "event.pdf";
+    const blob = await pdf(<EventsPdf eventData={event} />).toBlob();
+    saveAs(blob, fileName);
+  };
 
   return (
     <div
@@ -58,7 +65,7 @@ const EventCard = ({
           {currentUser?.role === "coach" && (
             <div className="text-lg flex gap-1">
               <BiPrinter
-                onClick={() => generatePDF(event, "Events")}
+                onClick={() => downloadPdf(event)}
                 className="cursor-pointer"
               />
               <BiEdit

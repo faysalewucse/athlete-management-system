@@ -145,7 +145,9 @@ const Chatting = () => {
               {users
                 .filter(
                   (user) =>
-                    user.status === "approved" && user?.role === selectedRole
+                    user.status === "approved" &&
+                    user?.role === selectedRole &&
+                    user.email !== currentUser.email
                 )
                 .map((user) => (
                   <div

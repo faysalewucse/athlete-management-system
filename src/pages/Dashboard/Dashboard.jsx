@@ -280,12 +280,6 @@ export const Dashboard = () => {
               </div>
             </div>
           )}
-          {(currentUser?.role === "athlete" ||
-            currentUser?.role === "parents") && (
-            <div className="">
-              <FileUpload />
-            </div>
-          )}
         </Container>
       ) : (
         <div className="flex items-center justify-center min-h-[90vh]">

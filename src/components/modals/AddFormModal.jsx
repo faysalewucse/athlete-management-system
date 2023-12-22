@@ -10,7 +10,6 @@ const { Dragger } = Upload;
 const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
-  const [teamValue, setTeamValue] = useState("");
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -50,11 +49,15 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
       role: currentUser.role,
     };
 
+    const adminEmail =
+      currentUser.role === "admin" ? currentUser.email : currentUser.adminEmail;
+
     const formData = new FormData();
     formData.append("formFile", fileList[0]);
     formData.append("addedBy", JSON.stringify(addedBy));
     formData.append("formName", data.formName);
-    formData.append("organization", data.organization);
+    formData.append("adminEmail", adminEmail);
+    // formData.append("organization", data.organization);
     formData.append("teamName", data.teamName);
     setUploading(true);
 
@@ -91,7 +94,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
         form={form}
         onFinish={onFinish}
         initialValues={{
-          ["organization"]: currentUser?.organization,
+          // ["organization"]: currentUser?.organization,
           ["addedByEmail"]: currentUser?.email,
         }}
       >
@@ -104,7 +107,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
             <Input className="w-full px-4 py-2 rounded-lg" size="large" />
           </Form.Item>
         </div>
-        <div>
+        {/* <div>
           <Form.Item
             name="organization"
             label="Organization"
@@ -116,7 +119,7 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
               disabled
             />
           </Form.Item>
-        </div>
+        </div> */}
         <div>
           <Form.Item name="addedByEmail" label="Email">
             <Input

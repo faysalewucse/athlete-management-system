@@ -65,11 +65,11 @@ const CurrentTab = () => {
       dataIndex: "teamName",
       key: "teamName",
     },
-    {
-      title: "Organization",
-      dataIndex: "organization",
-      key: "organization",
-    },
+    // {
+    //   title: "Organization",
+    //   dataIndex: "organization",
+    //   key: "organization",
+    // },
     {
       title: "Email",
       dataIndex: "email",

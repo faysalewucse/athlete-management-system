@@ -1,15 +1,13 @@
 import { Table } from "antd";
 
-const FormsTable = ({ forms, columns }) => {
+const CustomFormsTable = ({ forms, columns }) => {
   const data = forms?.map((form) => {
     return {
       key: form._id,
-      formName: form.formName,
-      formFile: form.formFile,
-      teamName: form.teamName,
-      organization: form.organization,
-      email: form.addedBy.email,
-      isArchived: form?.isArchived,
+      formName: form?.formName,
+      fields: form?.fields,
+      team: form?.team,
+      adminEmail: form?.addedBy?.email,
     };
   });
 
@@ -26,4 +24,4 @@ const FormsTable = ({ forms, columns }) => {
   );
 };
 
-export default FormsTable;
+export default CustomFormsTable;

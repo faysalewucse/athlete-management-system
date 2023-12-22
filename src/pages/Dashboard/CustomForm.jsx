@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { Input, Checkbox, Radio, Button, Upload, Form, Select } from "antd";
+import { Input, Button, Upload, Form, Select } from "antd";
 import { BiCheckbox, BiCircle } from "react-icons/bi";
 import { DeleteFilled, UploadOutlined } from "@ant-design/icons";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+import {
+  MdCheckBox,
+  MdClose,
+  MdOutlineFileUpload,
+  MdOutlineTextFields,
+  MdRadioButtonChecked,
+} from "react-icons/md";
 
 const CustomFormBuilder = () => {
   const [form] = Form.useForm();
@@ -32,7 +39,7 @@ const CustomFormBuilder = () => {
   });
 
   const addTextField = () => {
-    setFormItems([...formItems, { type: "text", label: "Text Field" }]);
+    setFormItems([...formItems, { type: "text", text: "" }]);
   };
 
   const addCheckbox = () => {
@@ -40,9 +47,8 @@ const CustomFormBuilder = () => {
       ...formItems,
       {
         type: "checkbox",
-        label: "Checkboxes",
-        options: [{ optionLabel: "Option 1", value: "option1" }],
-        question: "Question for checkboxes",
+        options: [{ optionLabel: "" }],
+        question: "",
       },
     ]);
   };
@@ -52,15 +58,14 @@ const CustomFormBuilder = () => {
       ...formItems,
       {
         type: "radio",
-        label: "Radio Buttons",
-        options: [{ optionLabel: "Option 1", value: "option1" }],
-        question: "Question for radio buttons",
+        options: [{ optionLabel: "" }],
+        question: "",
       },
     ]);
   };
 
   const addFileUpload = () => {
-    setFormItems([...formItems, { type: "file", label: "File Upload" }]);
+    setFormItems([...formItems, { type: "file", title: "" }]);
   };
 
   const deleteField = (index) => {
@@ -71,8 +76,7 @@ const CustomFormBuilder = () => {
   const addOption = (index) => {
     const updatedFormItems = [...formItems];
     updatedFormItems[index].options.push({
-      optionLabel: `Option ${updatedFormItems[index].options.length + 1}`,
-      value: `option${updatedFormItems[index].options.length + 1}`,
+      optionLabel: "",
     });
     setFormItems(updatedFormItems);
   };
@@ -81,6 +85,18 @@ const CustomFormBuilder = () => {
     const updatedFormItems = [...formItems];
     updatedFormItems[itemIndex].options[optionIndex].optionLabel =
       event.target.value;
+    setFormItems(updatedFormItems);
+  };
+
+  const updateTextField = (index, value) => {
+    const updatedFormItems = [...formItems];
+    updatedFormItems[index].text = value;
+    setFormItems(updatedFormItems);
+  };
+
+  const updateFileTitle = (index, value) => {
+    const updatedFormItems = [...formItems];
+    updatedFormItems[index].title = value;
     setFormItems(updatedFormItems);
   };
 
@@ -103,11 +119,15 @@ const CustomFormBuilder = () => {
           <Form.Item
             key={index}
             name={`text_${index}`}
+            className="w-full"
             rules={[{ required: true, message: "Please enter text" }]}
           >
             <div className="flex items-center gap-4">
               <h1>{index + 1}.</h1>
-              <Input placeholder="Enter Text..." />
+              <Input
+                onChange={(e) => updateTextField(index, e.target.value)}
+                placeholder="Enter Text..."
+              />
             </div>
           </Form.Item>
         );
@@ -116,6 +136,7 @@ const CustomFormBuilder = () => {
           <Form.Item
             key={index}
             name={`checkbox_${index}`}
+            className="w-full"
             rules={[
               {
                 required: true,
@@ -125,7 +146,7 @@ const CustomFormBuilder = () => {
           >
             <div className="flex items-start gap-4">
               <h1>{index + 1}.</h1>
-              <div className="flex flex-col gap-2">
+              <div className="flex-1 flex flex-col gap-2">
                 <Input
                   value={item.question}
                   onChange={(e) => updateQuestion(index, e)}
@@ -160,6 +181,7 @@ const CustomFormBuilder = () => {
           <Form.Item
             key={index}
             name={`radio_${index}`}
+            className="w-full"
             rules={[
               {
                 required: true,
@@ -213,10 +235,10 @@ const CustomFormBuilder = () => {
                 <Input
                   className="mb-2"
                   placeholder="Title"
+                  onChange={(e) => updateFileTitle(index, e.target.value)}
                   defaultValue={item.title}
-                  onChange={(e) => updateTitle(index, e)}
                 />
-                <Upload beforeUpload={() => false}>
+                <Upload disabled beforeUpload={() => false}>
                   <Button icon={<UploadOutlined />}>Choose File</Button>
                 </Upload>
               </div>
@@ -228,15 +250,25 @@ const CustomFormBuilder = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (data) => {
+    if (formItems.length == 0) {
+      toast.error("Please add at least one form field");
+      return;
+    }
     form
       .validateFields()
       .then((values) => {
         const formData = {
+          formName: data.formName,
           fields: formItems,
-          adminEmail: currentUser?.adminEmail,
-          teamId: selectedTeamId,
+          adminEmail:
+            currentUser?.role === "admin"
+              ? currentUser?.email
+              : currentUser?.adminEmail,
+          team: selectedTeam,
         };
+
+        console.log(formData);
         // Make your axios POST request here
         axiosSecure
           .post("/upload-custom-form", formData)
@@ -254,10 +286,15 @@ const CustomFormBuilder = () => {
   };
 
   return (
-    <div className="max-w-3xl flex gap-5 items-end mx-auto my-10 px-2">
-      <Form className="flex-1" layout="vertical" form={form}>
-        <div className="p-10 bg-white bg-opacity-50 rounded-2xl">
-          <h2 className="font-bold text-center text-4xl text-gradient mb-10">
+    <div className="relative max-w-4xl flex gap-5 mx-auto my-10 px-2">
+      <Form
+        onFinish={handleSubmit}
+        className="flex-1"
+        layout="vertical"
+        form={form}
+      >
+        <div className="md:p-10 p-3 bg-white bg-opacity-50 rounded-2xl">
+          <h2 className="font-bold text-center md:text-4xl text-xl text-gradient mb-3 md:mb-10">
             Custom Form Builder
           </h2>
           <div>
@@ -266,7 +303,11 @@ const CustomFormBuilder = () => {
               label="Form Name"
               rules={[{ required: true, message: "Form Name is required" }]}
             >
-              <Input className="w-full rounded-lg" size="middle" />
+              <Input
+                placeholder="Enter a form name"
+                className="w-full rounded-lg"
+                size="middle"
+              />
             </Form.Item>
           </div>
           <div>
@@ -279,9 +320,10 @@ const CustomFormBuilder = () => {
                 size="middle"
                 className="rounded-lg"
                 placeholder="Select Team"
+                onChange={(team) => setSelectedTeam(JSON.parse(team))}
               >
                 {teams.map((team) => (
-                  <Option key={team?._id} value={team.teamName}>
+                  <Option key={team?._id} value={JSON.stringify(team)}>
                     {team.teamName}
                   </Option>
                 ))}
@@ -294,10 +336,10 @@ const CustomFormBuilder = () => {
                 {renderField(item, index)}
                 <Button
                   type="btn"
-                  className="bg-danger text-white hover:bg-danger2"
+                  className="w-8 h-8 flex items-center justify-center bg-dark  text-white hover:bg-danger p-1"
                   onClick={() => deleteField(index)}
                 >
-                  Delete
+                  <MdClose className="text-xl" />
                 </Button>
               </div>
             </div>
@@ -313,27 +355,65 @@ const CustomFormBuilder = () => {
             </Button>
             <Button
               size="middle"
+              htmlType="submit"
               className="w-full bg-gradient text-white"
-              onClick={handleSubmit}
             >
               Submit Form
             </Button>
           </div>
         </div>
       </Form>
-      <div className="flex flex-col gap-2 mb-5">
-        <Button className="bg-gradient text-white" onClick={addTextField}>
-          Text Field +
-        </Button>
-        <Button className="bg-gradient text-white" onClick={addCheckbox}>
-          Checkboxes +
-        </Button>
-        <Button className="bg-gradient text-white" onClick={addRadioButton}>
-          Radio Buttons +
-        </Button>
-        <Button className="bg-gradient text-white" onClick={addFileUpload}>
-          File Upload +
-        </Button>
+      <div className="sticky top-0">
+        <div className="flex flex-col gap-2 mb-5">
+          <Button
+            className="hidden md:block bg-gradient text-white"
+            onClick={addTextField}
+          >
+            Text Field +
+          </Button>
+          <div
+            className="md:hidden flex items-center bg-white h-10 w-10 justify-center rounded-full"
+            onClick={addTextField}
+          >
+            <MdOutlineTextFields /> +
+          </div>
+          <Button
+            className="hidden md:block bg-gradient text-white"
+            onClick={addCheckbox}
+          >
+            Checkboxes +
+          </Button>
+          <div
+            className="md:hidden flex items-center bg-white h-10 w-10 justify-center rounded-full"
+            onClick={addCheckbox}
+          >
+            <MdCheckBox /> +
+          </div>
+          <Button
+            className="hidden md:block bg-gradient text-white"
+            onClick={addRadioButton}
+          >
+            Radio Buttons +
+          </Button>
+          <div
+            className="md:hidden flex items-center bg-white h-10 w-10 justify-center rounded-full"
+            onClick={addRadioButton}
+          >
+            <MdRadioButtonChecked /> +
+          </div>
+          <Button
+            className="hidden md:block bg-gradient text-white"
+            onClick={addFileUpload}
+          >
+            File Upload +
+          </Button>
+          <div
+            className="md:hidden flex items-center bg-white h-10 w-10 justify-center rounded-full"
+            onClick={addFileUpload}
+          >
+            <MdOutlineFileUpload /> +
+          </div>
+        </div>
       </div>
     </div>
   );

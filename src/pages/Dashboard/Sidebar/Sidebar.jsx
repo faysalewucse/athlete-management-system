@@ -265,6 +265,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         route: "chatting",
         icon: <BiChat />,
       },
+      {
+        key: 9,
+        label: "Forms",
+        route: "forms",
+        icon: <FaWpforms />,
+      },
     ],
     parents: [
       {

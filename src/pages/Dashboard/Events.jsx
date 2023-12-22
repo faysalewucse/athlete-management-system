@@ -36,7 +36,9 @@ const Events = () => {
     queryKey: ["event", currentUser?.email],
     queryFn: async () => {
       const adminEmail =
-        currentUser?.role === "admin" ? currentUser.email : currentUser?.email;
+        currentUser?.role === "admin"
+          ? currentUser.email
+          : currentUser?.adminEmail;
 
       const { data } = await axiosSecure.get(`/events/${adminEmail}`);
       return data;

@@ -5,6 +5,7 @@ import { Popconfirm, Space } from "antd";
 import toast from "react-hot-toast";
 import ArchivedFormsTable from "./ArchivedFormsTable";
 import { useEffect, useState } from "react";
+import ArchivedCustomFormsTable from "./ArchivedCustomFormsTable";
 
 const ArchiveTab = ({ tab }) => {
   const [axiosSecure] = useAxiosSecure();
@@ -67,11 +68,11 @@ const ArchiveTab = ({ tab }) => {
       dataIndex: "teamName",
       key: "teamName",
     },
-    {
-      title: "Organization",
-      dataIndex: "organization",
-      key: "organization",
-    },
+    // {
+    //   title: "Organization",
+    //   dataIndex: "organization",
+    //   key: "organization",
+    // },
     {
       title: "Email",
       dataIndex: "email",
@@ -123,8 +124,9 @@ const ArchiveTab = ({ tab }) => {
 
   return (
     <div>
-      <div>
+      <div className="lg:flex gap-5">
         <ArchivedFormsTable forms={forms} columns={columns} />
+        <ArchivedCustomFormsTable />
       </div>
     </div>
   );

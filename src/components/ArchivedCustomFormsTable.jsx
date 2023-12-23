@@ -1,16 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { Space, Table } from "antd";
-import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useAuth } from "../contexts/AuthContext";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import { useState } from "react";
 import CustomFormModal from "./modals/CustomFormModal";
+import { useState } from "react";
 
-const CustomFormsTable = () => {
+const ArchivedCustomFormsTable = () => {
   const { currentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [selectedForm, setSelectedForm] = useState([]);
+
+  const modalHandler = (form) => {
+    console.log(form);
+    setSelectedForm(form);
+    setFormModalOpen(true);
+  };
 
   const {
     isLoading: isCustomFormsLoading,
@@ -28,24 +34,33 @@ const CustomFormsTable = () => {
     },
   });
 
-  const handleArchive = async (id) => {
-    try {
-      const response = await axiosSecure.patch(`/custom-form/${id}`, {
-        isArchived: true,
-      });
+  const data = customForms
+    ?.filter((form) => form.isArchived)
+    ?.map((form) => {
+      return {
+        key: form._id,
+        formName: form.formName,
+        team: form.team,
+        fields: form.fields,
+        // organization: form.organization,
+        isArchived: form?.isArchived,
+      };
+    });
 
-      if (response.status === 200) {
-        refetch();
-        toast.success("Form archived Successfully");
-      }
+  const deleteHandler = async (id) => {
+    try {
+      await axiosSecure.delete(`/custom-form/${id}`).then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Form deleted successfully");
+          setOpen(false);
+          setConfirmLoading(false);
+        }
+      });
     } catch (error) {
+      console.log(error.message);
       toast.error(error.message);
     }
-  };
-
-  const modalHandler = (form) => {
-    setSelectedForm(form);
-    setFormModalOpen(true);
   };
 
   const customFormsColumns = [
@@ -83,7 +98,7 @@ const CustomFormsTable = () => {
               onClick={() => modalHandler(record)}
               className="bg-primary hover:bg-primary2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer"
             >
-              Open
+              View
             </button>
           </div>
 
@@ -91,10 +106,10 @@ const CustomFormsTable = () => {
             currentUser.role === "sub_coach") && (
             <div
               className="flex text-sm items-center space-x-4 justify-center"
-              onClick={() => handleArchive(record?.key)}
+              onClick={() => deleteHandler(record?.key)}
             >
               <button className="hidden md:block bg-danger hover:bg-danger2 transition-300 text-white hite py-1 px-4 rounded cursor-pointer">
-                Archive
+                Delete
               </button>
             </div>
           )}
@@ -103,20 +118,9 @@ const CustomFormsTable = () => {
     },
   ].filter((item) => !item.hidden);
 
-  const data = customForms
-    ?.filter((form) => !form.isArchived)
-    .map((form) => {
-      return {
-        key: form._id,
-        formName: form?.formName,
-        fields: form?.fields,
-        team: form?.team,
-        adminEmail: form?.addedBy?.email,
-      };
-    });
-
   return (
-    <div>
+    <div className="flex-1">
+      <p className="font-bold text-gradient text-lg">Custom Archived Forms</p>
       <Table
         size="small"
         className="mt-5"
@@ -134,4 +138,4 @@ const CustomFormsTable = () => {
   );
 };
 
-export default CustomFormsTable;
+export default ArchivedCustomFormsTable;

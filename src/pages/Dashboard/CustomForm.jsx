@@ -266,6 +266,7 @@ const CustomFormBuilder = () => {
               ? currentUser?.email
               : currentUser?.adminEmail,
           team: selectedTeam,
+          isArchived: false,
         };
 
         console.log(formData);

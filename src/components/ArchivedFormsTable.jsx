@@ -7,8 +7,8 @@ const ArchivedFormsTable = ({ forms, columns }) => {
       formName: form.formName,
       formFile: form.formFile,
       teamName: form.teamName,
-      organization: form.organization,
-      email: form.addedBy.email,
+      // organization: form.organization,
+      email: form?.addedBy?.email,
       isArchived: form?.isArchived,
     };
   });
@@ -16,7 +16,9 @@ const ArchivedFormsTable = ({ forms, columns }) => {
   console.log(data);
 
   return (
-    <div>
+    <div className="flex-1">
+      <p className="font-bold text-gradient text-lg">PDF Archived Forms</p>
+
       <Table
         size="small"
         className="mt-5"

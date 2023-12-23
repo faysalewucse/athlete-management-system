@@ -26,7 +26,7 @@ import ChangeRoleModal from "../../components/modals/ChangeRoleModal";
 import { MdEdit } from "react-icons/md";
 import { coachTitles } from "../../utils/Constant";
 
-const SubCoaches = () => {
+const AssistantCoaches = () => {
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,7 +96,9 @@ const SubCoaches = () => {
     setSelectedCoach(coach);
     if (coach.status === "pending") {
       toast.error("Approve assistant coach before assigning team");
-    } else setIsModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const titleChangeModalHandler = (coach) => {
@@ -359,16 +361,17 @@ const SubCoaches = () => {
             style={{ marginTop: "16px", textAlign: "right" }}
           />
 
-          {currentUser?.role == "admin" && (
-            <AssignTeamModal
-              refetch={refetch}
-              isModalOpen={isModalOpen}
-              setIsModalOpen={setIsModalOpen}
-              selectedUser={selectedCoach}
-              teams={selectedCoach?.length !== 0 ? getFilteredTeam() : []}
-              assignTo={"coach"}
-            />
-          )}
+          {currentUser?.role == "admin" ||
+            (currentUser?.role == "coach" && (
+              <AssignTeamModal
+                refetch={refetch}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                selectedUser={selectedCoach}
+                teams={selectedCoach?.length !== 0 ? getFilteredTeam() : []}
+                assignTo={"coach"}
+              />
+            ))}
           <TeamDetailsModal
             teamDetails={teamDetails}
             isTeamDetailsModal={isTeamDetailsModal}
@@ -420,4 +423,4 @@ const SubCoaches = () => {
   );
 };
 
-export default SubCoaches;
+export default AssistantCoaches;

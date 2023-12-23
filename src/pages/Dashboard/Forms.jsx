@@ -148,13 +148,21 @@ const Forms = () => {
     {
       key: "1",
       label: "PDF Forms",
-      children: <FormsTable forms={pdfForms} columns={columns} />,
+      children: (
+        <FormsTable
+          forms={pdfForms.filter((form) => !form.isArchived)}
+          columns={columns}
+        />
+      ),
     },
     {
       key: "2",
       label: "Custom Forms",
       children: (
-        <CustomFormsTable forms={customForms} columns={customFormsColumns} />
+        <CustomFormsTable
+          forms={customForms.filter((form) => !form.isArchived)}
+          columns={customFormsColumns}
+        />
       ),
     },
   ];

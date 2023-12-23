@@ -1,6 +1,7 @@
 import { Modal } from "antd";
 
 const ViewTasksModal = ({ modalOpen, setIsModalOpen, plan }) => {
+  console.log(plan);
   return (
     <Modal
       open={modalOpen}

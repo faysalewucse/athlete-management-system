@@ -128,7 +128,7 @@ export const Register = () => {
             <Radio.Group onChange={(e) => setRole(e.target.value)}>
               <Radio value="admin">Admin</Radio>
               <Radio value="coach">Coach</Radio>
-              <Radio value="sub_coach">Sub Coach</Radio>
+              <Radio value="sub_coach">Assistant Coach</Radio>
               <Radio value="parents">Parents</Radio>
               <Radio value="athlete">Athlete</Radio>
             </Radio.Group>

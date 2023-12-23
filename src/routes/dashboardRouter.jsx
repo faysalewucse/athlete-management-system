@@ -60,7 +60,7 @@ export const dashboardRouter = [
     ),
   },
   {
-    path: "sub-coaches",
+    path: "assistant-coaches",
     element: (
       <CoachRoute>
         <SubCoaches />

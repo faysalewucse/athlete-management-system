@@ -48,7 +48,7 @@ const SubCoaches = () => {
     data: coaches = [],
     refetch,
   } = useQuery({
-    queryKey: ["sub-coaches", currentUser?.email],
+    queryKey: ["assistant-coaches", currentUser?.email],
     queryFn: async () => {
       let email;
       if (currentUser.role === "admin") email = currentUser.email;
@@ -95,7 +95,7 @@ const SubCoaches = () => {
   const modalHandler = (coach) => {
     setSelectedCoach(coach);
     if (coach.status === "pending") {
-      toast.error("Approve sub coach before assigning team");
+      toast.error("Approve assistant coach before assigning team");
     } else setIsModalOpen(true);
   };
 
@@ -104,7 +104,7 @@ const SubCoaches = () => {
     setCurrentTitle(coach.title);
 
     if (coach.status === "pending") {
-      toast.error("Approve sub coach before assigning team");
+      toast.error("Approve assistant coach before assigning team");
     } else setModalOpen(true);
   };
 
@@ -338,7 +338,10 @@ const SubCoaches = () => {
     <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
       {!isLoading ? (
         <Container>
-          <SectionHeader title={"Sub Coaches"} quantity={coaches?.length} />
+          <SectionHeader
+            title={"Assistant Coaches"}
+            quantity={coaches?.length}
+          />
 
           <Table
             size="small"

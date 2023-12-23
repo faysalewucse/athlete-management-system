@@ -66,10 +66,10 @@ export default function Footer() {
 
           <div className="mt-5 md:mt-0 col-span-2 md:col-span-1">
             <h1 className="md:mb-1">Contact</h1>
-
             <p className="text-gray-300 font-light">
               joseph@bartholomewdevelopment.com
             </p>
+            <p className="text-gray-300 font-light">7403374300</p>
           </div>
         </div>
       </div>

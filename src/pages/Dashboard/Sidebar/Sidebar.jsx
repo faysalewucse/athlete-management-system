@@ -81,8 +81,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
       },
       {
         key: 9,
-        label: "Sub Coaches",
-        route: "sub-coaches",
+        label: "Assistant Coaches",
+        route: "assistant-coaches",
         icon: <FaChalkboardTeacher />,
       },
       {
@@ -131,8 +131,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
     coach: [
       {
         key: 0,
-        label: "Sub Coaches",
-        route: "sub-coaches",
+        label: "Assistant Coaches",
+        route: "assistant-coaches",
         icon: <FaChalkboardTeacher />,
       },
       {

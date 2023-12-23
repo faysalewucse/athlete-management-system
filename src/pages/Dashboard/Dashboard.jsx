@@ -142,8 +142,8 @@ export const Dashboard = () => {
                       />
                       <DashboardCard
                         number={quantity.sub_coach}
-                        title={"Total Sub Coaches"}
-                        route="/dashboard/sub-coaches"
+                        title={"Total Assistant Coaches"}
+                        route="/dashboard/assistant-coaches"
                       />
                       <DashboardCard
                         number={teams.length}

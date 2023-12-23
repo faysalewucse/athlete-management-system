@@ -22,7 +22,10 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
 
       if (currentUser?.role === "admin") {
         URL = `teams/${currentUser?.email}`;
-      } else if (currentUser?.role === "coach") {
+      } else if (
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      ) {
         URL = `teams/coach-team/${currentUser?.email}`;
       } else if (currentUser?.role === "athlete") {
         URL = `teams/athlete-team/${currentUser?.email}`;

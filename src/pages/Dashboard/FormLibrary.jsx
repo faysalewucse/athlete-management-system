@@ -7,6 +7,7 @@ import CustomFormModal from "../../components/modals/CustomFormModal";
 
 import { saveAs } from "file-saver";
 import { pdf } from "@react-pdf/renderer";
+import FilledForms from "./FilledForms";
 
 const FormLibrary = () => {
   const [tab, setTab] = useState(1);
@@ -33,12 +34,12 @@ const FormLibrary = () => {
       label: "Custom Forms",
       children: <CustomFormsTable />,
     },
+    {
+      key: "4",
+      label: "Filled Forms",
+      children: <FilledForms />,
+    },
   ];
-
-  const modalHandler = (form) => {
-    setSelectedForm(form);
-    setFormModalOpen(true);
-  };
 
   return (
     <div className="p-10">
@@ -47,12 +48,6 @@ const FormLibrary = () => {
         defaultActiveKey="1"
         items={items}
         onChange={onChange}
-      />
-
-      <CustomFormModal
-        formModalOpen={formModalOpen}
-        selectedForm={selectedForm}
-        setFormModalOpen={setFormModalOpen}
       />
     </div>
   );

@@ -2,11 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import FormsTable from "../../components/FormsTable";
-import { Modal, Space, Tabs } from "antd";
+import { Button, Modal, Space, Tabs } from "antd";
 import { useState } from "react";
 import CustomFormsTable from "../../components/CustomFormsTable";
 import CustomLoader from "../../components/CustomLoader";
 import CustomFormModal from "../../components/modals/CustomFormModal";
+import { BiUpload } from "react-icons/bi";
+import FileUploadModal from "../../components/modals/FileUploadModal";
 
 const Forms = () => {
   const { currentUser } = useAuth();
@@ -15,9 +17,16 @@ const Forms = () => {
   const [tab, setTab] = useState(1);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [selectedForm, setSelectedForm] = useState([]);
+  const [fileUploadModal, setFileUploadModal] = useState(false);
 
   const onChange = (key) => {
     setTab(key);
+  };
+
+  const fileUploadHandler = (form) => {
+    console.log(form);
+    setSelectedForm(form);
+    setFileUploadModal(true);
   };
 
   const { isLoading: isPdfFormsLoading, data: pdfForms = [] } = useQuery({
@@ -28,6 +37,20 @@ const Forms = () => {
       else email = currentUser?.adminEmail;
 
       const { data } = await axiosSecure.get(`/pdf-forms/${email}`);
+      return data;
+    },
+  });
+
+  const {
+    isLoading: isFilledFormsLoading,
+    data: filledForms = [],
+    refetch: refetchFilledForms,
+  } = useQuery({
+    queryKey: ["filled-forms", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/filled-forms/${currentUser?.email}`
+      );
       return data;
     },
   });
@@ -77,7 +100,25 @@ const Forms = () => {
               View
             </button>
           </div>
+          <Button onClick={() => fileUploadHandler(record)} icon={<BiUpload />}>
+            {filledForms.some((form) => form.formId === record.key)
+              ? "New"
+              : "Upload"}
+          </Button>
 
+          {filledForms.some((form) => form.formId === record.key) && (
+            <Button
+              onClick={() =>
+                window.open(
+                  filledForms.find((form) => form.formId === record.key)
+                    ?.formFile,
+                  "_blank"
+                )
+              }
+            >
+              View Uploaded
+            </Button>
+          )}
           {(currentUser?.role === "coach" ||
             currentUser.role === "sub_coach") && (
             <div
@@ -190,6 +231,13 @@ const Forms = () => {
         formModalOpen={formModalOpen}
         selectedForm={selectedForm}
         setFormModalOpen={setFormModalOpen}
+      />
+
+      <FileUploadModal
+        selectedForm={selectedForm}
+        isModalOpen={fileUploadModal}
+        refetch={refetchFilledForms}
+        setIsModalOpen={setFileUploadModal}
       />
     </div>
   );

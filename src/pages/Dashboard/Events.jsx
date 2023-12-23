@@ -49,6 +49,7 @@ const Events = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       const URL = `adminEmail=${currentUser?.adminEmail}`;
+
       const { data } = await axiosSecure.get(
         `/users/byRole?role=athlete&${URL}`
       );

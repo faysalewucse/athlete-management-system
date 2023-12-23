@@ -29,7 +29,11 @@ export const Athletes = () => {
     queryKey: ["athletes", currentUser?.email],
     queryFn: async () => {
       let URL = `adminEmail=${currentUser?.email}`;
-      if (currentUser?.role === "athlete" || currentUser?.role === "coach") {
+      if (
+        currentUser?.role === "athlete" ||
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      ) {
         URL = `adminEmail=${currentUser?.adminEmail}`;
       } else if (currentUser?.role === "parents") {
         URL = `parentsEmail=${currentUser?.email}`;

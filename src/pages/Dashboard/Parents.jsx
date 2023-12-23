@@ -30,6 +30,7 @@ const Parents = () => {
       if (
         currentUser?.role === "athlete" ||
         currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach" ||
         currentUser?.role === "parents"
       ) {
         URL = `adminEmail=${currentUser?.adminEmail}`;

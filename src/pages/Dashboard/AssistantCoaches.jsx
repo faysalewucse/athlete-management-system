@@ -50,9 +50,10 @@ const AssistantCoaches = () => {
   } = useQuery({
     queryKey: ["assistant-coaches", currentUser?.email],
     queryFn: async () => {
-      let email;
-      if (currentUser.role === "admin") email = currentUser.email;
-      else email = currentUser?.adminEmail;
+      const email =
+        currentUser.role === "admin"
+          ? currentUser.email
+          : currentUser?.adminEmail;
 
       const { data } = await axiosSecure.get(
         `/users/byRole?role=sub_coach&adminEmail=${email}`
@@ -64,10 +65,17 @@ const AssistantCoaches = () => {
   const { data: teams = [] } = useQuery({
     queryKey: ["teams", currentUser?.email],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/teams/${currentUser?.email}`);
+      const adminEmail =
+        currentUser?.role === "admin"
+          ? currentUser.email
+          : currentUser.adminEmail;
+
+      const { data } = await axiosSecure.get(`/teams/${adminEmail}`);
       return data;
     },
   });
+
+  console.log(teams);
 
   const handleApprove = async (id) => {
     if (currentUser?.status === "pending") {
@@ -91,6 +99,8 @@ const AssistantCoaches = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentCoaches = coaches.slice(startIndex, endIndex);
+
+  console.log(currentCoaches);
 
   const modalHandler = (coach) => {
     setSelectedCoach(coach);
@@ -361,8 +371,8 @@ const AssistantCoaches = () => {
             style={{ marginTop: "16px", textAlign: "right" }}
           />
 
-          {currentUser?.role == "admin" ||
-            (currentUser?.role == "coach" && (
+          {currentUser?.role === "admin" ||
+            (currentUser?.role === "coach" && (
               <AssignTeamModal
                 refetch={refetch}
                 isModalOpen={isModalOpen}

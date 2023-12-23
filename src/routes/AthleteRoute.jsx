@@ -7,7 +7,8 @@ export const AthleteRoute = ({ children }) => {
   return currentUser?.role === "sadmin" ||
     currentUser?.role === "admin" ||
     currentUser?.role === "athlete" ||
-    currentUser?.role === "coach" ? (
+    currentUser?.role === "coach" ||
+    currentUser?.role === "sub_coach" ? (
     children
   ) : (
     <Navigate to={"/"} />

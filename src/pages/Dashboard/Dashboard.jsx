@@ -28,8 +28,11 @@ export const Dashboard = () => {
       let URL = "/users";
       if (currentUser?.role === "admin")
         URL = `/users/coach-sub_coach-athlete-parents/${currentUser?.email}`;
-      else if (currentUser?.role === "coach")
-        URL = `/users/athlete-parents/${currentUser?.adminEmail}`;
+      else if (
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      )
+        URL = `/users/athlete-parents/${currentUser?.adminEmail}?role=${currentUser?.role}`;
       else if (currentUser?.role === "parents")
         URL = `/users/athlete/${currentUser?.email}`;
       else if (currentUser?.role === "athlete") return [];

@@ -33,7 +33,9 @@ const Chatting = () => {
     currentUser?.role === "admin" ? "coach" : "admin"
   );
   const [selectedChat, setSelectedChat] = useState(
-    currentUser?.role === "coach" && { email: currentUser?.adminEmail }
+    (currentUser?.role === "coach" || currentUser?.role === "sub_coach") && {
+      email: currentUser?.adminEmail,
+    }
   );
   // const [chatOpen, setChatOpen] = useState(false);
 
@@ -120,6 +122,14 @@ const Chatting = () => {
             <UserType
               selectedRole={selectedRole}
               setSelectedRole={setSelectedRole}
+              role={"Assistant Coach"}
+              setSelectedChat={setSelectedChat}
+              refetchChats={refetchChats}
+            />
+
+            <UserType
+              selectedRole={selectedRole}
+              setSelectedRole={setSelectedRole}
               role={"Athlete"}
               setSelectedChat={setSelectedChat}
               refetchChats={refetchChats}
@@ -146,7 +156,10 @@ const Chatting = () => {
                 .filter(
                   (user) =>
                     user.status === "approved" &&
-                    user?.role === selectedRole &&
+                    user?.role ===
+                      (selectedRole === "assistant coach"
+                        ? "sub_coach"
+                        : selectedRole) &&
                     user.email !== currentUser.email
                 )
                 .map((user) => (

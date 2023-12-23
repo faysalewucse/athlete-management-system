@@ -12,6 +12,7 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import AssignCoachModal from "../../components/modals/AssignCoachModal";
 import CoachDetailsModal from "../../components/modals/CoachDetailsModal";
 import toast from "react-hot-toast";
+import { coachTitles } from "../../utils/Constant";
 
 const Teams = () => {
   const [axiosSecure] = useAxiosSecure();
@@ -30,7 +31,10 @@ const Teams = () => {
 
       if (currentUser?.role === "admin") {
         URL = `teams/${currentUser?.email}`;
-      } else if (currentUser?.role === "coach") {
+      } else if (
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      ) {
         URL = `teams/coach-team/${currentUser?.email}`;
       } else if (currentUser?.role === "athlete") {
         URL = `teams/athlete-team/${currentUser?.email}`;
@@ -40,17 +44,17 @@ const Teams = () => {
     },
   });
 
-  console.log(teams);
-
   const { data: coaches = [] } = useQuery({
     queryKey: ["coaches", currentUser?.email],
     queryFn: async () => {
       const { data } = await axiosSecure.get(
-        `/users/byRole?role=coach&adminEmail=${currentUser?.email}`
+        `/users/byRole?role=${currentUser?.role}&adminEmail=${currentUser?.email}`
       );
       return data;
     },
   });
+
+  console.log(coaches);
 
   // pagination
   const handlePageChange = (page) => {
@@ -134,7 +138,7 @@ const Teams = () => {
                       label: (
                         <div className="flex items-center justify-between gap-5">
                           <p onClick={() => detailsModalHandler(coach)}>
-                            {coach.name}
+                            {coach.fullName}
                           </p>
                           <AiTwotoneDelete
                             onClick={() => handleRemoveCoach(coach, record)}
@@ -147,7 +151,7 @@ const Teams = () => {
                 }}
                 trigger={["click"]}
               >
-                <Button>
+                <Button className="text-xs">
                   <Space>
                     View Coaches ({coaches.length})
                     <BiChevronDown />

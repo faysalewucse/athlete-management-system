@@ -7,6 +7,7 @@ export const ValidUserRoute = ({ children }) => {
   return currentUser?.role === "sadmin" ||
     currentUser?.role === "admin" ||
     currentUser?.role === "coach" ||
+    currentUser?.role === "sub_coach" ||
     currentUser?.role === "parents" ||
     currentUser?.role === "athlete" ? (
     children

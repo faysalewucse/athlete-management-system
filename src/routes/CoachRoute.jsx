@@ -6,7 +6,8 @@ export const CoachRoute = ({ children }) => {
 
   return currentUser?.role === "sadmin" ||
     currentUser?.role === "admin" ||
-    currentUser?.role === "coach" ? (
+    currentUser?.role === "coach" ||
+    currentUser?.role === "sub_coach" ? (
     children
   ) : (
     <Navigate to={"/"} />

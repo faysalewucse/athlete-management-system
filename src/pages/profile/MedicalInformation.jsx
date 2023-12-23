@@ -177,7 +177,7 @@ const MedicalInformation = ({ userId }) => {
       label: "Past Injuries",
       children: (
         <div>
-          <div className="grid md:grid-cols-3 gap-2 grid-cols-2">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-2 grid-cols-2">
             {userMedicalInfo?.pastInjuries?.map((injury, index) => (
               <div
                 className="hover:bg-indigo-500 transition-300 cursor-pointer hover:text-white p-2 rounded-md border-2 text-start border-indigo-500"

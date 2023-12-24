@@ -11,6 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const { Option } = Select;
 
@@ -44,6 +45,26 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
       }
     });
   };
+
+  const { isLoading, data: teams = [] } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      let URL = "teams";
+
+      if (currentUser?.role === "admin") {
+        URL = `teams/${currentUser?.email}`;
+      } else if (
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      ) {
+        URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
+      }
+      const { data } = await axiosSecure.get(`/${URL}`);
+      return data;
+    },
+  });
 
   const validateDateOfEvent = (rule, value) => {
     if (value && value.isBefore()) {
@@ -168,6 +189,22 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             className="w-full px-4 py-2 rounded-lg"
             size="middle"
           />
+        </Form.Item>
+        <Form.Item
+          name="teamId"
+          label="Select Team"
+          rules={[{ required: true, message: "Please select a team." }]}
+        >
+          <Select size="large" className="rounded-lg" placeholder="Select Team">
+            <Option key={"all"} value={"all"}>
+              {"All"}
+            </Option>
+            {teams.map((team) => (
+              <Option key={team?._id} value={team?._id}>
+                {team.teamName}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item className="col-span-2" name="fee" label="Event Fee">
           <Input type="number" placeholder="Put 0 if Free" />

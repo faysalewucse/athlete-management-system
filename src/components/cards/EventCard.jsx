@@ -45,6 +45,12 @@ const EventCard = ({
         <p className="text-sm">
           {event.eventDescription ? event.eventDescription : "No Description"}
         </p>
+        <p className="text-sm font-semibold">
+          Team:{" "}
+          {event.teamDetails.length === 0
+            ? "For All"
+            : event.teamDetails[0]?.teamName}
+        </p>
       </div>
       <div>
         <p className="mt-10 font-semibold text-gradient flex items-center gap-2">

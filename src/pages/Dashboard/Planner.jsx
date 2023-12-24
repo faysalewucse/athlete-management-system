@@ -129,6 +129,12 @@ const Planner = () => {
                       <p className="text-sm">
                         {plan.duration ? plan.duration : "No Duration"}
                       </p>
+                      <p className="text-sm font-semibold">
+                        Team:{" "}
+                        {plan?.teamDetails?.length === 0
+                          ? "For All"
+                          : plan?.teamDetails[0]?.teamName}
+                      </p>
                     </div>
                     <div className="mt-10 flex items-center justify-between">
                       <div className="flex items-center gap-2">

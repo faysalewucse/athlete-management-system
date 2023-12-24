@@ -100,7 +100,7 @@ const Events = () => {
             {events.length === 0 ? (
               <div className="bg-white p-2 rounded-lg">No Events Created</div>
             ) : (
-              <div className="grid lg:grid-cols-2  md:grid-cols-2 sm:grid-cols-2 gap-5">
+              <div className="grid lg:grid-cols-2  md:grid-cols-2 grid-cols-1 gap-5">
                 {visibleEvents?.map((event) => (
                   <EventCard
                     key={event._id}

@@ -3,6 +3,7 @@ import { Button, Form, Input, Modal, Select } from "antd";
 import { useAuth } from "../../contexts/AuthContext";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 const { Option } = Select;
 
@@ -16,6 +17,16 @@ const AddPlanerTaskModal = ({ modalOpen, setIsModalOpen, refetch, plan }) => {
     setIsModalOpen(false);
     setSubmitting(false);
   };
+
+  const { isLoading, data: coaches = [] } = useQuery({
+    queryKey: ["coaches", currentUser?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/users/coaches/${currentUser?.adminEmail}`
+      );
+      return data;
+    },
+  });
 
   const onCreate = async (values) => {
     const taskData = {
@@ -119,7 +130,17 @@ const AddPlanerTaskModal = ({ modalOpen, setIsModalOpen, refetch, plan }) => {
             },
           ]}
         >
-          <Input />
+          <Select
+            size="middle"
+            className="rounded-lg"
+            placeholder="Select Coach"
+          >
+            {coaches.map((coach) => (
+              <Option key={coach?._id} value={coach?._id}>
+                {coach.fullName}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item name="notes" label="Notes">

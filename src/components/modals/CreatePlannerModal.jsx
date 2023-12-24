@@ -12,6 +12,8 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
 import { Option } from "antd/es/mentions";
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
 
 const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
   const [form] = Form.useForm();
@@ -23,6 +25,26 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
     setIsModalOpen(false);
     setSubmitting(false);
   };
+
+  const { isLoading, data: teams = [] } = useQuery({
+    queryKey: ["teams", currentUser?.email],
+    queryFn: async () => {
+      let URL = "teams";
+
+      if (currentUser?.role === "admin") {
+        URL = `teams/${currentUser?.email}`;
+      } else if (
+        currentUser?.role === "coach" ||
+        currentUser?.role === "sub_coach"
+      ) {
+        URL = `teams/coach-team/${currentUser?.email}`;
+      } else if (currentUser?.role === "athlete") {
+        URL = `teams/athlete-team/${currentUser?.email}`;
+      }
+      const { data } = await axiosSecure.get(`/${URL}`);
+      return data;
+    },
+  });
 
   const onCreate = async (values) => {
     const planData = {
@@ -143,6 +165,10 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
           ]}
         >
           <DatePicker
+            disabledDate={(current) => {
+              let customDate = moment().format("YYYY-MM-DD");
+              return current < moment(customDate, "YYYY-MM-DD");
+            }}
             size="middle"
             className="w-full px-4 py-2 rounded-lg"
             format="YYYY-MM-DD"
@@ -159,6 +185,22 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             className="w-full px-4 py-2 rounded-lg"
             size="middle"
           />
+        </Form.Item>
+        <Form.Item
+          name="teamId"
+          label="Select Team"
+          rules={[{ required: true, message: "Please select a team." }]}
+        >
+          <Select size="large" className="rounded-lg" placeholder="Select Team">
+            <Option key={"all"} value={"all"}>
+              {"All"}
+            </Option>
+            {teams.map((team) => (
+              <Option key={team?._id} value={team?._id}>
+                {team.teamName}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
       </Form>
     </Modal>

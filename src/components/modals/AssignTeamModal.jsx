@@ -86,7 +86,7 @@ const AssignTeamModal = ({
               <span className="font-bold"> {selectedUser?.name}</span>
             </p>
 
-            {selectedUser.reqTeamId && teams.length !== 0 && (
+            {selectedUser.reqTeamId && teams?.length !== 0 && (
               <div>
                 <p>
                   {selectedUser.name} Requested to Join
@@ -94,7 +94,7 @@ const AssignTeamModal = ({
                     {" `"}
                     {
                       teams?.find((team) => team._id === selectedUser.reqTeamId)
-                        .teamName
+                        ?.teamName
                     }
                     {"` "}
                   </span>

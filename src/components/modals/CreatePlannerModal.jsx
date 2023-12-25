@@ -118,7 +118,7 @@ const CreatePlannerModal = ({ modalOpen, setIsModalOpen, refetch }) => {
       ]}
     >
       <Form
-        className="grid grid-cols-2 gap-x-5"
+        className="md:grid grid-cols-2 gap-x-5"
         size="middle"
         form={form}
         layout="vertical"

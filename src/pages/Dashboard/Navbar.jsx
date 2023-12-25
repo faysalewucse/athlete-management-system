@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { CgMenuGridR } from "react-icons/cg";
+import { RxDashboard } from "react-icons/rx";
 
 export const Navbar = ({ setSidebarOpen }) => {
   const { currentUser, logout } = useAuth();
@@ -82,30 +83,30 @@ export const Navbar = ({ setSidebarOpen }) => {
 
   return (
     <div className="bg-white z-10 sticky top-0">
-      <div className="flex items-center justify-between p-2 md:p-5 ">
+      <div className="flex items-center justify-between p-3 md:p-5 ">
         <div className="flex items-center gap-3">
-          <CgMenuGridR
+          <RxDashboard
             onClick={() => setSidebarOpen(true)}
-            className="md:hidden text-4xl text-primary"
+            className="md:hidden text-2xl text-primary"
           />
-          <div className="text-gradient flex items-center gap-2">
+          <div className="text-gradient flex items-center gap-2 font-bold text-sm md:text-lg">
             <GrOrganization className="rotate-180 text-primary" />
             {currentUser?.role === "admin" ? (
-              <p className="font-bold text-xl">{currentUser?.organization}</p>
+              <p>{currentUser?.organization}</p>
             ) : (
-              <p className="font-bold text-xl">{adminData?.organization}</p>
+              <p>{adminData?.organization}</p>
             )}
           </div>
         </div>
         {/* user info */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-2 md:gap-5">
           <HiMiniMagnifyingGlass
             onClick={showModal}
             size={20}
             className="text-primary cursor-pointer"
           />
 
-          <BiSolidBell className="text-3xl text-primary" />
+          <BiSolidBell className="text-xl md:text-3xl text-primary" />
 
           <AvatarDropdown currentUser={currentUser} items={avatarItems} />
         </div>

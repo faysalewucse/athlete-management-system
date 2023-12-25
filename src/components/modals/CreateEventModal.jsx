@@ -125,7 +125,7 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
       ]}
     >
       <Form
-        className="grid grid-cols-2 gap-x-5"
+        className="md:grid md:grid-cols-2 md:gap-x-5"
         size="middle"
         form={form}
         layout="vertical"
@@ -173,7 +173,6 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
           ]}
         >
           <DatePicker
-            size="middle"
             className="w-full px-4 py-2 rounded-lg"
             format="YYYY-MM-DD"
           />
@@ -187,15 +186,15 @@ const CreateEventModal = ({ modalOpen, setIsModalOpen, refetch }) => {
             use12Hours
             format="h:mm a"
             className="w-full px-4 py-2 rounded-lg"
-            size="middle"
           />
         </Form.Item>
         <Form.Item
           name="teamId"
           label="Select Team"
           rules={[{ required: true, message: "Please select a team." }]}
+          className="col-span-2"
         >
-          <Select size="large" className="rounded-lg" placeholder="Select Team">
+          <Select className="rounded-lg" placeholder="Select Team">
             <Option key={"all"} value={"all"}>
               {"All"}
             </Option>

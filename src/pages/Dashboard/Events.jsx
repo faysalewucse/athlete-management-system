@@ -81,7 +81,7 @@ const Events = () => {
   const visibleEvents = events.slice(startIdx, endIdx);
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-dark">
+    <div className="min-h-[90vh] bg-transparent p-4 md:p-10 text-dark">
       {!isLoading && !isLoadingAthletes ? (
         <Container>
           {currentUser?.role === "coach" && (

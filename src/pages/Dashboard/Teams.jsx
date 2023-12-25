@@ -54,8 +54,6 @@ const Teams = () => {
     },
   });
 
-  console.log(coaches);
-
   // pagination
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -180,7 +178,7 @@ const Teams = () => {
   };
 
   return (
-    <div className="min-h-[90vh] bg-transparent p-10 text-slate-800">
+    <div className="min-h-[90vh] bg-transparent p-5 md:p-10 text-slate-800">
       {!isLoading ? (
         <Container>
           <div className="flex justify-between">

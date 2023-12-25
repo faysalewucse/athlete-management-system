@@ -6,7 +6,7 @@ const AvatarDropdown = ({ items, currentUser }) => {
     <Dropdown placement="bottomRight" menu={{ items }} trigger={["click"]}>
       <a onClick={(e) => e.preventDefault()}>
         <img
-          className="border-2 border-primary rounded-full w-10 h-10 cursor-pointer"
+          className="border-2 border-primary rounded-full md:w-10 md:h-10 w-6 h-6 cursor-pointer"
           src={
             currentUser
               ? currentUser?.photoURL

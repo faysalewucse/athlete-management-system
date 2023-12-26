@@ -5,6 +5,9 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import UserProfile from "../pages/UserProfile";
 
+import { SocialRegister } from "../pages/SocialRegister";
+import SocialAuthRoute from "./SocialAuthRoute";
+
 export const userRouter = [
   {
     path: "/",
@@ -24,6 +27,14 @@ export const userRouter = [
       <PublicRoute>
         <Register />
       </PublicRoute>
+    ),
+  },
+  {
+    path: "/social-register",
+    element: (
+      <SocialAuthRoute>
+        <SocialRegister />
+      </SocialAuthRoute>
     ),
   },
   {

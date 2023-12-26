@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Button } from "antd";
 import Swal from "sweetalert2";
+import GoogleLogin from "../components/Auth/GoogleLogin";
+import FacebookLogin from "../components/Auth/FacebookLogin";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -129,6 +131,16 @@ export const Login = () => {
                 SIGN IN
               </Button>
             </form>
+            <div className="flex items-center py-6">
+              <div className="border-t border-gray-300 flex-grow" />
+              <div className="mx-4 text-gray-500">OR</div>
+              <div className="border-t border-gray-300 flex-grow" />
+            </div>
+
+            <GoogleLogin />
+            <div className="mt-4">
+              <FacebookLogin />
+            </div>
           </div>
         </div>
       </div>

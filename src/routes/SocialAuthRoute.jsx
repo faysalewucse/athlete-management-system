@@ -3,11 +3,15 @@ import { useAuth } from "../contexts/AuthContext";
 
 export default function SocialAuthRoute({ children }) {
   const { currentUser } = useAuth();
+  const isGoogleLoggedIn = localStorage.getItem("isGoogleLoggedIn");
+  const isFbLoggedIn = localStorage.getItem("isFbLoggedIn");
+
+  console.log({ currentUser });
   const location = useLocation();
 
-  if (currentUser?.role) {
+  if (currentUser?.providerId === "firebase") {
     return children;
   }
 
-  return <Navigate to="/social-register" state={{ from: location }} replace />;
+  return <Navigate to="/" state={{ from: location }} replace />;
 }

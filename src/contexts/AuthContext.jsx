@@ -91,8 +91,9 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  function resetPassword(email) {
-    sendPasswordResetEmail(auth, email);
+  async function resetPassword(email) {
+    await sendPasswordResetEmail(auth, email);
+    return "Sent";
   }
 
   const value = {

@@ -1,6 +1,6 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
@@ -40,7 +40,9 @@ export const Login = () => {
         console.log({ e });
         setLoading(false);
         toast.error(
-          e.message.includes("password") ? "Wrong password" : "User Not Found"
+          e.message.includes("password") || e.message.includes("invalid")
+            ? "Wrong email or password"
+            : "User Not Found"
         );
       });
   };
@@ -110,9 +112,9 @@ export const Login = () => {
                 </div>
               </div>
               <div className="flex md:flex-row text-center justify-between flex-col mt-6 text-secondary text-xl">
-                <div className="cursor-pointer">
+                <Link to="/reset-password" className="cursor-pointer">
                   <small>Forgot password?</small>
-                </div>
+                </Link>
                 <small
                   className="underline cursor-pointer"
                   onClick={() => navigate("/register")}

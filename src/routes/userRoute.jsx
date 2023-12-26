@@ -7,6 +7,7 @@ import UserProfile from "../pages/UserProfile";
 
 import { SocialRegister } from "../pages/SocialRegister";
 import SocialAuthRoute from "./SocialAuthRoute";
+import { ResetPassword } from "../pages/ResetPassword";
 
 export const userRouter = [
   {
@@ -18,6 +19,14 @@ export const userRouter = [
     element: (
       <PublicRoute>
         <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/reset-password",
+    element: (
+      <PublicRoute>
+        <ResetPassword />
       </PublicRoute>
     ),
   },

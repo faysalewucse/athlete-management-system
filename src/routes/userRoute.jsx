@@ -17,9 +17,9 @@ export const userRouter = [
   {
     path: "/login",
     element: (
-      <PublicRoute>
-        <Login />
-      </PublicRoute>
+      // <PublicRoute>
+      <Login />
+      // </PublicRoute>
     ),
   },
   {

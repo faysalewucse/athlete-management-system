@@ -71,6 +71,7 @@ export const Register = () => {
         phoneNumber,
         role,
         status: "pending",
+        isVerified: false,
       };
 
       if (role === "admin") userData.organization = organization;
@@ -85,12 +86,12 @@ export const Register = () => {
       await signup(email, password, fullName, userData);
 
       await axios.post(`${baseUrl}/user`, userData);
-
-      Swal.fire("Welcome!", "You registered Successfully!", "success").then(
-        () => {
-          navigate("/dashboard");
-        }
-      );
+      navigate("/login");
+      // Swal.fire("Welcome!", "You registered Successfully!", "success").then(
+      //   () => {
+      //     navigate("/dashboard");
+      //   }
+      // );
 
       setLoading(false);
     } catch (error) {

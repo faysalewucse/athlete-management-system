@@ -13,8 +13,10 @@ import {
   sendPasswordResetEmail,
   FacebookAuthProvider,
   fetchSignInMethodsForEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 import { baseUrl } from "../utils/Constant";
+import toast from "react-hot-toast";
 
 const AuthContext = React.createContext();
 
@@ -35,7 +37,7 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
 
       // getUsersData from Database if not found save to database
-      if (user) {
+      if (user?.emailVerified) {
         await axios
           .get(`${baseUrl}/users/${user.email}`)
           .then(({ data: userData }) => {
@@ -47,7 +49,7 @@ export function AuthProvider({ children }) {
         setCurrentUser(user);
       }
 
-      if (user) {
+      if (user?.emailVerified) {
         axios
           .post(`${baseUrl}/jwt`, {
             email: user.email,
@@ -66,8 +68,14 @@ export function AuthProvider({ children }) {
 
   //signup function
   async function signup(email, password, username, userData) {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const user = await createUserWithEmailAndPassword(auth, email, password);
+    await sendEmailVerification(user.user);
+    toast.success(
+      "An email verification has been sent to your email address. Please verify it and log in again"
+    );
+
     setCurrentUser({ ...userData });
+    return user;
   }
 
   //login function

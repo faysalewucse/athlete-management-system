@@ -8,9 +8,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 export const Banner = ({ scrollRef, handleScroll }) => {
-  // const { isDark } = useTheme();
-  //TODO3: set autoplat delay 2500
-
   const { currentUser } = useAuth();
 
   return (
@@ -43,7 +40,12 @@ export const Banner = ({ scrollRef, handleScroll }) => {
             transition={{ delay: 0.2, duration: 0.1 }}
             className="md:w-3/4 md:text-justify text-gray-300 text-center my-5"
           >
-            Overtime Athletic Management software is a comprehensive platform designed for athletic organizations, coaches, athletes, parents, and administrators. It streamlines athlete registration, team management, event scheduling, and communication while offering various user roles and functionalities for a seamless sports management experience.
+            Overtime Athletic Management software is a comprehensive platform
+            designed for athletic organizations, coaches, athletes, parents, and
+            administrators. It streamlines athlete registration, team
+            management, event scheduling, and communication while offering
+            various user roles and functionalities for a seamless sports
+            management experience.
           </motion.p>
           <div className="flex flex-col md:flex-row md:justify-start justify-center items-center gap-5">
             <Button

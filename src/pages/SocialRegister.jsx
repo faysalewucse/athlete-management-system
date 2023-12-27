@@ -14,13 +14,13 @@ import ReCaptcha from "../components/ReCaptcha";
 
 const { Option } = Select;
 
-export const Register = () => {
+export const SocialRegister = () => {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("admin");
   const [teams, setTeams] = useState([]);
   const [captcha, setCaptcha] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
-  const { signup } = useAuth();
+  const { signup, currentUser, setCurrentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
 
@@ -81,8 +81,8 @@ export const Register = () => {
       if (role === "sub_coach") {
         userData.title = title;
       }
-
-      await signup(email, password, fullName, userData);
+      setCurrentUser(userData);
+      //   await signup(email, password, fullName, userData);
 
       await axios.post(`${baseUrl}/user`, userData);
 
@@ -126,7 +126,7 @@ export const Register = () => {
           layout="vertical"
           onFinish={onFinish}
           className="md:grid grid-cols-2 gap-x-6 py-10"
-          initialValues={{ role: "admin" }}
+          initialValues={{ role: "admin", email: currentUser?.email }}
         >
           <h1 className="font-semibold text-lg">Role?</h1>
           <Form.Item name="role" className="role-radio col-span-2">
@@ -175,7 +175,11 @@ export const Register = () => {
               },
             ]}
           >
-            <Input className="w-full px-4 py-2 rounded-lg" size="large" />
+            <Input
+              className="w-full px-4 py-2 rounded-lg"
+              size="large"
+              disabled
+            />
           </Form.Item>
 
           {role === "sub_coach" && (
@@ -399,10 +403,10 @@ export const Register = () => {
 
           <Form.Item className="col-span-2">
             <Button
-              size="large"
-              type="btn"
               loading={loading}
               disabled={loading}
+              size="large"
+              type="btn"
               htmlType="submit"
               className={`bg-gradient text-white w-full ${
                 loading && "cursor-not-allowed opacity-50"

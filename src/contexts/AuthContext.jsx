@@ -11,6 +11,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
+  FacebookAuthProvider,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { baseUrl } from "../utils/Constant";
 
@@ -29,6 +31,7 @@ export function AuthProvider({ children }) {
   // TODO1: remove setLoading function
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("from context", user);
       setCurrentUser(user);
 
       // getUsersData from Database if not found save to database
@@ -73,8 +76,14 @@ export function AuthProvider({ children }) {
   }
 
   // signin with google
-  async function googleSignIn() {
+  function googleSignIn() {
     const googleAuthProvider = new GoogleAuthProvider();
+    return signInWithPopup(auth, googleAuthProvider);
+  }
+
+  // facebook
+  function facebookSignIn() {
+    const googleAuthProvider = new FacebookAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   }
 
@@ -83,8 +92,9 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  function resetPassword(email) {
-    sendPasswordResetEmail(auth, email);
+  async function resetPassword(email) {
+    await sendPasswordResetEmail(auth, email);
+    return "Sent";
   }
 
   const value = {
@@ -96,6 +106,8 @@ export function AuthProvider({ children }) {
     logout,
     googleSignIn,
     resetPassword,
+    facebookSignIn,
+    setCurrentUser,
   };
 
   return (

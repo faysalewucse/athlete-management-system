@@ -5,6 +5,10 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import UserProfile from "../pages/UserProfile";
 
+import { SocialRegister } from "../pages/SocialRegister";
+import SocialAuthRoute from "./SocialAuthRoute";
+import { ResetPassword } from "../pages/ResetPassword";
+
 export const userRouter = [
   {
     path: "/",
@@ -19,11 +23,27 @@ export const userRouter = [
     ),
   },
   {
+    path: "/reset-password",
+    element: (
+      <PublicRoute>
+        <ResetPassword />
+      </PublicRoute>
+    ),
+  },
+  {
     path: "/register",
     element: (
       <PublicRoute>
         <Register />
       </PublicRoute>
+    ),
+  },
+  {
+    path: "/social-register",
+    element: (
+      <SocialAuthRoute>
+        <SocialRegister />
+      </SocialAuthRoute>
     ),
   },
   {

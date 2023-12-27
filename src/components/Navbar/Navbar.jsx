@@ -90,7 +90,7 @@ export const Navbar = () => {
     {
       route: "/dashboard",
       pathName: "Dashboard",
-      render: currentUser ? true : false,
+      render: currentUser?.role ? true : false,
     },
   ];
 
@@ -128,7 +128,7 @@ export const Navbar = () => {
               ))}
             <div className="flex items-center gap-8">
               {/* Dropdown Avatar */}
-              {currentUser ? (
+              {currentUser?.role ? (
                 <AvatarDropdown
                   currentUser={currentUser}
                   items={avatarItems.filter((item) => item.render)}

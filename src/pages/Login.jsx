@@ -1,17 +1,24 @@
 import { useAuth } from "../contexts/AuthContext";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { Button } from "antd";
 import Swal from "sweetalert2";
+import GoogleLogin from "../components/Auth/GoogleLogin";
+import FacebookLogin from "../components/Auth/FacebookLogin";
+import ReCaptcha from "../components/ReCaptcha";
+import { useEffect } from "react";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [captcha, setCaptcha] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -19,6 +26,8 @@ export const Login = () => {
   } = useForm();
 
   const loginHandler = (data) => {
+    if (!captcha) return setErrorMsg("Please complete the captcha to proceed!");
+
     const { email, password } = data;
     setLoading(true);
     login(email, password)
@@ -38,7 +47,9 @@ export const Login = () => {
         console.log({ e });
         setLoading(false);
         toast.error(
-          e.message.includes("password") ? "Wrong password" : "User Not Found"
+          e.message.includes("password") || e.message.includes("invalid")
+            ? "Wrong email or password"
+            : "User Not Found"
         );
       });
   };
@@ -108,15 +119,27 @@ export const Login = () => {
                 </div>
               </div>
               <div className="flex md:flex-row text-center justify-between flex-col mt-6 text-secondary text-xl">
-                <div className="cursor-pointer">
+                <Link to="/reset-password" className="cursor-pointer">
                   <small>Forgot password?</small>
-                </div>
+                </Link>
                 <small
                   className="underline cursor-pointer"
                   onClick={() => navigate("/register")}
                 >
                   Create new account
                 </small>
+              </div>
+
+              <div className="mt-4">
+                <ReCaptcha
+                  captcha={captcha}
+                  setCaptcha={setCaptcha}
+                  setErrorMsg={setErrorMsg}
+                />
+
+                {errorMsg && (
+                  <p className="text-sm text-red-600 pt-1">{errorMsg}</p>
+                )}
               </div>
 
               <Button
@@ -129,6 +152,16 @@ export const Login = () => {
                 SIGN IN
               </Button>
             </form>
+            <div className="flex items-center py-6">
+              <div className="border-t border-gray-300 flex-grow" />
+              <div className="mx-4 text-gray-500">OR</div>
+              <div className="border-t border-gray-300 flex-grow" />
+            </div>
+
+            <GoogleLogin />
+            <div className="mt-4">
+              <FacebookLogin />
+            </div>
           </div>
         </div>
       </div>

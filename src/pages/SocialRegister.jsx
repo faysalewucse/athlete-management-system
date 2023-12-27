@@ -10,6 +10,7 @@ import moment from "moment/moment";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { baseUrl, coachTitles } from "../utils/Constant";
+import ReCaptcha from "../components/ReCaptcha";
 
 const { Option } = Select;
 
@@ -17,6 +18,7 @@ export const SocialRegister = () => {
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("admin");
   const [teams, setTeams] = useState([]);
+  const [captcha, setCaptcha] = useState(null);
   const { signup, currentUser, setCurrentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
@@ -385,8 +387,14 @@ export const SocialRegister = () => {
             </Form.Item>
           </div>
 
+          <div className="my-4">
+            <ReCaptcha captcha={captcha} setCaptcha={setCaptcha} />
+          </div>
+
           <Form.Item className="col-span-2">
             <Button
+              loading={loading}
+              disabled={loading || !captcha}
               size="large"
               type="btn"
               htmlType="submit"

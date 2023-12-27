@@ -3,6 +3,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { baseUrl } from "../../utils/Constant";
 
 const GoogleLogin = () => {
   const { googleSignIn, currentUser } = useAuth();
@@ -11,20 +13,18 @@ const GoogleLogin = () => {
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
-    const isGoogleLoggedIn = localStorage.getItem("isGoogleLoggedIn");
     try {
       setLoading(true);
       const response = await googleSignIn();
 
-      if (
-        response.providerId === "google.com" &&
-        !currentUser?.role &&
-        !isGoogleLoggedIn
-      ) {
-        localStorage.setItem("isGoogleLoggedIn", true);
+      const userData = await axios.get(
+        `${baseUrl}/user-exist/${response.user.email}`
+      );
+
+      if (response.providerId === "google.com" && !userData?.data) {
         navigate("/social-register");
         setLoading(false);
-      } else if (currentUser?.role || isGoogleLoggedIn) {
+      } else if (currentUser?.role || userData?.data) {
         setTimeout(() => {
           setLoading(false);
           Swal.fire(

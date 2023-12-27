@@ -12,6 +12,7 @@ import {
   signInWithPopup,
   sendPasswordResetEmail,
   FacebookAuthProvider,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { baseUrl } from "../utils/Constant";
 

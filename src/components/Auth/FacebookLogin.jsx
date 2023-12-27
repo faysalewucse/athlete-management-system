@@ -3,6 +3,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { baseUrl } from "../../utils/Constant";
 
 const FacebookLogin = () => {
   const { facebookSignIn, currentUser } = useAuth();
@@ -10,20 +12,18 @@ const FacebookLogin = () => {
   const navigate = useNavigate();
 
   const handleSignIn = async () => {
-    const isFbLoggedIn = localStorage.getItem("isFbLoggedIn");
     try {
       setLoading(true);
       const response = await facebookSignIn();
 
-      if (
-        response.providerId === "facebook.com" &&
-        !currentUser?.role &&
-        !isFbLoggedIn
-      ) {
-        setLoading(false);
-        localStorage.setItem("isFbLoggedIn", true);
+      const userData = await axios.get(
+        `${baseUrl}/user-exist/${response.user.email}`
+      );
+
+      if (response.providerId === "facebook.com" && !userData?.data) {
         navigate("/social-register");
-      } else if (currentUser?.role || isFbLoggedIn) {
+        setLoading(false);
+      } else if (currentUser?.role || userData?.data) {
         setTimeout(() => {
           setLoading(false);
           Swal.fire(

@@ -8,12 +8,16 @@ import { Button } from "antd";
 import Swal from "sweetalert2";
 import GoogleLogin from "../components/Auth/GoogleLogin";
 import FacebookLogin from "../components/Auth/FacebookLogin";
+import ReCaptcha from "../components/ReCaptcha";
+import { useEffect } from "react";
 
 export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [captcha, setCaptcha] = useState(null);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -123,9 +127,13 @@ export const Login = () => {
                 </small>
               </div>
 
+              <div className="mt-4">
+                <ReCaptcha captcha={captcha} setCaptcha={setCaptcha} />
+              </div>
+
               <Button
                 loading={loading}
-                disabled={loading}
+                disabled={loading || !captcha}
                 size="large"
                 htmlType="submit"
                 className="bg-gradient text-white mt-5 w-full"

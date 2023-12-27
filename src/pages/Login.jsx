@@ -15,6 +15,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
@@ -25,6 +26,8 @@ export const Login = () => {
   } = useForm();
 
   const loginHandler = (data) => {
+    if (!captcha) return setErrorMsg("Please complete the captcha to proceed!");
+
     const { email, password } = data;
     setLoading(true);
     login(email, password)
@@ -128,12 +131,20 @@ export const Login = () => {
               </div>
 
               <div className="mt-4">
-                <ReCaptcha captcha={captcha} setCaptcha={setCaptcha} />
+                <ReCaptcha
+                  captcha={captcha}
+                  setCaptcha={setCaptcha}
+                  setErrorMsg={setErrorMsg}
+                />
+
+                {errorMsg && (
+                  <p className="text-sm text-red-600 pt-1">{errorMsg}</p>
+                )}
               </div>
 
               <Button
                 loading={loading}
-                disabled={loading || !captcha}
+                disabled={loading}
                 size="large"
                 htmlType="submit"
                 className="bg-gradient text-white mt-5 w-full"

@@ -19,6 +19,7 @@ export const SocialRegister = () => {
   const [role, setRole] = useState("admin");
   const [teams, setTeams] = useState([]);
   const [captcha, setCaptcha] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
   const { signup, currentUser, setCurrentUser } = useAuth();
   const [axiosSecure] = useAxiosSecure();
   const navigate = useNavigate();
@@ -32,6 +33,8 @@ export const SocialRegister = () => {
   });
 
   const onFinish = async (data) => {
+    if (!captcha) return setErrorMsg("Please complete the captcha to proceed!");
+
     try {
       setLoading(true);
       const {
@@ -388,13 +391,20 @@ export const SocialRegister = () => {
           </div>
 
           <div className="my-4">
-            <ReCaptcha captcha={captcha} setCaptcha={setCaptcha} />
+            <ReCaptcha
+              captcha={captcha}
+              setCaptcha={setCaptcha}
+              setErrorMsg={setErrorMsg}
+            />
+            {errorMsg && (
+              <p className="text-sm text-red-600 pt-1">{errorMsg}</p>
+            )}
           </div>
 
           <Form.Item className="col-span-2">
             <Button
               loading={loading}
-              disabled={loading || !captcha}
+              disabled={loading}
               size="large"
               type="btn"
               htmlType="submit"

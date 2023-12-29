@@ -5,6 +5,8 @@ export default function PrivateRoute({ children }) {
   const { currentUser } = useAuth();
   const location = useLocation();
 
+  console.log(currentUser);
+
   if (currentUser?.role) {
     return children;
   }

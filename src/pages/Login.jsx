@@ -10,6 +10,8 @@ import GoogleLogin from "../components/Auth/GoogleLogin";
 import FacebookLogin from "../components/Auth/FacebookLogin";
 import ReCaptcha from "../components/ReCaptcha";
 import { useEffect } from "react";
+import axios from "axios";
+import { baseUrl } from "../utils/Constant";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ export const Login = () => {
   const [captcha, setCaptcha] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
 
   const {
     register,
@@ -31,9 +33,18 @@ export const Login = () => {
     const { email, password } = data;
     setLoading(true);
     login(email, password)
-      .then((result) => {
-        if (result.user) {
+      .then(async (result) => {
+        console.log(result.user);
+        if (!result.user.emailVerified) {
           setLoading(false);
+          return toast.error(
+            "Your email is not verified. Please verify your email and login again"
+          );
+        } else {
+          setLoading(false);
+          await axios.patch(`${baseUrl}/user/update/isverified`, {
+            email: currentUser?.email,
+          });
           Swal.fire(
             "Welcome back!",
             "You have logged in Successfully!",

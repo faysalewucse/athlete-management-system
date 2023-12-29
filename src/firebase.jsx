@@ -9,6 +9,15 @@ import { initializeApp } from "firebase/app";
 //   messagingSenderId: "61767520214",
 //   appId: "1:61767520214:web:8e827ddbb89ded7bea1e77",
 // });
+const app = initializeApp({
+  apiKey: "AIzaSyAexLDAyQE6OrSqnRESqAjSMp1mNuNdxo4",
+  authDomain: "overtime-athletic-management.firebaseapp.com",
+  projectId: "overtime-athletic-management",
+  storageBucket: "overtime-athletic-management.appspot.com",
+  messagingSenderId: "957242065537",
+  appId: "1:957242065537:web:23d63034c25acc21dc0380",
+  measurementId: "G-F83PRFGJT4",
+});
 
 // Joseph
 const app = initializeApp({

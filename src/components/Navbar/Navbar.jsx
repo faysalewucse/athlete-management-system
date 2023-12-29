@@ -1,11 +1,12 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Container } from "../Container";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+
 import Brand from "../Brand";
 import { Button } from "antd";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import AvatarDropdown from "../AvatarDropdown";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -96,7 +97,7 @@ export const Navbar = () => {
     {
       route: "/dashboard",
       pathName: "Dashboard",
-      render: currentUser?.role ? true : false,
+      render: currentUser?.isVerified ? true : false,
     },
   ];
 
@@ -134,7 +135,7 @@ export const Navbar = () => {
               ))}
             <div className="flex items-center gap-8">
               {/* Dropdown Avatar */}
-              {currentUser?.role ? (
+              {currentUser?.isVerified ? (
                 <AvatarDropdown
                   currentUser={currentUser}
                   items={avatarItems.filter((item) => item.render)}

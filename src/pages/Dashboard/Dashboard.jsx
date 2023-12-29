@@ -255,6 +255,7 @@ export const Dashboard = () => {
                     <DashboardCard
                       number={quantity.athlete}
                       title={"Total Athlete"}
+                      route="/dashboard/athletes"
                     />
                     <Button
                       style={"rounded-lg"}

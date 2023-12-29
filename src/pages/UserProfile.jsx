@@ -291,7 +291,8 @@ const UserProfile = () => {
                       </Form.Item>
                     </div>
                   </div>
-                  {currentUser?._id === userDetails?._id && (
+                  {(currentUser?._id === userDetails?._id ||
+                    currentUser.role === "parents") && (
                     <Button
                       htmlType="submit"
                       loading={submitting}

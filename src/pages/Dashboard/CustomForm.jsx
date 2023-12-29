@@ -13,6 +13,7 @@ import {
   MdOutlineTextFields,
   MdRadioButtonChecked,
 } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const CustomFormBuilder = () => {
   const [form] = Form.useForm();
@@ -20,6 +21,7 @@ const CustomFormBuilder = () => {
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [axiosSecure] = useAxiosSecure();
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   const { isLoading, data: teams = [] } = useQuery({
     queryKey: ["teams", currentUser?.email],
@@ -275,6 +277,7 @@ const CustomFormBuilder = () => {
           .post("/upload-custom-form", formData)
           .then((response) => {
             toast.success("File uploaded successfully");
+            navigate("/dashboard/form-library");
           })
           .catch((error) => {
             // Handle error from POST request
@@ -323,6 +326,9 @@ const CustomFormBuilder = () => {
                 placeholder="Select Team"
                 onChange={(team) => setSelectedTeam(JSON.parse(team))}
               >
+                <Option key={"all"} value={"all"}>
+                  All
+                </Option>
                 {teams.map((team) => (
                   <Option key={team?._id} value={JSON.stringify(team)}>
                     {team.teamName}

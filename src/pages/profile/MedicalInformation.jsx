@@ -193,7 +193,8 @@ const MedicalInformation = ({ userId }) => {
               </div>
             ))}
           </div>
-          {currentUser.role === "athlete" && (
+          {(currentUser.role === "athlete" ||
+            currentUser.role === "parents") && (
             <div>
               <Button
                 className="bg-gradient text-white mt-10"
@@ -265,7 +266,8 @@ const MedicalInformation = ({ userId }) => {
                   >
                     <Input.TextArea className="text-gray-500  py-2 px-3" />
                   </Form.Item>
-                  {currentUser?.role === "athlete" && (
+                  {(currentUser?.role === "athlete" ||
+                    currentUser?.role === "parents") && (
                     <Button
                       htmlType="submit"
                       loading={submitting}

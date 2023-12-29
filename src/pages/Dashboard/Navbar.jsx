@@ -41,7 +41,13 @@ export const Navbar = ({ setSidebarOpen }) => {
         <div className="bg-dark/5 py-2 pr-10 pl-2 rounded-md text-left">
           <p className="text-lg font-semibold">
             {currentUser?.fullName}{" "}
-            <span className="capitalize">({currentUser?.role})</span>
+            <span className="capitalize">
+              (
+              {currentUser?.role === "sub_coach"
+                ? "Assistant Coach"
+                : currentUser?.role}
+              )
+            </span>
           </p>
           <p className="text-xs">{currentUser?.email}</p>
         </div>

@@ -143,6 +143,9 @@ const AddFormModal = ({ isModalOpen, setIsModalOpen, refetch }) => {
               className="rounded-lg"
               placeholder="Select Team"
             >
+              <Option key={"all"} value={"all"}>
+                All
+              </Option>
               {teams.map((team) => (
                 <Option key={team?._id} value={team.teamName}>
                   {team.teamName}

@@ -228,7 +228,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         icon: <BiChat />,
       },
       {
-        key: 8,
+        key: 9,
         label: "Form Library",
         route: "form-library",
         icon: <FaWpforms />,
@@ -284,6 +284,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, sideRef }) => {
         label: "Events",
         route: "events",
         icon: <MdEvent />,
+      },
+      {
+        key: 3,
+        label: "Forms",
+        route: "forms",
+        icon: <FaWpforms />,
+      },
+      {
+        key: 4,
+        label: "Chatting",
+        route: "chatting",
+        icon: <BiChat />,
       },
     ],
   };

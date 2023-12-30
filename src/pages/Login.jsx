@@ -34,17 +34,11 @@ export const Login = () => {
     setLoading(true);
     login(email, password)
       .then(async (result) => {
-        console.log(result.user);
-        if (!result.user.emailVerified) {
+        await axios.patch(`${baseUrl}/user/update/isverified`, {
+          email: currentUser?.email,
+        });
+        setTimeout(() => {
           setLoading(false);
-          return toast.error(
-            "Your email is not verified. Please verify your email and login again"
-          );
-        } else {
-          setLoading(false);
-          await axios.patch(`${baseUrl}/user/update/isverified`, {
-            email: currentUser?.email,
-          });
           Swal.fire(
             "Welcome back!",
             "You have logged in Successfully!",
@@ -52,7 +46,26 @@ export const Login = () => {
           ).then(() => {
             navigate("/dashboard");
           });
-        }
+        }, 4000);
+        // console.log(result.user);
+        // if (!result.user.emailVerified) {
+        //   setLoading(false);
+        //   return toast.error(
+        //     "Your email is not verified. Please verify your email and login again"
+        //   );
+        // } else {
+        //   setLoading(false);
+        //   await axios.patch(`${baseUrl}/user/update/isverified`, {
+        //     email: currentUser?.email,
+        //   });
+        //   Swal.fire(
+        //     "Welcome back!",
+        //     "You have logged in Successfully!",
+        //     "success"
+        //   ).then(() => {
+        //     navigate("/dashboard");
+        //   });
+        // }
       })
       .catch((e) => {
         console.log({ e });

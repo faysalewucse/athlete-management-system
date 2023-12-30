@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
 
       // getUsersData from Database if not found save to database
-      if (user?.emailVerified) {
+      if (user) {
         await axios
           .get(`${baseUrl}/users/${user.email}`)
           .then(({ data: userData }) => {
@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
         setCurrentUser(user);
       }
 
-      if (user?.emailVerified) {
+      if (user) {
         axios
           .post(`${baseUrl}/jwt`, {
             email: user.email,

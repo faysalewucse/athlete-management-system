@@ -7,5 +7,5 @@ export default function PublicRoute({ children }) {
   const { state } = useLocation();
   const route = state?.from?.pathname || "/";
 
-  return !currentUser ? children : <Navigate to={route} />;
+  return !currentUser?.role ? children : <Navigate to={route} />;
 }

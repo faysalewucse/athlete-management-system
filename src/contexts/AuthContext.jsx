@@ -55,10 +55,10 @@ export function AuthProvider({ children }) {
             email: user.email,
           })
           .then((response) => {
-            localStorage.setItem("access_token", response.data.token);
+            sessionStorage.setItem("access_token", response.data.token);
           });
       } else {
-        localStorage.removeItem("access_token");
+        sessionStorage.removeItem("access_token");
       }
       setLoading(false);
     });
@@ -97,8 +97,31 @@ export function AuthProvider({ children }) {
 
   //logout function
   function logout() {
+    sessionStorage.removeItem("access_token");
     return signOut(auth);
   }
+
+  useEffect(() => {
+    document.addEventListener("mousemove", () => {
+      localStorage.setItem("lastActvity", new Date());
+    });
+    document.addEventListener("click", () => {
+      localStorage.setItem("lastActvity", new Date());
+    });
+
+    let timeInterval = setInterval(() => {
+      let lastAcivity = localStorage.getItem("lastActvity");
+      var diffMs = Math.abs(new Date(lastAcivity) - new Date());
+      var seconds = Math.floor(diffMs / 1000);
+      var minute = Math.floor(seconds / 60);
+
+      if (minute == 10) {
+        console.log("No activity from last 10 minutes... Logging Out");
+        clearInterval(timeInterval);
+        logout();
+      }
+    }, 1000);
+  }, []);
 
   async function resetPassword(email) {
     await sendPasswordResetEmail(auth, email);
